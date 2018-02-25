@@ -20,7 +20,13 @@ public class BoardView extends JPanel implements Observer {
 
     public BoardView(int rowNum, int columnNum,int imageSize, String[] imageList){
         super();
-
+        iconArray = new ArrayList();
+        int leng = rowNum*columnNum;
+        for(int i = 0;i <leng; i++ ){
+            PieceView p = new PieceView(i,i/3,i%3,imageSize,imageList[i]);
+            iconArray.add(p);
+        }
+       
 
     }
 
@@ -51,9 +57,9 @@ public class BoardView extends JPanel implements Observer {
     }
 
     public void paint(Graphics g){
-        //for(PieceView iconImage:iconArray){
-            //g.drawImage(iconImage.getImage(), iconImage.getDrawnRowIndex(), iconImage.getDrawnColumnIndex(), iconImage.getImageSize(), iconImage.getImageSize(), this);
-        //}
+        for(PieceView iconImage:iconArray){
+            g.drawImage(iconImage.getImage(), iconImage.getIndexColumn()*96/3, iconImage.getIndexRow()*96/3, iconImage.getImageSize(), iconImage.getImageSize(), this);
+        }
     }
 
     //Dado una posicion X e Y localizar una pieza

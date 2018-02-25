@@ -27,7 +27,11 @@ public class PieceView extends ImageIcon implements Cloneable{
      * @param imagePath ubicación de la imagen.
      */
     public PieceView(int id,int indexRow, int indexColumn,int imageSize,String imagePath){
-        super();
+        super(imagePath);
+        this.id = id;
+        this.indexRow = indexRow;
+        this.indexColumn = indexColumn;
+        this.imageSize = imageSize;
     }
 
     public PieceView(int id, int indexRow, int indexColumn,int imageSize,Image image){

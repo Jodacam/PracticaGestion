@@ -1,3 +1,4 @@
+import model.*;
 import view.PuzzleGUI;
 
 /*
@@ -34,7 +35,9 @@ public class PuzzleApp {
         String[] imageList={imagePath+"blank.gif",imagePath+"one.gif",imagePath+"two.gif",imagePath+"three.gif",imagePath+ "four.gif",
                 imagePath+"five.gif",imagePath+"six.gif",imagePath+"seven.gif",imagePath+"eight.gif"};
         // Creamos el modelo
+        Model m = new Model(rowNum, columnNum, imageSize, imageList);
         // Creamos el controlador
+        
         // Inicializamos la GUI
         PuzzleGUI.initialize(null, rowNum, columnNum, imageSize, imageList);
         // Obtenemos la vista del tablero
