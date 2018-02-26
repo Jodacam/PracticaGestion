@@ -1,4 +1,7 @@
+import control.Controller;
 import model.*;
+import observer.Observer;
+import view.BoardView;
 import view.PuzzleGUI;
 
 /*
@@ -37,11 +40,14 @@ public class PuzzleApp {
         // Creamos el modelo
         Model m = new Model(rowNum, columnNum, imageSize, imageList);
         // Creamos el controlador
-        
+        Controller c  = new Controller();
         // Inicializamos la GUI
-        PuzzleGUI.initialize(null, rowNum, columnNum, imageSize, imageList);
+        PuzzleGUI.initialize(c, rowNum, columnNum, imageSize, imageList);
         // Obtenemos la vista del tablero
+        BoardView b = new BoardView(rowNum, columnNum, imageSize, imageList);
         // Añadimos un nuevo observador al controlador
+        c.addObserver(b);
+        c.addObserver(m);
         // Visualizamos la aplicación.
         PuzzleGUI.getInstance().setVisible(true);
     }

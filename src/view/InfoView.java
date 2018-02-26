@@ -86,6 +86,7 @@ public class InfoView extends JDialog implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent ae){
+        System.out.println("InfoView");//Esto esta para ver si hace algo
         this.setVisible(false);
     }
 }

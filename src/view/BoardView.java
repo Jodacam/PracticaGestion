@@ -49,7 +49,7 @@ public class BoardView extends JPanel implements Observer {
     }
 
     public void update(int blankPos, int movedPos){
-
+        System.out.println("Board View: "+blankPos+", "+movedPos);
     }
 
     public void update(Graphics g){
@@ -58,12 +58,13 @@ public class BoardView extends JPanel implements Observer {
 
     public void paint(Graphics g){
         for(PieceView iconImage:iconArray){
-            g.drawImage(iconImage.getImage(), iconImage.getIndexColumn()*96/3, iconImage.getIndexRow()*96/3, iconImage.getImageSize(), iconImage.getImageSize(), this);
+            g.drawImage(iconImage.getImage(), iconImage.getIndexColumn()*iconImage.getIconWidth(), iconImage.getIndexRow()*iconImage.getIconHeight(), iconImage.getImageSize(), iconImage.getImageSize(), this);
         }
     }
 
     //Dado una posicion X e Y localizar una pieza
     private int locatePiece(int posX,int posY){
+        System.out.println("BoardView locatePiece: "+posX+", "+posY);//texto para debuggear
         return(-1);
     }
 
@@ -77,7 +78,8 @@ public class BoardView extends JPanel implements Observer {
      * actual de la pieza que tiene que ser movida.
      */
     public int[] movePiece(int posX,int posY){
-
+        
+        
         return(null);
     }
 
