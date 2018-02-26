@@ -63,5 +63,12 @@ public class PieceView extends ImageIcon implements Cloneable{
     public String toString(){
         return("id:"+id);
     }
+    
+    
+    public void setPosition(int colum,int row){
+        indexColumn = colum;
+        indexRow = row;
+    
+    }
 
 }

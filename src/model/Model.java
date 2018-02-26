@@ -37,7 +37,7 @@ public class Model extends AbstractModel {
 
     @Override
     public void update(int blankPos, int movedPos) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

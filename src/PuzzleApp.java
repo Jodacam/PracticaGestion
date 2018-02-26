@@ -44,9 +44,8 @@ public class PuzzleApp {
         // Inicializamos la GUI
         PuzzleGUI.initialize(c, rowNum, columnNum, imageSize, imageList);
         // Obtenemos la vista del tablero
-        BoardView b = new BoardView(rowNum, columnNum, imageSize, imageList);
         // Añadimos un nuevo observador al controlador
-        c.addObserver(b);
+        c.addObserver(PuzzleGUI.getInstance().getBoardView());
         c.addObserver(m);
         // Visualizamos la aplicación.
         PuzzleGUI.getInstance().setVisible(true);

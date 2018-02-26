@@ -7,6 +7,8 @@ package control;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import view.BoardView;
+import view.PuzzleGUI;
 
 /**
  *
@@ -29,6 +31,13 @@ public class Controller extends AbstractController {
     
     public void mouseClicked(MouseEvent me){//Metodo que recibe el evento de click del raton
         System.out.println(me.getX()+", "+me.getY());
+        int x = me.getX();
+        int y = me.getY();
+        if(x < BoardView.imageWidth && y <BoardView.imageHeight){
+            int piezas[] = PuzzleGUI.getInstance().getBoardView().movePiece(x, y);
+            
+            notifyObservers(piezas[0],piezas[1]);                
+        }
     }
     
     

@@ -17,13 +17,15 @@ public class BoardView extends JPanel implements Observer {
     public static final int imageWidth= 96;
     public static final int imageHeight= 96;
     private ArrayList<PieceView> iconArray = null;
+    private int blankPiece;
 
     public BoardView(int rowNum, int columnNum,int imageSize, String[] imageList){
         super();
         iconArray = new ArrayList();
         int leng = rowNum*columnNum;
+        blankPiece = 0;
         for(int i = 0;i <leng; i++ ){
-            PieceView p = new PieceView(i,i/3,i%3,imageSize,imageList[i]);
+            PieceView p = new PieceView(i,i/columnNum,i%rowNum,imageSize,imageList[i]);
             iconArray.add(p);
         }
        
@@ -49,14 +51,39 @@ public class BoardView extends JPanel implements Observer {
     }
 
     public void update(int blankPos, int movedPos){
+        
         System.out.println("Board View: "+blankPos+", "+movedPos);
+        PieceView p = iconArray.get(movedPos);
+        PieceView p2 = iconArray.get(blankPos);
+        
+        
+        int disx = p2.getIndexColumn() - p.getIndexColumn();
+        int disy = p2.getIndexRow()-p.getIndexRow();             
+        boolean inPlace = disx == 1 ? (disy == 0):(disx==-1 ? (disy==0):(disy==1 ? (disx==0):(disy==-1 ?  disx==0:false)));
+        if( inPlace)
+        {
+
+            int x = p.getIndexColumn();
+            int y = p.getIndexRow();
+            p.setPosition(p2.getIndexColumn(), p2.getIndexRow());
+            p2.setPosition(x, y);       
+            iconArray.set(blankPos, p);
+            iconArray.set(movedPos, p2);
+            blankPiece = movedPos;      
+            this.repaint();
+        }
+                   
     }
 
     public void update(Graphics g){
-        paint(g);
+       
+        paintComponent(g);
     }
 
-    public void paint(Graphics g){
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        g.setColor(Color.BLACK);
+        g.fillOval(0, 0, imageWidth, imageHeight);
         for(PieceView iconImage:iconArray){
             g.drawImage(iconImage.getImage(), iconImage.getIndexColumn()*iconImage.getIconWidth(), iconImage.getIndexRow()*iconImage.getIconHeight(), iconImage.getImageSize(), iconImage.getImageSize(), this);
         }
@@ -79,8 +106,14 @@ public class BoardView extends JPanel implements Observer {
      */
     public int[] movePiece(int posX,int posY){
         
+        int piezas[] = new int[2];
+        PieceView blankPieces = iconArray.get(blankPiece);
         
-        return(null);
+        piezas[0] = blankPieces.getIndexRow()*3 + blankPieces.getIndexColumn();
+        piezas[1] = (posX/blankPieces.getIconWidth())+(posY/blankPieces.getIconHeight()*3);
+        
+        
+        return piezas;
     }
 
 }
