@@ -21,6 +21,9 @@ public class Controller extends AbstractController {
          //To change body of generated methods, choose Tools | Templates.
          System.out.println(ae.getActionCommand());//devuelve un string dependiendo del boton que se pulse
          System.out.println(ae.getID());
+         if(ae.getActionCommand() == "clutter"){
+            
+         }
     }
 
     @Override
@@ -33,9 +36,8 @@ public class Controller extends AbstractController {
         System.out.println(me.getX()+", "+me.getY());
         int x = me.getX();
         int y = me.getY();
-        if(x < BoardView.imageWidth && y <BoardView.imageHeight){
+        if(x < PuzzleGUI.getInstance().getBoardView().imageWidth && y < PuzzleGUI.getInstance().getBoardView().imageWidth){
             int piezas[] = PuzzleGUI.getInstance().getBoardView().movePiece(x, y);
-            
             notifyObservers(piezas[0],piezas[1]);                
         }
     }

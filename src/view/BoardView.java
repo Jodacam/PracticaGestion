@@ -25,7 +25,7 @@ public class BoardView extends JPanel implements Observer {
         int leng = rowNum*columnNum;
         blankPiece = 0;
         for(int i = 0;i <leng; i++ ){
-            PieceView p = new PieceView(i,i/columnNum,i%rowNum,imageSize,imageList[i]);
+            PieceView p = new PieceView(i,i/columnNum,i%columnNum,imageSize,imageList[i]);
             iconArray.add(p);
         }
        
@@ -53,7 +53,7 @@ public class BoardView extends JPanel implements Observer {
     public void update(int blankPos, int movedPos){
         
         System.out.println("Board View: "+blankPos+", "+movedPos);
-        PieceView p = iconArray.get(movedPos);
+        /*PieceView p = iconArray.get(movedPos);
         PieceView p2 = iconArray.get(blankPos);
         
         
@@ -68,22 +68,22 @@ public class BoardView extends JPanel implements Observer {
             p.setPosition(p2.getIndexColumn(), p2.getIndexRow());
             p2.setPosition(x, y);       
             iconArray.set(blankPos, p);
-            iconArray.set(movedPos, p2);
-            blankPiece = movedPos;      
+            iconArray.set(movedPos, p2);*/
+            //blankPiece = movedPos;      
             this.repaint();
-        }
+        //}
                    
     }
 
     public void update(Graphics g){
        
-        paintComponent(g);
+        paint(g);
     }
 
-    public void paintComponent(Graphics g){
-        super.paintComponent(g);
-        g.setColor(Color.BLACK);
-        g.fillOval(0, 0, imageWidth, imageHeight);
+    public void paint(Graphics g){
+        super.paint(g);
+        //g.setColor(Color.BLACK);
+        //g.fillOval(0, 0, imageWidth, imageHeight);
         for(PieceView iconImage:iconArray){
             g.drawImage(iconImage.getImage(), iconImage.getIndexColumn()*iconImage.getIconWidth(), iconImage.getIndexRow()*iconImage.getIconHeight(), iconImage.getImageSize(), iconImage.getImageSize(), this);
         }
@@ -92,7 +92,8 @@ public class BoardView extends JPanel implements Observer {
     //Dado una posicion X e Y localizar una pieza
     private int locatePiece(int posX,int posY){
         System.out.println("BoardView locatePiece: "+posX+", "+posY);//texto para debuggear
-        return(-1);
+        int posArray = (posX/iconArray.get(blankPiece).getIconWidth())+(posY/iconArray.get(blankPiece).getIconHeight()*3);
+        return posArray;
     }
 
     /**
@@ -109,9 +110,30 @@ public class BoardView extends JPanel implements Observer {
         int piezas[] = new int[2];
         PieceView blankPieces = iconArray.get(blankPiece);
         
-        piezas[0] = blankPieces.getIndexRow()*3 + blankPieces.getIndexColumn();
-        piezas[1] = (posX/blankPieces.getIconWidth())+(posY/blankPieces.getIconHeight()*3);
+        //piezas[0] = blankPieces.getIndexRow()*3 + blankPieces.getIndexColumn();
+        piezas[0] = blankPiece;
+        piezas[1] = locatePiece(posX,posY);
         
+        PieceView p = iconArray.get(piezas[1]);
+        PieceView p2 = iconArray.get(piezas[0]);
+        
+        
+        int disx = Math.abs(p2.getIndexColumn() - p.getIndexColumn());
+        int disy = Math.abs(p2.getIndexRow()-p.getIndexRow());             
+        //boolean inPlace = disx == 1 ? (disy == 0):(disx==-1 ? (disy==0):(disy==1 ? (disx==0):(disy==-1 ?  disx==0:false)));
+        if( /*inPlace*/disx + disy == 1)
+        {
+            System.out.println("WIIII");
+            int x = p.getIndexColumn();
+            int y = p.getIndexRow();
+            p.setPosition(p2.getIndexColumn(), p2.getIndexRow());
+            p2.setPosition(x, y);       
+            iconArray.set(piezas[0], p);
+            iconArray.set(piezas[1], p2);
+            blankPiece = piezas[1];      
+            //this.repaint();
+            return piezas;
+        }
         
         return piezas;
     }

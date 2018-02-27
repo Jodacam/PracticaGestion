@@ -68,7 +68,6 @@ public class PieceView extends ImageIcon implements Cloneable{
     public void setPosition(int colum,int row){
         indexColumn = colum;
         indexRow = row;
-    
     }
 
 }

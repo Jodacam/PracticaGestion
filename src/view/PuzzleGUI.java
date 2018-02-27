@@ -36,7 +36,7 @@ public class PuzzleGUI extends JFrame{
         super("GMD PuzzleGUI");
         boardView = new BoardView(rowNum,columnNum,imageSize,imageList);
         boardView.addMouseListener(controller);
-        //controller.addObserver(boardView);
+        controller.addObserver(boardView);
         this.getContentPane().setLayout(new BorderLayout());
         this.setJMenuBar(createMenuBar());
         this.getContentPane().add(boardView, BorderLayout.CENTER);
