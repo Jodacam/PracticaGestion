@@ -7,6 +7,8 @@ package control;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import view.BoardView;
 import view.PuzzleGUI;
@@ -17,24 +19,44 @@ import view.PuzzleGUI;
  */
 public class Controller extends AbstractController {
 
+	
+	private Map<String, Function> EventsFunctions = new HashMap<>();
+	
+	public Controller() {
+		super();
+		EventsFunctions.put("clutter", (String[] param)->{
+			 PuzzleGUI.getInstance().getCommand().desordenarCommand();;
+            			
+		} );
+		
+		EventsFunctions.put("solve",(String[] param)->{			
+	                PuzzleGUI.getInstance().getCommand().resolverCommand();	            
+			}
+		);
+			
+		}
+	
+		
+		
+	
+	
+	
+	
     Random r = new Random();
     @Override
     public void actionPerformed(ActionEvent ae) {
         //To change body of generated methods, choose Tools | Templates.
         System.out.println(ae.getActionCommand());//devuelve un string dependiendo del boton que se pulse
         System.out.println(ae.getID());
-        if(ae.getActionCommand() == "clutter"){
-            for(int i=0;i<99;i++){
-                int x = r.nextInt(96);
-                int y = r.nextInt(96);
-                int piezas[] = PuzzleGUI.getInstance().getBoardView().movePiece(x, y);
-                notifyObservers(piezas[0],piezas[1]);   
-            }
-        }else if(ae.getActionCommand() == "solve"){
-            while(!PuzzleGUI.getInstance().getCommand().getMovimiento().isEmpty()){
-                PuzzleGUI.getInstance().getCommand().undoCommand();
-            }
-        }
+        try {
+        	EventsFunctions.get(ae.getActionCommand()).ExecuteAction(null);
+			
+		} catch (NullPointerException e) {
+			System.out.println("No implementado");
+		}
+        
+        
+        
     }
 
     @Override

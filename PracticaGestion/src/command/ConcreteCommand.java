@@ -6,6 +6,7 @@
 package command;
 
 import java.util.Collection;
+import java.util.Random;
 import java.util.Stack;
 import view.PuzzleGUI;
 
@@ -26,6 +27,14 @@ public class ConcreteCommand implements Command {
             movimientoDeshecho = mov;
         }
     }
+    
+    public void resolverCommand() {
+    	
+    	while(!movimientos.isEmpty()){
+        this.undoCommand();
+    }	
+    	
+    }
 
     public ConcreteCommand() {
         movimientos = new Stack<>();
@@ -45,7 +54,17 @@ public class ConcreteCommand implements Command {
         movimientos.push(movimiento);
     }
     
-    public Stack<Integer[]> getMovimiento(){
+    public Stack<Integer[]> getMovimientos(){
         return movimientos;
+    }
+    
+    public void desordenarCommand() {
+    	Random r = new Random();
+		for(int i=0;i<99;i++){
+            int x = r.nextInt(96);
+            int y = r.nextInt(96);
+            int piezas[] = PuzzleGUI.getInstance().getBoardView().movePiece(x, y);
+            PuzzleGUI.getInstance().getControler().notifyObservers(piezas[0],piezas[1]);      	
+		}
     }
 }
