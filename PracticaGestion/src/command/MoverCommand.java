@@ -32,13 +32,11 @@ public class MoverCommand implements Command {
     	Movimiento[1] = piezas[0];
     	Movimiento[0] = piezas[1];
     	PuzzleGUI.controller.notifyObservers(piezas[0], piezas[1]);
-    	
     }
 
     @Override
     public void redoCommand() {            
             control.notifyObservers(Movimiento[1], Movimiento[0]);           
-        
     }
     
     

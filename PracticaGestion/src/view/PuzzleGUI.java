@@ -46,7 +46,7 @@ public class PuzzleGUI extends JFrame{
         this.getContentPane().add(createSouthPanel(), BorderLayout.SOUTH);
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.setSize(250, 250);
+        this.setSize(500, 500);
         this.setLocation(centerFrame());
     }
 
@@ -75,13 +75,21 @@ public class PuzzleGUI extends JFrame{
         clutterButton.setActionCommand("clutter");
         JButton solveButton = new JButton("Resolver");
         solveButton.setActionCommand("solve");
+        JButton undoButton = new JButton("Deshacer");//botÃ³n de desordenar
+        undoButton.setActionCommand("clutter");
+        JButton redoButton = new JButton("Rehacer");
+        redoButton.setActionCommand("solve");
 
         clutterButton.addActionListener(controller);
         solveButton.addActionListener(controller);
+        undoButton.addActionListener(controller);
+        redoButton.addActionListener(controller);
 
 
         southPanel.add(clutterButton);
         southPanel.add(solveButton);
+        southPanel.add(undoButton);
+        southPanel.add(redoButton);
 
         return(southPanel);
     }
@@ -122,7 +130,20 @@ public class PuzzleGUI extends JFrame{
     }
 
     public File showFileSelector(){
+        
+        JFileChooser selectorArchivo = new JFileChooser();
+        
+        int i = selectorArchivo.showOpenDialog(this);
+        
         File selectedFile = null;
+        
+        if(i == JFileChooser.APPROVE_OPTION){
+            selectedFile = selectorArchivo.getSelectedFile();
+        }else{
+            System.out.println("Archivo invalido");
+            return null;
+        }
+        
         return(selectedFile);
     }
 
@@ -133,7 +154,11 @@ public class PuzzleGUI extends JFrame{
     
     //MÃ©todo para actualizar la imagen del tablero
     public void updateBoard(File imageFile){
-
+        controller.removeObserver(boardView);
+        //this.setVisible(false);
+        boardView = new BoardView(rowNum,columnNum,imageSize,imageFile);
+        //this.setVisible(true);
+        controller.addObserver(boardView);
     }
 
 

@@ -9,6 +9,7 @@ import command.Command;
 import command.MoverCommand;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +46,12 @@ public class Controller extends AbstractController {
 					movimientos.pop().undoCommand();
 			}
 		});
+                
+                /*EventsFunctions.put("load", (String[] param) -> {
+			while (!movimientos.isEmpty()) {
+					movimientos.pop().undoCommand();
+			}
+		});*/
 	}
 
 	Random r = new Random();
@@ -54,12 +61,19 @@ public class Controller extends AbstractController {
 		// To change body of generated methods, choose Tools | Templates.
 		System.out.println(ae.getActionCommand());// devuelve un string dependiendo del boton que se pulse
 		System.out.println(ae.getID());
+                if(ae.getActionCommand() == "load"){
+                    File img = PuzzleGUI.getInstance().showFileSelector();
+                    PuzzleGUI.getInstance().updateBoard(img);
+                    notifyObservers(99, 99);
+                }else{
 		try {
 			EventsFunctions.get(ae.getActionCommand()).ExecuteAction(null);
 
 		} catch (NullPointerException e) {
+                    e.printStackTrace();
 			System.out.println("No implementado");
 		}
+                }
 
 	}
 

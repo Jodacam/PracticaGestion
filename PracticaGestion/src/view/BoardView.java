@@ -6,7 +6,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 /**
  * Clase que representa la vista del tablero
@@ -34,19 +38,50 @@ public class BoardView extends JPanel implements Observer {
 
     public BoardView(int rowNum, int columnNum, int imageSize, File imageFile){
         super();
+        iconArray = new ArrayList<>();
+        BufferedImage[]imageList = splitImage(resizeImage(imageFile));
+        blankPiece = 0;
+        int leng = rowNum*columnNum;
+        for(int i = 0;i < leng; i++ ){
+            PieceView p = new PieceView(i,i/columnNum,i%columnNum,imageSize,imageList[i]);
+            iconArray.add(p);
+        }
     }
 
     //redimensionamos la imagen para 96*96
     private BufferedImage resizeImage(File fileImage){
-        BufferedImage resizedImage = null;
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(fileImage);
+        } catch (IOException ex) {
+            Logger.getLogger(BoardView.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
+        BufferedImage resizedImage = new BufferedImage(imageWidth,imageHeight,BufferedImage.TYPE_INT_ARGB);
+                
+        
         return(resizedImage);
     }
 
     //dividimos la imagen en el número
     private BufferedImage[] splitImage(BufferedImage image){
         //Divisor de imágenes
-        BufferedImage images[] = null;
+
+        BufferedImage images[] = new BufferedImage[PuzzleGUI.getInstance().columnNum*PuzzleGUI.getInstance().rowNum];
+        
+        for(int i =0; i < PuzzleGUI.rowNum; i++){
+            for(int j =0; j < PuzzleGUI.columnNum; j++){
+                BufferedImage pieza = image.getSubimage(j*32, i*32, 96/3, 96/3);
+                //File archivoPieza = new File("/resources"+i+".jpg"); 
+                /*try {
+                    ImageIO.write(pieza, "jpg", archivoPieza);
+                } catch (IOException ex) {
+                    Logger.getLogger(BoardView.class.getName()).log(Level.SEVERE, null, ex);
+                }*/
+                images[i*PuzzleGUI.columnNum+j] = pieza;
+            }
+        }
+        
         return(images);
     }
 
@@ -67,13 +102,13 @@ public class BoardView extends JPanel implements Observer {
             blankPiece = movedPos;    
             //Integer[] pos = {movedPos,blankPos};
             //PuzzleGUI.getInstance().getCommand().setMovimiento(pos);
-            this.repaint();
+            
         }
+        this.repaint();
                    
     }
 
     public void update(Graphics g){
-       
         paint(g);
     }
 
@@ -83,6 +118,7 @@ public class BoardView extends JPanel implements Observer {
         //g.fillOval(0, 0, imageWidth, imageHeight);
         for(PieceView iconImage:iconArray){
             g.drawImage(iconImage.getImage(), iconImage.getIndexColumn()*iconImage.getIconWidth(), iconImage.getIndexRow()*iconImage.getIconHeight(), iconImage.getImageSize(), iconImage.getImageSize(), this);
+            System.out.println("pintamos");
         }
     }
 
