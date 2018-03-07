@@ -1,6 +1,6 @@
 package view;
 
-import command.ConcreteCommand;
+import command.MoverCommand;
 import control.AbstractController;
 import control.Controller;
 
