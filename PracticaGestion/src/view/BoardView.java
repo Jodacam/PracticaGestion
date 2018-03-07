@@ -57,11 +57,6 @@ public class BoardView extends JPanel implements Observer {
         System.out.println("Board View: "+blankPos+", "+movedPos);
         PieceView p = iconArray.get(movedPos);
         PieceView p2 = iconArray.get(blankPos);
-        
-        
-        //int disx = p2.getIndexColumn() - p.getIndexColumn();
-        //int disy = p2.getIndexRow()-p.getIndexRow();             
-        //boolean inPlace = disx == 1 ? (disy == 0):(disx==-1 ? (disy==0):(disy==1 ? (disx==0):(disy==-1 ?  disx==0:false)));
 
             int x = p.getIndexColumn();
             int y = p.getIndexRow();
@@ -110,9 +105,6 @@ public class BoardView extends JPanel implements Observer {
     public int[] movePiece(int posX,int posY){
         
         int piezas[] = new int[2];
-        //PieceView blankPieces = iconArray.get(blankPiece);
-        
-        //piezas[0] = blankPieces.getIndexRow()*3 + blankPieces.getIndexColumn();
         piezas[0] = blankPiece;
         piezas[1] = locatePiece(posX,posY);
         
@@ -122,20 +114,10 @@ public class BoardView extends JPanel implements Observer {
         
         int disx = Math.abs(p2.getIndexColumn() - p.getIndexColumn());
         int disy = Math.abs(p2.getIndexRow()-p.getIndexRow());             
-        //boolean inPlace = disx == 1 ? (disy == 0):(disx==-1 ? (disy==0):(disy==1 ? (disx==0):(disy==-1 ?  disx==0:false)));
         if( /*inPlace*/disx + disy == 1)
         {
-           /* System.out.println("WIIII");
-            int x = p.getIndexColumn();
-            int y = p.getIndexRow();
-            p.setPosition(p2.getIndexColumn(), p2.getIndexRow());
-            p2.setPosition(x, y);       
-            iconArray.set(piezas[0], p);
-            iconArray.set(piezas[1], p2);
-            blankPiece = piezas[1];      
-            //this.repaint();*/
             Integer[] pos = {piezas[1],piezas[0]};
-            PuzzleGUI.getInstance().getCommand().setMovimiento(pos);
+        
             return piezas;
         }else{
             piezas[0] = 99;

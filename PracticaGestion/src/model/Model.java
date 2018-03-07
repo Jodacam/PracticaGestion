@@ -11,6 +11,9 @@ package model;
  */
 public class Model extends AbstractModel {
 
+    
+    
+    
     public Model(int rowNum, int columnNum, int pieceSize, String[] imageList) {
         super(rowNum, columnNum, pieceSize, imageList);
     }
@@ -27,7 +30,7 @@ public class Model extends AbstractModel {
 
     @Override
     public boolean isPuzzleSolve() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false; //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -37,7 +40,9 @@ public class Model extends AbstractModel {
 
     @Override
     public void update(int blankPos, int movedPos) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       if (isPuzzleSolve()){
+       System.out.print("Has ganado");
+       }
     }
     
 }

@@ -5,11 +5,14 @@
  */
 package control;
 
+import command.Command;
+import command.ConcreteCommand;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.Stack;
 import view.BoardView;
 import view.PuzzleGUI;
 
@@ -18,23 +21,29 @@ import view.PuzzleGUI;
  * @author pablo
  */
 public class Controller extends AbstractController {
-
-	
+    
+        public Stack<Integer[]> movimientos;
+        public Integer[] movimientoDeshecho;
 	private Map<String, Function> EventsFunctions = new HashMap<>();
-	
+	private Map<String, Command> Commands = new HashMap<>();
 	public Controller() {
-		super();
-		EventsFunctions.put("clutter", (String[] param)->{
-			 PuzzleGUI.getInstance().getCommand().desordenarCommand();;
-            			
-		} );
-		
-		EventsFunctions.put("solve",(String[] param)->{			
-	                PuzzleGUI.getInstance().getCommand().resolverCommand();	            
-			}
-		);
-			
+            super();
+            movimientos = new Stack();
+            movimientoDeshecho = new Integer[2];           
+            Commands.put("MovimientoAleatorio",new ConcreteCommand(this));               
+	    EventsFunctions.put("clutter", (String[] param)->{			 
+                         for(int i=0;i<99;i++){     
+                            Commands.get("MovimientoAleatorio").redoCommand();
 		}
+            			
+		} );                                                		
+		EventsFunctions.put("solve",(String[] param)->{			
+	                while(!movimientos.isEmpty()){
+                               Commands.get("MovimientoAleatorio").undoCommand();        
+			}
+                    }
+		);
+        }
 	
 		
 		
@@ -50,7 +59,7 @@ public class Controller extends AbstractController {
         System.out.println(ae.getID());
         try {
         	EventsFunctions.get(ae.getActionCommand()).ExecuteAction(null);
-			
+		
 		} catch (NullPointerException e) {
 			System.out.println("No implementado");
 		}
@@ -71,6 +80,7 @@ public class Controller extends AbstractController {
         int y = me.getY();
         if(x < PuzzleGUI.getInstance().getBoardView().imageWidth && y < PuzzleGUI.getInstance().getBoardView().imageWidth){
             int piezas[] = PuzzleGUI.getInstance().getBoardView().movePiece(x, y);
+            movimientos.push(new Integer[]{piezas[1],piezas[0]});
             notifyObservers(piezas[0],piezas[1]);                
         }
     }

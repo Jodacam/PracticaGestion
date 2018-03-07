@@ -5,6 +5,7 @@
  */
 package command;
 
+import control.Controller;
 import java.util.Collection;
 import java.util.Random;
 import java.util.Stack;
@@ -16,55 +17,41 @@ import view.PuzzleGUI;
  */
 public class ConcreteCommand implements Command {
 
-    private Stack<Integer[]> movimientos;
-    private Integer[] movimientoDeshecho;
-    
+
+    private Controller control;
+    Random r = new Random();
     @Override
     public void undoCommand() {
-        if(!movimientos.isEmpty()){
-            Integer[] mov = movimientos.pop();
-            PuzzleGUI.getInstance().getBoardView().update(mov[0],mov[1]);
-            movimientoDeshecho = mov;
+        if(!control.movimientos.isEmpty()){
+            Integer[] mov = control.movimientos.pop();
+            control.notifyObservers(mov[0], mov[1]);
+           control.movimientoDeshecho = mov;
         }
-    }
-    
-    public void resolverCommand() {
-    	
-    	while(!movimientos.isEmpty()){
-        this.undoCommand();
-    }	
-    	
-    }
+    }      
 
-    public ConcreteCommand() {
-        movimientos = new Stack<>();
-        movimientoDeshecho = new Integer[2];
+    public ConcreteCommand(Controller a) {
+        control = a;
+
     }
 
     @Override
     public void redoCommand() {
-        if(movimientoDeshecho[0]!=null){
-            PuzzleGUI.getInstance().getBoardView().movePiece(movimientoDeshecho[0],movimientoDeshecho[1]);
-            movimientoDeshecho[0] = null;
-            movimientoDeshecho[1] = null;
-        }
-    }
-    
-    public void setMovimiento(Integer[] movimiento){
-        movimientos.push(movimiento);
-    }
-    
-    public Stack<Integer[]> getMovimientos(){
-        return movimientos;
-    }
-    
-    public void desordenarCommand() {
-    	Random r = new Random();
-		for(int i=0;i<99;i++){
+        
+            
             int x = r.nextInt(96);
             int y = r.nextInt(96);
-            int piezas[] = PuzzleGUI.getInstance().getBoardView().movePiece(x, y);
-            PuzzleGUI.getInstance().getControler().notifyObservers(piezas[0],piezas[1]);      	
-		}
+            int[] movimiento = PuzzleGUI.getInstance().getBoardView().movePiece(x,y);
+            setMovimiento(movimiento);
+            control.notifyObservers(movimiento[0], movimiento[1]);           
+        
     }
+    
+    private void setMovimiento(int[] movimiento){
+        Integer[] l = new Integer[2];
+        l[0] = movimiento[1];
+        l[1] = movimiento[0];
+        control.movimientos.push(l);
+    }
+    
+
 }

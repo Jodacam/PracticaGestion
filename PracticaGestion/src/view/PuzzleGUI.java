@@ -29,8 +29,7 @@ public class PuzzleGUI extends JFrame{
     public static String[] imageList = null;
     //Panel de juego
     private BoardView boardView;
-    //Comand
-    private ConcreteCommand comandos;
+
 
 
     /**
@@ -41,7 +40,6 @@ public class PuzzleGUI extends JFrame{
         boardView = new BoardView(rowNum,columnNum,imageSize,imageList);
         boardView.addMouseListener(controller);
         controller.addObserver(boardView);
-        comandos = new ConcreteCommand();
         this.getContentPane().setLayout(new BorderLayout());
         this.setJMenuBar(createMenuBar());
         this.getContentPane().add(boardView, BorderLayout.CENTER);
@@ -132,9 +130,6 @@ public class PuzzleGUI extends JFrame{
         return(this.boardView);
     }
 
-    public ConcreteCommand getCommand(){
-        return(this.comandos);
-    }
     
     //MÃ©todo para actualizar la imagen del tablero
     public void updateBoard(File imageFile){
@@ -145,10 +140,5 @@ public class PuzzleGUI extends JFrame{
     public Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
-
-	public Controller getControler() {
-		// TODO Auto-generated method stub
-		return (Controller) this.controller;
-	}
 
 }
