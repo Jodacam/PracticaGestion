@@ -155,9 +155,15 @@ public class PuzzleGUI extends JFrame{
     //MÃ©todo para actualizar la imagen del tablero
     public void updateBoard(File imageFile){
         controller.removeObserver(boardView);
+        this.remove(boardView);
+        
         //this.setVisible(false);
         boardView = new BoardView(rowNum,columnNum,imageSize,imageFile);
+        boardView.addMouseListener(controller);
+        this.getContentPane().add(boardView, BorderLayout.CENTER);
         //this.setVisible(true);
+        this.revalidate();
+        this.repaint();
         controller.addObserver(boardView);
     }
 

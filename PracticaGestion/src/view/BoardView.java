@@ -18,13 +18,14 @@ import javax.imageio.ImageIO;
  * @version 1.0
  */
 public class BoardView extends JPanel implements Observer {
-    public static final int imageWidth= 96;
-    public static final int imageHeight= 96;
+    public static final int imageWidth= 64*3;
+    public static final int imageHeight= 64*3;
     private ArrayList<PieceView> iconArray = null;
     private int blankPiece;
-
+    private int imageSize;
     public BoardView(int rowNum, int columnNum,int imageSize, String[] imageList){
         super();
+        this.imageSize = imageSize;
         iconArray = new ArrayList();
         int leng = rowNum*columnNum;
         blankPiece = 0;
@@ -38,11 +39,18 @@ public class BoardView extends JPanel implements Observer {
 
     public BoardView(int rowNum, int columnNum, int imageSize, File imageFile){
         super();
+        this.imageSize = imageSize;
         iconArray = new ArrayList<>();
-        BufferedImage[]imageList = splitImage(resizeImage(imageFile));
+        BufferedImage b = resizeImage(imageFile);
+        Image[]imageList = splitImage(b);
         blankPiece = 0;
         int leng = rowNum*columnNum;
-        for(int i = 0;i < leng; i++ ){
+        String fileSeparator = System.getProperty("file.separator");
+        String imagePath=System.getProperty("user.dir")+fileSeparator+"resources"+fileSeparator+"blank.gif";  
+                       
+        PieceView e = new PieceView(0,0,0,imageSize,imagePath);
+        iconArray.add(e);
+        for(int i = 1;i < leng; i++ ){
             PieceView p = new PieceView(i,i/columnNum,i%columnNum,imageSize,imageList[i]);
             iconArray.add(p);
         }
@@ -50,15 +58,23 @@ public class BoardView extends JPanel implements Observer {
 
     //redimensionamos la imagen para 96*96
     private BufferedImage resizeImage(File fileImage){
-        BufferedImage image = null;
+        BufferedImage image = null;               
         try {
             image = ImageIO.read(fileImage);
+             ImageIO.write(image, "jpg", new File("fotoSinresice.jpg"));
         } catch (IOException ex) {
             Logger.getLogger(BoardView.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        BufferedImage resizedImage = new BufferedImage(imageWidth,imageHeight,BufferedImage.TYPE_INT_ARGB);
-                
+        BufferedImage resizedImage = new BufferedImage(imageWidth,imageHeight,image.getType());
+        
+        Graphics2D g2d = resizedImage.createGraphics();
+        g2d.drawImage(image, 0, 0, imageWidth, imageHeight, null);
+        g2d.dispose();        
+        try {
+            ImageIO.write(resizedImage, "jpg", new File("fotoResize.jpg"));
+        } catch (IOException ex) {
+            Logger.getLogger(BoardView.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         return(resizedImage);
     }
@@ -71,13 +87,16 @@ public class BoardView extends JPanel implements Observer {
         
         for(int i =0; i < PuzzleGUI.rowNum; i++){
             for(int j =0; j < PuzzleGUI.columnNum; j++){
-                BufferedImage pieza = image.getSubimage(j*32, i*32, 96/3, 96/3);
-                //File archivoPieza = new File("/resources"+i+".jpg"); 
+                BufferedImage pieza = image.getSubimage(j*imageSize, i*imageSize, imageWidth/3, imageHeight/3);
+                try {
+                    ImageIO.write(pieza, "jpg", new File("foto"+i*PuzzleGUI.columnNum+j+".jpg"));
+                } catch (IOException ex) {
+                    Logger.getLogger(BoardView.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 /*try {
                     ImageIO.write(pieza, "jpg", archivoPieza);
                 } catch (IOException ex) {
-                    Logger.getLogger(BoardView.class.getName()).log(Level.SEVERE, null, ex);
-                }*/
+                    Logger.getLogger(BoardView.class.getName()).log(Level.SEVERE, null, ex);                }*/
                 images[i*PuzzleGUI.columnNum+j] = pieza;
             }
         }
@@ -117,7 +136,7 @@ public class BoardView extends JPanel implements Observer {
         //g.setColor(Color.BLACK);
         //g.fillOval(0, 0, imageWidth, imageHeight);
         for(PieceView iconImage:iconArray){
-            g.drawImage(iconImage.getImage(), iconImage.getIndexColumn()*iconImage.getIconWidth(), iconImage.getIndexRow()*iconImage.getIconHeight(), iconImage.getImageSize(), iconImage.getImageSize(), this);
+            g.drawImage(iconImage.getImage(), iconImage.getIndexColumn()*64, iconImage.getIndexRow()*64, iconImage.getImageSize(), iconImage.getImageSize(), this);
             System.out.println("pintamos");
         }
     }
@@ -125,7 +144,7 @@ public class BoardView extends JPanel implements Observer {
     //Dado una posicion X e Y localizar una pieza
     private int locatePiece(int posX,int posY){
         System.out.println("BoardView locatePiece: "+posX+", "+posY);//texto para debuggear
-        int posArray = (posX/iconArray.get(blankPiece).getIconWidth())+(posY/iconArray.get(blankPiece).getIconHeight()*3);
+        int posArray = (posX/64)+(posY/64*3);
         return posArray;
     }
 
