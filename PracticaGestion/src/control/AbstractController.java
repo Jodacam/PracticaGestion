@@ -1,11 +1,13 @@
 package control;
 
+import command.Command;
 import observer.Observable;
 import observer.Observer;
 
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
+import java.util.Deque;
 
 /**
  * Interfaz que tiene que ser implementada por un controlador.
@@ -14,6 +16,8 @@ import java.util.ArrayList;
  */
 public abstract class AbstractController extends MouseAdapter implements ActionListener, Observable {
     protected ArrayList<Observer> observerList;
+    
+    public Deque<Command> movimientos;
     public AbstractController(){
         observerList = new ArrayList<Observer>();
     }

@@ -26,7 +26,7 @@ import view.PuzzleGUI;
  */
 public class Controller extends AbstractController {
 
-	public Deque<Command> movimientos;
+	
 
 	private Map<String, Function> EventsFunctions = new HashMap<>();
 
@@ -35,8 +35,8 @@ public class Controller extends AbstractController {
 		movimientos = new ConcurrentLinkedDeque<>();
 		EventsFunctions.put("clutter", (String[] param) -> {
 			for (int i = 0; i < 99; i++) {
-				int x = r.nextInt(96);
-				int y = r.nextInt(96);
+				int x = r.nextInt(PuzzleGUI.imageSize*PuzzleGUI.columnNum);
+				int y = r.nextInt(PuzzleGUI.imageSize*PuzzleGUI.rowNum);
 				movimientos.push(new MoverCommand(x, y));
 			}
 
@@ -47,11 +47,14 @@ public class Controller extends AbstractController {
 			}
 		});
                 
-                /*EventsFunctions.put("load", (String[] param) -> {
+                EventsFunctions.put("load", (String[] param) -> {
 			while (!movimientos.isEmpty()) {
-					movimientos.pop().undoCommand();
+					movimientos.pop();
 			}
-		});*/
+                        File img = PuzzleGUI.getInstance().showFileSelector();
+                        PuzzleGUI.getInstance().updateBoard(img);
+                        notifyObservers(99, 99);
+		});
 	}
 
 	Random r = new Random();
@@ -61,11 +64,7 @@ public class Controller extends AbstractController {
 		// To change body of generated methods, choose Tools | Templates.
 		System.out.println(ae.getActionCommand());// devuelve un string dependiendo del boton que se pulse
 		System.out.println(ae.getID());
-                if(ae.getActionCommand() == "load"){
-                    File img = PuzzleGUI.getInstance().showFileSelector();
-                    PuzzleGUI.getInstance().updateBoard(img);
-                    notifyObservers(99, 99);
-                }else{
+                
 		try {
 			EventsFunctions.get(ae.getActionCommand()).ExecuteAction(null);
 
@@ -73,7 +72,7 @@ public class Controller extends AbstractController {
                     e.printStackTrace();
 			System.out.println("No implementado");
 		}
-                }
+                
 
 	}
 
@@ -88,8 +87,8 @@ public class Controller extends AbstractController {
 		System.out.println(me.getX() + ", " + me.getY());
 		int x = me.getX();
 		int y = me.getY();
-		if (x < PuzzleGUI.getInstance().getBoardView().imageWidth
-				&& y < PuzzleGUI.getInstance().getBoardView().imageWidth) {			
+		if (x < PuzzleGUI.imageSize*PuzzleGUI.columnNum
+                    && y < PuzzleGUI.imageSize*PuzzleGUI.rowNum) {			
 			movimientos.push(new MoverCommand(x, y));
 		}
 	}

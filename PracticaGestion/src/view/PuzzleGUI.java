@@ -133,6 +133,10 @@ public class PuzzleGUI extends JFrame{
         
         JFileChooser selectorArchivo = new JFileChooser();
         
+        File directorioRecursos = new File(System.getProperty("user.dir")+System.getProperty("file.separator")+"ImagenesEjemplo");
+        
+        selectorArchivo.setCurrentDirectory(directorioRecursos);
+        
         int i = selectorArchivo.showOpenDialog(this);
         
         File selectedFile = null;
@@ -157,13 +161,24 @@ public class PuzzleGUI extends JFrame{
         controller.removeObserver(boardView);
         this.remove(boardView);
         
-        //this.setVisible(false);
+        String inputString = JOptionPane.showInputDialog(null, "Choose a number of rows");
+        int input = Integer.parseInt(inputString);
+        rowNum = input;
+        
+        inputString = JOptionPane.showInputDialog(null, "Choose a number of columns");
+        input = Integer.parseInt(inputString);
+        columnNum = input;
+        
+        inputString = JOptionPane.showInputDialog(null, "Choose a size");
+        input = Integer.parseInt(inputString);
+        imageSize = input;
+        
         boardView = new BoardView(rowNum,columnNum,imageSize,imageFile);
         boardView.addMouseListener(controller);
         this.getContentPane().add(boardView, BorderLayout.CENTER);
-        //this.setVisible(true);
         this.revalidate();
         this.repaint();
+        
         controller.addObserver(boardView);
     }
 

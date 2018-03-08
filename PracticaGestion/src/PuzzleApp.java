@@ -29,7 +29,7 @@ import view.PuzzleGUI;
 public class PuzzleApp {
 
     public static void main(String args[]){
-        int imageSize = 64;
+        int imageSize = 32;
         int rowNum = 3;
         int columnNum= 3;
 

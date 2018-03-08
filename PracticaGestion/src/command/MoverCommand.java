@@ -17,8 +17,7 @@ import view.PuzzleGUI;
  */
 public class MoverCommand implements Command {
 
-
-    private Controller control;
+    //private Controller control;
     private int[] Movimiento;
     Random r = new Random();
     @Override
@@ -36,7 +35,7 @@ public class MoverCommand implements Command {
 
     @Override
     public void redoCommand() {            
-            control.notifyObservers(Movimiento[1], Movimiento[0]);           
+        PuzzleGUI.controller.notifyObservers(Movimiento[1], Movimiento[0]);           
     }
     
     
