@@ -1,3 +1,4 @@
+import config.ConfigLoader;
 import control.Controller;
 import java.io.File;
 import model.*;
@@ -29,9 +30,14 @@ import view.PuzzleGUI;
 public class PuzzleApp {
 
     public static void main(String args[]){
-        int imageSize = 32;
-        int rowNum = 3;
-        int columnNum= 3;
+
+        
+        ConfigLoader.LoadDefaultConfig();
+        
+        
+        int imageSize = ConfigLoader.getActualConfig().getImageSize();
+        int rowNum =  ConfigLoader.getActualConfig().getNumRow();
+        int columnNum= ConfigLoader.getActualConfig().getNumColumn();
 
         String fileSeparator = System.getProperty("file.separator");
         String imagePath=System.getProperty("user.dir")+fileSeparator+"resources"+fileSeparator;

@@ -1,0 +1,61 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package config;
+
+import javax.xml.bind.annotation.*;
+
+/**
+ *
+ * @author Jose Daniel Campos
+ */
+@XmlRootElement(name = "Config")
+public class Config {
+
+    
+    private int numColumn;
+    private int numRow;
+    private int imageSize;    
+     
+    
+    @XmlElement(name = "numColumn")
+    public int getNumColumn() {
+        return numColumn;
+    }
+   
+   
+    public void setNumColumn(int numColumn) {
+        this.numColumn = numColumn;
+    }
+    
+    @XmlElement(name = "numRow")
+    public int getNumRow() {
+        return numRow;
+    }
+    
+
+    public void setNumRow(int numRow) {
+        this.numRow = numRow;
+    }
+    
+    @XmlElement(name = "imageSize")
+    public int getImageSize() {
+        return imageSize;
+    }
+    
+    
+    
+    
+    public void setImageSize(int imageSize) {
+        this.imageSize = imageSize;
+    }
+
+
+
+    
+    
+    
+    
+}
