@@ -7,6 +7,8 @@ package control;
 
 import command.Command;
 import command.MoverCommand;
+import config.ConfigLoader;
+import config.LoadState;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -16,6 +18,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 import view.BoardView;
 import view.PuzzleGUI;
@@ -34,7 +38,7 @@ public class Controller extends AbstractController {
 		super();
 		movimientos = new ConcurrentLinkedDeque<>();
 		EventsFunctions.put("clutter", (String[] param) -> {
-			for (int i = 0; i < 99; i++) {
+			for (int i = 0; i < 200; i++) {
 				int x = r.nextInt(PuzzleGUI.imageSize*PuzzleGUI.columnNum);
 				int y = r.nextInt(PuzzleGUI.imageSize*PuzzleGUI.rowNum);
 				movimientos.push(new MoverCommand(x, y));
@@ -47,7 +51,7 @@ public class Controller extends AbstractController {
 			}
 		});
                 
-                EventsFunctions.put("load", (String[] param) -> {
+                EventsFunctions.put("loadImage", (String[] param) -> {
 			while (!movimientos.isEmpty()) {
 					movimientos.pop();
 			}
@@ -55,6 +59,29 @@ public class Controller extends AbstractController {
                         PuzzleGUI.getInstance().updateBoard(img);
                         notifyObservers(99, 99);
 		});
+                
+                EventsFunctions.put("save",(String[] param)->{                  
+                    ConfigLoader.SaveGame(movimientos,PuzzleGUI.getInstance().getBoardView().getImage());                   
+                });
+                
+                EventsFunctions.put("load", (String[] param)->{
+                   LoadState state = ConfigLoader.Load();
+                   if(0 != state.getImagePath().compareTo("default"))
+                    PuzzleGUI.getInstance().CreateNewBoard(new File(ConfigLoader.ProyectDir+state.getImagePath()));
+                   
+                   while(!state.getCommand().isEmpty()){ 
+                   Command d = state.getCommand().pollLast();
+                   d.redoCommand();
+                   movimientos.push(d);
+                   }
+                   
+                   
+                   
+                });
+                
+                
+                
+                
 	}
 
 	Random r = new Random();

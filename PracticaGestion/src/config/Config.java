@@ -18,7 +18,18 @@ public class Config {
     private int numColumn;
     private int numRow;
     private int imageSize;    
-     
+    private String gameName; 
+
+    
+    
+    public String getGameName() {
+        return gameName;
+    }
+
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
+    }
+    
     
     @XmlElement(name = "numColumn")
     public int getNumColumn() {

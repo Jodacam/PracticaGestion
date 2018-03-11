@@ -5,6 +5,7 @@
  */
 package config;
 
+import command.Command;
 import command.MoverCommand;
 import java.util.Deque;
 
@@ -22,10 +23,7 @@ public class LoadState {
         this.config = config;
         this.command = command;
         this.imagePath = imagePath;
-    }
-
-    
-    
+    }  
     
     public Config getConfig() {
         return config;

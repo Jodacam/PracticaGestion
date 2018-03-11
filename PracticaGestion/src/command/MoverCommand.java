@@ -19,7 +19,9 @@ public class MoverCommand implements Command {
 
     //private Controller control;
     private int[] Movimiento;
-    Random r = new Random();
+    private transient Random r = new Random();
+    
+    
     @Override
     public void undoCommand() {        
     	PuzzleGUI.controller.notifyObservers(Movimiento[0],Movimiento[1]);        

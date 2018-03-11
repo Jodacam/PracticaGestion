@@ -7,14 +7,26 @@ package config;
 
 import com.google.gson.Gson;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import command.Command;
+import command.MoverCommand;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Deque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import view.PuzzleGUI;
 
 /**
  *
@@ -32,9 +44,7 @@ public class ConfigLoader {
     public static Config getActualConfig() {
        
         if (ActualConfig == null)
-            LoadDefaultConfig();
-        
-        
+            LoadDefaultConfig();              
         return ActualConfig;
     }
     
@@ -63,12 +73,76 @@ public class ConfigLoader {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
         }
- 
-        
-        
+        ActualConfig = state.getConfig();
+        PuzzleGUI.getInstance().setConfig(ActualConfig);
         
         return state;
     }
+
     
+    
+    
+    public static void SaveGame(Deque<Command> list,File image) {
+       if(ActualConfig.getGameName() == null){
+           String inputString = JOptionPane.showInputDialog(null, "Please write the save name");
+           ActualConfig.setGameName(inputString);      
+       }
+                        
+       String imageName = "default";
+       if(image != null)
+            imageName = FileSeparator+"saveGame"+FileSeparator+"imageSaves"+FileSeparator+ActualConfig.getGameName()+"_"+image.getName();
+       
+       
+       Deque<MoverCommand> c = new ConcurrentLinkedDeque<MoverCommand>();
+       
+       for(Command d:list){
+           c.add((MoverCommand)d);
+       }
+       
+                           
+       LoadState stateGame = new LoadState(ActualConfig, c,imageName);
+       String data = JSONMapper.toJson(stateGame);
+        try {
+          
+        if(image!=null){
+        BufferedImage imageBuffed = ImageIO.read(image);
+        ImageIO.write(imageBuffed,"png", new File(ProyectDir+imageName));
+        }
+            FileWriter writer = new FileWriter(ProyectDir+FileSeparator+"saveGame"+FileSeparator+ActualConfig.getGameName()+".sav");
+            PrintWriter w = new PrintWriter(writer);
+            w.print(data);
+            w.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+    }
+
+    public static LoadState Load() {
+        JFileChooser selectorArchivo = new JFileChooser();
+        
+                    File directorioRecursos = new File(ProyectDir+FileSeparator+"saveGame");
+        
+                    selectorArchivo.setCurrentDirectory(directorioRecursos);
+                     
+                    int i = selectorArchivo.showOpenDialog(PuzzleGUI.getInstance());
+                    File selectedFile = null;
+                    
+                    if(i == JFileChooser.APPROVE_OPTION){
+                    selectedFile = selectorArchivo.getSelectedFile();
+                    return ConfigLoader.LoadGame(selectedFile);
+                    }else{
+                    return null;       
+                  }
+    }
+    public static void SetNewConfig(Config c){
+        ActualConfig = c;
+    }
+    
+    public static void SetNewConfig(int row,int colum,int size){
+        ActualConfig.setImageSize(size);
+        ActualConfig.setNumColumn(colum);
+        ActualConfig.setNumRow(row);
+    }
     
 }

@@ -22,6 +22,7 @@ public class BoardView extends JPanel implements Observer {
     public static final int imageHeight= 96;
     private ArrayList<PieceView> iconArray = null;
     private int blankPiece;
+    private File image;
 
     public BoardView(int rowNum, int columnNum,int imageSize, String[] imageList){
         super();
@@ -38,6 +39,8 @@ public class BoardView extends JPanel implements Observer {
 
     public BoardView(int rowNum, int columnNum, int imageSize, File imageFile){
         super();
+        image = imageFile;
+        
         iconArray = new ArrayList<>();
         BufferedImage b = resizeImage(imageFile);
         Image[] imageList = splitImage(b);
@@ -78,6 +81,8 @@ public class BoardView extends JPanel implements Observer {
         
         return(resizedImage);
     }
+
+
 
     //dividimos la imagen en el número
     private BufferedImage[] splitImage(BufferedImage image){
@@ -179,6 +184,9 @@ public class BoardView extends JPanel implements Observer {
         }
         
         
+    }
+        public File getImage() {
+        return image;
     }
 
 }

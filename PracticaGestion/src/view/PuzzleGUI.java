@@ -1,6 +1,8 @@
 package view;
 
 import command.MoverCommand;
+import config.Config;
+import config.ConfigLoader;
 import control.AbstractController;
 import control.Controller;
 
@@ -76,9 +78,9 @@ public class PuzzleGUI extends JFrame{
         JButton solveButton = new JButton("Resolver");
         solveButton.setActionCommand("solve");
         JButton undoButton = new JButton("Deshacer");//botÃ³n de desordenar
-        undoButton.setActionCommand("clutter");
+        undoButton.setActionCommand("undo");
         JButton redoButton = new JButton("Rehacer");
-        redoButton.setActionCommand("solve");
+        redoButton.setActionCommand("redo");
 
         clutterButton.addActionListener(controller);
         solveButton.addActionListener(controller);
@@ -100,20 +102,30 @@ public class PuzzleGUI extends JFrame{
         JMenu archive = new JMenu("Archive");
         JMenu help = new JMenu("Help");
 
-        JMenuItem load = new JMenuItem("Load");
-        load.setActionCommand("load");
+        JMenuItem save = new JMenuItem("save");
+        save.setActionCommand("save");
+        
+        JMenuItem loadGame = new JMenuItem("load");
+        loadGame.setActionCommand("load");
+        
+        JMenuItem load = new JMenuItem("Load New Image");
+        load.setActionCommand("loadImage");
         JMenuItem exit = new JMenuItem("Exit");
         exit.setActionCommand("exit");
         JMenuItem info = new JMenuItem("Info");
         info.setActionCommand("info");
 
+        archive.add(save);
+        archive.add((loadGame));
         archive.add(load);
         archive.add(exit);
         help.add(info);
 
         menu.add(archive);
         menu.add(help);
-
+        
+        loadGame.addActionListener(controller);
+        save.addActionListener(controller);
         load.addActionListener(controller);
         exit.addActionListener(controller);
         info.addActionListener(controller);
@@ -157,10 +169,7 @@ public class PuzzleGUI extends JFrame{
 
     
     //MÃ©todo para actualizar la imagen del tablero
-    public void updateBoard(File imageFile){
-        controller.removeObserver(boardView);
-        this.remove(boardView);
-        
+    public void updateBoard(File imageFile){        
         String inputString = JOptionPane.showInputDialog(null, "Choose a number of rows");
         int input = Integer.parseInt(inputString);
         rowNum = input;
@@ -172,7 +181,13 @@ public class PuzzleGUI extends JFrame{
         inputString = JOptionPane.showInputDialog(null, "Choose a size");
         input = Integer.parseInt(inputString);
         imageSize = input;
-        
+        ConfigLoader.SetNewConfig(rowNum, columnNum, imageSize);
+        CreateNewBoard(imageFile);
+    }
+
+    public void CreateNewBoard(File imageFile){
+        controller.removeObserver(boardView);
+        this.remove(boardView);
         boardView = new BoardView(rowNum,columnNum,imageSize,imageFile);
         boardView.addMouseListener(controller);
         this.getContentPane().add(boardView, BorderLayout.CENTER);
@@ -181,10 +196,17 @@ public class PuzzleGUI extends JFrame{
         
         controller.addObserver(boardView);
     }
-
+    
+    
 
     public Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
+    }
+
+    public void setConfig(Config c) {
+       rowNum = c.getNumRow();
+       columnNum = c.getNumColumn();
+       imageSize = c.getImageSize();
     }
 
 }
