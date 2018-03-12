@@ -18,7 +18,7 @@ import view.PuzzleGUI;
 public class MoverCommand implements Command {
 
     //private Controller control;
-    private int[] Movimiento;
+    public int[] Movimiento;
     private transient Random r = new Random();
     
     
@@ -35,6 +35,14 @@ public class MoverCommand implements Command {
     	PuzzleGUI.controller.notifyObservers(piezas[0], piezas[1]);
     }
 
+    public MoverCommand(int x, int y, boolean deordenar) {
+    	Movimiento = new int[2];
+    	int piezas[] = PuzzleGUI.getInstance().getBoardView().getRandomMovement(x, y);
+    	Movimiento[1] = piezas[0];
+    	Movimiento[0] = piezas[1];
+    	PuzzleGUI.controller.notifyObservers(piezas[0], piezas[1]);
+    }
+    
     @Override
     public void redoCommand() {            
         PuzzleGUI.controller.notifyObservers(Movimiento[1], Movimiento[0]);           

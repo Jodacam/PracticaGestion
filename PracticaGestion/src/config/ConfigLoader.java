@@ -106,7 +106,7 @@ public class ConfigLoader {
           
         if(image!=null){
         BufferedImage imageBuffed = ImageIO.read(image);
-        ImageIO.write(imageBuffed,"png", new File(ProyectDir+imageName));
+        ImageIO.write(imageBuffed,"jpg", new File(ProyectDir+imageName));
         }
             FileWriter writer = new FileWriter(ProyectDir+FileSeparator+"saveGame"+FileSeparator+ActualConfig.getGameName()+".sav");
             PrintWriter w = new PrintWriter(writer);

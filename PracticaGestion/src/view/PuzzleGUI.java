@@ -170,15 +170,15 @@ public class PuzzleGUI extends JFrame{
     
     //MÃ©todo para actualizar la imagen del tablero
     public void updateBoard(File imageFile){        
-        String inputString = JOptionPane.showInputDialog(null, "Choose a number of rows");
+        String inputString = JOptionPane.showInputDialog(this, "Choose a number of rows");
         int input = Integer.parseInt(inputString);
         rowNum = input;
         
-        inputString = JOptionPane.showInputDialog(null, "Choose a number of columns");
+        inputString = JOptionPane.showInputDialog(this, "Choose a number of columns");
         input = Integer.parseInt(inputString);
         columnNum = input;
         
-        inputString = JOptionPane.showInputDialog(null, "Choose a size");
+        inputString = JOptionPane.showInputDialog(this, "Choose a size");
         input = Integer.parseInt(inputString);
         imageSize = input;
         ConfigLoader.SetNewConfig(rowNum, columnNum, imageSize);
@@ -207,6 +207,10 @@ public class PuzzleGUI extends JFrame{
        rowNum = c.getNumRow();
        columnNum = c.getNumColumn();
        imageSize = c.getImageSize();
+    }
+    
+    public void mensajeVictoria(){
+        JOptionPane.showMessageDialog(this, "Has Ganado");
     }
 
 }

@@ -38,10 +38,14 @@ public class Controller extends AbstractController {
 		super();
 		movimientos = new ConcurrentLinkedDeque<>();
 		EventsFunctions.put("clutter", (String[] param) -> {
-			for (int i = 0; i < 200; i++) {
-				int x = r.nextInt(PuzzleGUI.imageSize*PuzzleGUI.columnNum);
-				int y = r.nextInt(PuzzleGUI.imageSize*PuzzleGUI.rowNum);
-				movimientos.push(new MoverCommand(x, y));
+                    
+			for (int i = 0; i < PuzzleGUI.rowNum*PuzzleGUI.columnNum; i++) {
+				if(!movimientos.isEmpty()){
+                                    MoverCommand movimientoAnterior = (MoverCommand) movimientos.getFirst();
+                                    movimientos.push(new MoverCommand(movimientoAnterior.Movimiento[1], movimientoAnterior.Movimiento[0],true));  
+                                }else{
+                                    movimientos.push(new MoverCommand(1, 0,true));
+                                }
 			}
 
 		});

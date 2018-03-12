@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -23,6 +24,7 @@ public class BoardView extends JPanel implements Observer {
     private ArrayList<PieceView> iconArray = null;
     private int blankPiece;
     private File image;
+    private Random r = new Random();
 
     public BoardView(int rowNum, int columnNum,int imageSize, String[] imageList){
         super();
@@ -187,6 +189,79 @@ public class BoardView extends JPanel implements Observer {
     }
         public File getImage() {
         return image;
+    }
+        
+
+    public int[] getRandomMovement(int lastPos, int pos) {
+        boolean repetido = true;
+        int randomMove[] = new int[2];
+
+            while(repetido){
+                PieceView piezaBlanca = iconArray.get(pos);
+                
+                int piezaMoverColumna=piezaBlanca.getIndexColumn();
+                int piezaMoverFila=piezaBlanca.getIndexRow();
+                
+                int move = r.nextInt(4);
+                
+                //Array
+                if(move == 0){
+                    if(piezaMoverFila-1>-1){
+                        
+                        int posMover = (piezaMoverFila-1)*PuzzleGUI.columnNum+piezaMoverColumna;
+                    
+                        if(posMover != lastPos){
+                            randomMove[0] = pos;
+                            randomMove[1] = posMover;
+
+                            repetido = false;
+                        }
+                    }
+                }
+                if(move == 1){
+                    if(piezaMoverFila+1<PuzzleGUI.rowNum){
+                        
+                        int posMover = (piezaMoverFila+1)*PuzzleGUI.columnNum+piezaMoverColumna;
+                    
+                        if(posMover != lastPos){
+                            randomMove[0] = pos;
+                            randomMove[1] = posMover;
+
+                            repetido = false;
+                        }
+                    }
+                }
+                if(move == 2){
+                    if(piezaMoverColumna-1>-1){
+                        
+                        int posMover = piezaMoverFila*PuzzleGUI.columnNum+piezaMoverColumna-1;
+                    
+                        if(posMover != lastPos){
+                            randomMove[0] = pos;
+                            randomMove[1] = posMover;
+
+                            repetido = false;
+                        }
+                    }
+                }
+                if(move == 3){
+                    if(piezaMoverColumna+1<PuzzleGUI.columnNum){
+                        
+                        int posMover = piezaMoverFila*PuzzleGUI.columnNum+piezaMoverColumna+1;
+                    
+                        if(posMover != lastPos){
+                            randomMove[0] = pos;
+                            randomMove[1] = posMover;
+
+                            repetido = false;
+                        }
+                    }
+                }
+                
+            }
+
+        
+        return randomMove;
     }
 
 }
