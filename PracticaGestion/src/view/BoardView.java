@@ -141,7 +141,7 @@ public class BoardView extends JPanel implements Observer {
         //g.setColor(Color.BLACK);
         //g.fillOval(0, 0, imageWidth, imageHeight);
         for(PieceView iconImage:iconArray){
-            g.drawImage(iconImage.getImage(), iconImage.getIndexColumn()*PuzzleGUI.imageSize, iconImage.getIndexRow()*PuzzleGUI.imageSize, PuzzleGUI.imageSize, PuzzleGUI.imageSize, this);
+            g.drawImage(iconImage.getImage(), iconImage.getIndexColumn()*PuzzleGUI.imageSize, iconImage.getIndexRow()*PuzzleGUI.imageSize, PuzzleGUI.imageSize-1, PuzzleGUI.imageSize-1, this);
             System.out.println("pintamos");
         }
     }
@@ -176,7 +176,7 @@ public class BoardView extends JPanel implements Observer {
         int disy = Math.abs(p2.getIndexRow()-p.getIndexRow());             
         if( /*inPlace*/disx + disy == 1)
         {
-            Integer[] pos = {piezas[1],piezas[0]};
+            //Integer[] pos = {piezas[1],piezas[0]};
         
             return piezas;
         }else{

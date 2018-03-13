@@ -6,6 +6,7 @@
 package config;
 
 import com.google.gson.Gson;
+import com.sun.org.apache.xerces.internal.impl.dtd.XMLDTDLoader;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import command.Command;
 import command.MoverCommand;
@@ -26,6 +27,7 @@ import javax.swing.JOptionPane;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.stream.XMLInputFactory;
 import view.PuzzleGUI;
 
 /**
@@ -55,6 +57,8 @@ public class ConfigLoader {
         Config c = null;
         try {
             JAXBContext context = JAXBContext.newInstance(Config.class);
+            //XMLInputFactory XMLfactory = XMLInputFactory.newFactory();
+            //XMLfactory.setProperty(javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD, true);
             Unmarshaller XMLoader = context.createUnmarshaller();
             File xml = new File("config.xml");
             c = (Config) XMLoader.unmarshal(xml);                     
