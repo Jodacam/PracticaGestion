@@ -9,6 +9,8 @@ import command.Command;
 import command.MoverCommand;
 import config.ConfigLoader;
 import config.LoadState;
+import model.Model;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -30,62 +32,59 @@ import view.PuzzleGUI;
  */
 public class Controller extends AbstractController {
 
-	
-
 	private Map<String, Function> EventsFunctions = new HashMap<>();
 
 	public Controller() {
 		super();
 		movimientos = new ConcurrentLinkedDeque<>();
 		EventsFunctions.put("clutter", (String[] param) -> {
-                    
-			for (int i = 0; i < PuzzleGUI.rowNum*PuzzleGUI.columnNum; i++) {
-				if(!movimientos.isEmpty()){
-                                    MoverCommand movimientoAnterior = (MoverCommand) movimientos.getFirst();
-                                    movimientos.push(new MoverCommand(movimientoAnterior.Movimiento[1], movimientoAnterior.Movimiento[0],true));  
-                                }else{
-                                    movimientos.push(new MoverCommand(1, 0,true));
-                                }
+
+			for (int i = 0; i < PuzzleGUI.rowNum * PuzzleGUI.columnNum; i++) {
+				if (!movimientos.isEmpty()) {
+					MoverCommand movimientoAnterior = (MoverCommand) movimientos.getFirst();
+					movimientos.push(
+							new MoverCommand(movimientoAnterior.Movimiento[1], movimientoAnterior.Movimiento[0], true));
+				} else {
+					movimientos.push(new MoverCommand(1, 0, true));
+				}
 			}
 
 		});
 		EventsFunctions.put("solve", (String[] param) -> {
 			while (!movimientos.isEmpty()) {
-					movimientos.pop().undoCommand();
+				movimientos.pop().undoCommand();
 			}
 		});
-                
-                EventsFunctions.put("loadImage", (String[] param) -> {
+
+		EventsFunctions.put("loadImage", (String[] param) -> {
 			while (!movimientos.isEmpty()) {
-					movimientos.pop();
+				movimientos.pop();
 			}
-                        File img = PuzzleGUI.getInstance().showFileSelector();
-                        PuzzleGUI.getInstance().updateBoard(img);
-                        notifyObservers(99, 99);
+			File img = PuzzleGUI.getInstance().showFileSelector();
+			PuzzleGUI.getInstance().updateBoard(img);
+			this.ReStartModel();
+			notifyObservers(99, 99);
 		});
-                
-                EventsFunctions.put("save",(String[] param)->{                  
-                    ConfigLoader.SaveGame(movimientos,PuzzleGUI.getInstance().getBoardView().getImage());                   
-                });
-                
-                EventsFunctions.put("load", (String[] param)->{
-                   LoadState state = ConfigLoader.Load();
-                   if(0 != state.getImagePath().compareTo("default"))
-                    PuzzleGUI.getInstance().CreateNewBoard(new File(ConfigLoader.ProyectDir+state.getImagePath()));
-                   
-                   while(!state.getCommand().isEmpty()){ 
-                   Command d = state.getCommand().pollLast();
-                   d.redoCommand();
-                   movimientos.push(d);
-                   }
-                   
-                   
-                   
-                });
-                
-                
-                
-                
+
+		EventsFunctions.put("save", (String[] param) -> {
+			ConfigLoader.SaveGame(movimientos, PuzzleGUI.getInstance().getBoardView().getImage());
+		});
+
+		EventsFunctions.put("load", (String[] param) -> {
+			LoadState state = ConfigLoader.Load();
+			if (0 != state.getImagePath().compareTo("default")) {
+				PuzzleGUI.getInstance().CreateNewBoard(new File(ConfigLoader.ProyectDir + state.getImagePath()));
+				this.ReStartModel();
+			}
+
+			while (!state.getCommand().isEmpty()) {
+				Command d = state.getCommand().pollLast();
+				d.redoCommand();
+				movimientos.push(d);
+			}
+
+		});
+
 	}
 
 	Random r = new Random();
@@ -95,15 +94,14 @@ public class Controller extends AbstractController {
 		// To change body of generated methods, choose Tools | Templates.
 		System.out.println(ae.getActionCommand());// devuelve un string dependiendo del boton que se pulse
 		System.out.println(ae.getID());
-                
+
 		try {
 			EventsFunctions.get(ae.getActionCommand()).ExecuteAction(null);
 
 		} catch (NullPointerException e) {
-                    e.printStackTrace();
+			e.printStackTrace();
 			System.out.println("No implementado");
 		}
-                
 
 	}
 
@@ -118,10 +116,17 @@ public class Controller extends AbstractController {
 		System.out.println(me.getX() + ", " + me.getY());
 		int x = me.getX();
 		int y = me.getY();
-		if (x < PuzzleGUI.imageSize*PuzzleGUI.columnNum
-                    && y < PuzzleGUI.imageSize*PuzzleGUI.rowNum) {			
+		if (x < PuzzleGUI.imageSize * PuzzleGUI.columnNum && y < PuzzleGUI.imageSize * PuzzleGUI.rowNum) {
 			movimientos.push(new MoverCommand(x, y));
 		}
+	}
+
+	private void ReStartModel() {
+		Model model = (Model) observerList.stream().filter(a -> (a.getClass() == Model.class)).findFirst().get();
+		observerList.remove(model);
+		model = new Model(ConfigLoader.getActualConfig().getNumRow(), ConfigLoader.getActualConfig().getNumColumn(),
+				ConfigLoader.getActualConfig().getImageSize());
+		this.addObserver(model);
 	}
 
 }

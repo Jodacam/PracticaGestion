@@ -29,6 +29,16 @@ public class Model extends AbstractModel {
             iconArray.add(p);
         }
     }
+    
+    public Model(int rowNum, int columnNum, int pieceSize) {
+        super(rowNum, columnNum, pieceSize);
+        iconArray = new ArrayList<>();
+        blankPiece = 0;
+        for (int i = 0; i < columnNum*rowNum; i++) {
+            PieceModel p = new PieceModel(i,i/columnNum,i%columnNum,pieceSize);
+            iconArray.add(p);
+        }
+    }
 
     @Override
     public void addNewPiece(int id, int indexRow, int indexCol, String imagePath) {
