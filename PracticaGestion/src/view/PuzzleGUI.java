@@ -197,6 +197,17 @@ public class PuzzleGUI extends JFrame{
         controller.addObserver(boardView);
     }
     
+    public void LoadDefaultBoard(){
+        
+        controller.removeObserver(boardView);
+        this.remove(boardView);      
+        boardView = new BoardView(rowNum,columnNum,imageSize,imageList);
+        boardView.addMouseListener(controller);
+        controller.addObserver(boardView);
+        this.getContentPane().add(boardView, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
     
 
     public Object clone() throws CloneNotSupportedException {

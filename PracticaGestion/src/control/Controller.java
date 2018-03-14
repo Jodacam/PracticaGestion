@@ -75,7 +75,11 @@ public class Controller extends AbstractController {
 			if (0 != state.getImagePath().compareTo("default")) {
 				PuzzleGUI.getInstance().CreateNewBoard(new File(ConfigLoader.ProyectDir + state.getImagePath()));
 				this.ReStartModel();
-			}
+			}else{
+                            PuzzleGUI.getInstance().setConfig(state.getConfig());
+                            PuzzleGUI.getInstance().LoadDefaultBoard();
+                            this.ReStartModel();
+                        }
 
 			while (!state.getCommand().isEmpty()) {
 				Command d = state.getCommand().pollLast();
