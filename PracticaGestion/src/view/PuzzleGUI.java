@@ -102,10 +102,10 @@ public class PuzzleGUI extends JFrame{
         JMenu archive = new JMenu("Archive");
         JMenu help = new JMenu("Help");
 
-        JMenuItem save = new JMenuItem("save");
+        JMenuItem save = new JMenuItem("Save Game");
         save.setActionCommand("save");
         
-        JMenuItem loadGame = new JMenuItem("load");
+        JMenuItem loadGame = new JMenuItem("Load Game");
         loadGame.setActionCommand("load");
         
         JMenuItem load = new JMenuItem("Load New Image");
@@ -169,20 +169,37 @@ public class PuzzleGUI extends JFrame{
 
     
     //MÃ©todo para actualizar la imagen del tablero
-    public void updateBoard(File imageFile){        
-        String inputString = JOptionPane.showInputDialog(this, "Choose a number of rows");
-        int input = Integer.parseInt(inputString);
-        rowNum = input;
+    public void updateBoard(File imageFile){  
+        if(imageFile != null){
+            String inputString = JOptionPane.showInputDialog(this, "Choose a number of rows, the number must be equal or higgher than 3");
+            int input = Integer.parseInt(inputString);
+            if(input>=3){
+                rowNum = input;
+            }else{
+                rowNum = 3;
+            }
         
-        inputString = JOptionPane.showInputDialog(this, "Choose a number of columns");
-        input = Integer.parseInt(inputString);
-        columnNum = input;
-        
-        inputString = JOptionPane.showInputDialog(this, "Choose a size");
-        input = Integer.parseInt(inputString);
-        imageSize = input;
-        ConfigLoader.SetNewConfig(rowNum, columnNum, imageSize);
-        CreateNewBoard(imageFile);
+            inputString = JOptionPane.showInputDialog(this, "Choose a number of columns, the number must be equal or higgher than 3");
+            input = Integer.parseInt(inputString);
+            if(input>=3){
+                columnNum = input;
+            }else{
+                columnNum = 3;
+            }
+
+            inputString = JOptionPane.showInputDialog(this, "Choose the piece size, the number must be equal or higgher than 32, all pieces are squares");
+            input = Integer.parseInt(inputString);
+            if(input>=32){
+                imageSize = input;
+            }else{
+                imageSize = 32;
+            }
+            
+            ConfigLoader.SetNewConfig(rowNum, columnNum, imageSize);
+            CreateNewBoard(imageFile);
+        }else{
+            JOptionPane.showMessageDialog(this, "No has cargado ninguna imagen");
+        }
     }
 
     public void CreateNewBoard(File imageFile){
@@ -190,11 +207,20 @@ public class PuzzleGUI extends JFrame{
         this.remove(boardView);
         boardView = new BoardView(rowNum,columnNum,imageSize,imageFile);
         boardView.addMouseListener(controller);
+        
+        if(imageSize*columnNum > 500){
+            this.setSize(imageSize*columnNum,imageSize*rowNum+imageSize);
+        }
+        
+        
+        
+        
         this.getContentPane().add(boardView, BorderLayout.CENTER);
         this.revalidate();
         this.repaint();
         
         controller.addObserver(boardView);
+        
     }
     
     
