@@ -24,6 +24,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import view.BoardView;
+import view.InfoView;
 import view.PuzzleGUI;
 
 /**
@@ -88,6 +89,16 @@ public class Controller extends AbstractController {
 			}
 
 		});
+                
+                EventsFunctions.put("exit",(String[] param) -> {
+                    System.exit(0);
+                });
+                
+                EventsFunctions.put("info",(String[] param) -> {
+                    InfoView info = new InfoView();
+                });
+                
+                        
 
 	}
 
