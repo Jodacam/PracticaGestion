@@ -1,10 +1,8 @@
 package view;
 
-import command.MoveCommand;
 import config.Config;
 import config.ConfigLoader;
 import control.AbstractController;
-import control.Controller;
 
 import javax.swing.*;
 import java.awt.*;
@@ -150,7 +148,7 @@ public class PuzzleGUI extends JFrame{
         if(i == JFileChooser.APPROVE_OPTION){
             selectedFile = selectorArchivo.getSelectedFile();
         }else{
-            System.out.println("Archivo invalido");
+            JOptionPane.showMessageDialog(this, "No has cargado ninguna imagen");
             return null;
         }
         
@@ -164,7 +162,7 @@ public class PuzzleGUI extends JFrame{
     
     //MÃ©todo para actualizar la imagen del tablero
     public void updateBoard(File imageFile){  
-        if(imageFile != null){
+        
             String inputString = JOptionPane.showInputDialog(this, "Choose a number of rows, the number must be equal or higgher than 3");
             int input = Integer.parseInt(inputString);
             if(input>=3){
@@ -191,9 +189,7 @@ public class PuzzleGUI extends JFrame{
             
             ConfigLoader.getInstance().SetNewConfig(rowNum, columnNum, imageSize);
             CreateNewBoard(imageFile);
-        }else{
-            JOptionPane.showMessageDialog(this, "No has cargado ninguna imagen");
-        }
+        
     }
 
     public void CreateNewBoard(File imageFile){

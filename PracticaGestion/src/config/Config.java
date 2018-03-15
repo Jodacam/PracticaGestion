@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.*;
 
 /**
  *
- * @author Jose Daniel Campos
+ * @author Jose Daniel Campos y Pablo Rodriguez Vicente
  */
 @XmlRootElement(name = "Config")
 public class Config {
