@@ -32,12 +32,12 @@ public class PuzzleApp {
     public static void main(String args[]){
 
         
-        ConfigLoader.LoadDefaultConfig();
+        ConfigLoader.getInstance().LoadDefaultConfig();
         
         
-        int imageSize = ConfigLoader.getActualConfig().getImageSize();
-        int rowNum =  ConfigLoader.getActualConfig().getNumRow();
-        int columnNum= ConfigLoader.getActualConfig().getNumColumn();
+        int imageSize = ConfigLoader.getInstance().getActualConfig().getImageSize();
+        int rowNum =  ConfigLoader.getInstance().getActualConfig().getNumRow();
+        int columnNum= ConfigLoader.getInstance().getActualConfig().getNumColumn();
 
         String fileSeparator = System.getProperty("file.separator");
         String imagePath=System.getProperty("user.dir")+fileSeparator+"resources"+fileSeparator;
@@ -45,7 +45,7 @@ public class PuzzleApp {
         String[] imageList={imagePath+"blank.gif",imagePath+"one.gif",imagePath+"two.gif",imagePath+"three.gif",imagePath+ "four.gif",
                 imagePath+"five.gif",imagePath+"six.gif",imagePath+"seven.gif",imagePath+"eight.gif"};
         // Creamos el modelo
-        Model m = new Model(rowNum, columnNum, imageSize, imageList);
+        BoardModel m = new BoardModel(rowNum, columnNum, imageSize, imageList);
         // Creamos el controlador
         Controller c  = new Controller();
         // Inicializamos la GUI

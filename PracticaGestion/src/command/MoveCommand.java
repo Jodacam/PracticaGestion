@@ -15,7 +15,7 @@ import view.PuzzleGUI;
  *
  * @author pablo
  */
-public class MoverCommand implements Command {
+public class MoveCommand implements Command {
 
     //private Controller control;
     public int[] Movimiento;
@@ -27,7 +27,7 @@ public class MoverCommand implements Command {
     	PuzzleGUI.controller.notifyObservers(Movimiento[0],Movimiento[1]);        
     }      
 
-    public MoverCommand(int x, int y) {
+    public MoveCommand(int x, int y) {
     	Movimiento = new int[2];
     	int piezas[] = PuzzleGUI.getInstance().getBoardView().movePiece(x, y);
     	Movimiento[1] = piezas[0];
@@ -35,7 +35,7 @@ public class MoverCommand implements Command {
     	PuzzleGUI.controller.notifyObservers(piezas[0], piezas[1]);
     }
 
-    public MoverCommand(int x, int y, boolean deordenar) {
+    public MoveCommand(int x, int y, boolean deordenar) {
     	Movimiento = new int[2];
     	int piezas[] = PuzzleGUI.getInstance().getBoardView().getRandomMovement(x, y);
     	Movimiento[1] = piezas[0];

@@ -3,21 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Git/PracticaGestion/PracticaGestion/src/view/InfoView.java</file>
-            <file>file:/D:/Git/PracticaGestion/PracticaGestion/src/view/PuzzleGUI.java</file>
-            <file>file:/D:/Git/PracticaGestion/PracticaGestion/src/PuzzleApp.java</file>
-            <file>file:/D:/Git/PracticaGestion/PracticaGestion/src/config/LoadState.java</file>
-            <file>file:/D:/Git/PracticaGestion/PracticaGestion/src/view/PieceView.java</file>
-            <file>file:/D:/Git/PracticaGestion/PracticaGestion/src/view/BoardView.java</file>
-            <file>file:/D:/Git/PracticaGestion/PracticaGestion/src/config/Config.java</file>
-            <file>file:/D:/Git/PracticaGestion/PracticaGestion/src/command/MoverCommand.java</file>
-            <file>file:/D:/Git/PracticaGestion/PracticaGestion/src/model/Model.java</file>
-            <file>file:/D:/Git/PracticaGestion/PracticaGestion/src/config/ConfigLoader.java</file>
-            <file>file:/D:/Git/PracticaGestion/PracticaGestion/src/control/Controller.java</file>
-            <file>file:/D:/Git/PracticaGestion/PracticaGestion/config.dtd</file>
-            <file>file:/D:/Git/PracticaGestion/PracticaGestion/src/control/AbstractController.java</file>
-            <file>file:/D:/Git/PracticaGestion/PracticaGestion/config.xml</file>
-            <file>file:/D:/Git/PracticaGestion/PracticaGestion/src/model/PieceModel.java</file>
+            <file>file:/E:/Git/PracticaGestion/PracticaGestion/src/control/AbstractController.java</file>
+            <file>file:/E:/Git/PracticaGestion/PracticaGestion/src/config/ConfigLoader.java</file>
+            <file>file:/E:/Git/PracticaGestion/PracticaGestion/src/view/PuzzleGUI.java</file>
+            <file>file:/E:/Git/PracticaGestion/PracticaGestion/src/view/BoardView.java</file>
+            <file>file:/E:/Git/PracticaGestion/PracticaGestion/src/config/Config.java</file>
+            <file>file:/E:/Git/PracticaGestion/PracticaGestion/src/view/PieceView.java</file>
+            <file>file:/E:/Git/PracticaGestion/PracticaGestion/src/model/Model.java</file>
+            <file>file:/E:/Git/PracticaGestion/PracticaGestion/src/config/LoadState.java</file>
+            <file>file:/E:/Git/PracticaGestion/PracticaGestion/src/control/Controller.java</file>
+            <file>file:/E:/Git/PracticaGestion/PracticaGestion/src/PuzzleApp.java</file>
         </group>
     </open-files>
 </project-private>

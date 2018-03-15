@@ -6,7 +6,7 @@
 package config;
 
 import command.Command;
-import command.MoverCommand;
+import command.MoveCommand;
 import java.util.Deque;
 
 /**
@@ -16,10 +16,10 @@ import java.util.Deque;
 public class LoadState {
     
     private Config config;
-    private Deque<MoverCommand> command;
+    private Deque<MoveCommand> command;
     private String imagePath;
 
-    public LoadState(Config config, Deque<MoverCommand> command, String imagePath) {
+    public LoadState(Config config, Deque<MoveCommand> command, String imagePath) {
         this.config = config;
         this.command = command;
         this.imagePath = imagePath;
@@ -33,11 +33,11 @@ public class LoadState {
         this.config = config;
     }
 
-    public Deque<MoverCommand> getCommand() {
+    public Deque<MoveCommand> getCommand() {
         return command;
     }
 
-    public void setCommand(Deque<MoverCommand> command) {
+    public void setCommand(Deque<MoveCommand> command) {
         this.command = command;
     }
 

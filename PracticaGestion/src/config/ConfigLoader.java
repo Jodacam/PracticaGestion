@@ -9,7 +9,7 @@ import com.google.gson.Gson;
 import com.sun.org.apache.xerces.internal.impl.dtd.XMLDTDLoader;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import command.Command;
-import command.MoverCommand;
+import command.MoveCommand;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,16 +42,32 @@ public class ConfigLoader {
     public static final String ProyectDir = System.getProperty("user.dir");
     public static final String FileSeparator = System.getProperty("file.separator");
     
+    private static ConfigLoader configLoader;
+    
+    
     private static final Gson JSONMapper = new Gson();
-    public static Config getActualConfig() {
+  
+    public static ConfigLoader getInstance(){
+    if (configLoader == null)
+        configLoader = new ConfigLoader();
+    return configLoader;   
+    }
+    
+    public Config getActualConfig() {
        
         if (ActualConfig == null)
             LoadDefaultConfig();              
         return ActualConfig;
     }
     
+    private ConfigLoader(){
     
-    public static void  LoadDefaultConfig(){
+    }
+    
+    
+    
+    
+    public  void  LoadDefaultConfig(){
          
          
         Config c = null;
@@ -69,7 +85,7 @@ public class ConfigLoader {
     }
     
     
-    public static LoadState LoadGame(File saveFile){
+    public  LoadState LoadGame(File saveFile){
         LoadState state= null;
         try {
             FileReader reader = new FileReader(saveFile);
@@ -86,7 +102,7 @@ public class ConfigLoader {
     
     
     
-    public static void SaveGame(Deque<Command> list,File image) {
+    public  void SaveGame(Deque<Command> list,File image) {
        if(ActualConfig.getGameName() == null){
            String inputString = JOptionPane.showInputDialog(null, "Please write the save name");
            ActualConfig.setGameName(inputString);      
@@ -94,13 +110,13 @@ public class ConfigLoader {
                         
        String imageName = "default";
        if(image != null)
-            imageName = FileSeparator+"saveGame"+FileSeparator+"imageSaves"+FileSeparator+ActualConfig.getGameName()+"_"+image.getName();
+            imageName = FileSeparator+"saveGame"+FileSeparator+"imageSaves"+FileSeparator+ActualConfig.getGameName()+"_saveImage";
        
        
-       Deque<MoverCommand> c = new ConcurrentLinkedDeque<MoverCommand>();
+       Deque<MoveCommand> c = new ConcurrentLinkedDeque<MoveCommand>();
        
        for(Command d:list){
-           c.add((MoverCommand)d);
+           c.add((MoveCommand)d);
        }
        
                            
@@ -122,7 +138,7 @@ public class ConfigLoader {
        
     }
 
-    public static LoadState Load() {
+    public LoadState Load() {
         JFileChooser selectorArchivo = new JFileChooser();
         
                     File directorioRecursos = new File(ProyectDir+FileSeparator+"saveGame");
@@ -134,7 +150,7 @@ public class ConfigLoader {
                     
                     if(i == JFileChooser.APPROVE_OPTION){
                     selectedFile = selectorArchivo.getSelectedFile();
-                    return ConfigLoader.LoadGame(selectedFile);
+                    return LoadGame(selectedFile);
                     }else{
                     return null;       
                   }
@@ -142,11 +158,11 @@ public class ConfigLoader {
     
     
     
-    public static void SetNewConfig(Config c){
+    public  void SetNewConfig(Config c){
         ActualConfig = c;
     }
     
-    public static void SetNewConfig(int row,int colum,int size){
+    public void SetNewConfig(int row,int colum,int size){
         ActualConfig.setImageSize(size);
         ActualConfig.setNumColumn(colum);
         ActualConfig.setNumRow(row);

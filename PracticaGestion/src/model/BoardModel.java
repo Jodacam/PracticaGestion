@@ -14,13 +14,13 @@ import view.PuzzleGUI;
  *
  * @author Jose Daniel Campos
  */
-public class Model extends AbstractModel {
+public class BoardModel extends AbstractModel {
 
     private ArrayList<PieceModel> iconArray = null;
     private int blankPiece;
     private Random r = new Random();
     
-    public Model(int rowNum, int columnNum, int pieceSize, String[] imageList) {
+    public BoardModel(int rowNum, int columnNum, int pieceSize, String[] imageList) {
         super(rowNum, columnNum, pieceSize, imageList);
         iconArray = new ArrayList<>();
         blankPiece = 0;
@@ -30,7 +30,7 @@ public class Model extends AbstractModel {
         }
     }
     
-    public Model(int rowNum, int columnNum, int pieceSize) {
+    public BoardModel(int rowNum, int columnNum, int pieceSize) {
         super(rowNum, columnNum, pieceSize);
         iconArray = new ArrayList<>();
         blankPiece = 0;

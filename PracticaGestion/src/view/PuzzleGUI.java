@@ -1,6 +1,6 @@
 package view;
 
-import command.MoverCommand;
+import command.MoveCommand;
 import config.Config;
 import config.ConfigLoader;
 import control.AbstractController;
@@ -77,21 +77,15 @@ public class PuzzleGUI extends JFrame{
         clutterButton.setActionCommand("clutter");
         JButton solveButton = new JButton("Resolver");
         solveButton.setActionCommand("solve");
-        JButton undoButton = new JButton("Deshacer");//botÃ³n de desordenar
-        undoButton.setActionCommand("undo");
-        JButton redoButton = new JButton("Rehacer");
-        redoButton.setActionCommand("redo");
+        
 
         clutterButton.addActionListener(controller);
         solveButton.addActionListener(controller);
-        undoButton.addActionListener(controller);
-        redoButton.addActionListener(controller);
-
+        
 
         southPanel.add(clutterButton);
         southPanel.add(solveButton);
-        southPanel.add(undoButton);
-        southPanel.add(redoButton);
+     
 
         return(southPanel);
     }
@@ -195,7 +189,7 @@ public class PuzzleGUI extends JFrame{
                 imageSize = 32;
             }
             
-            ConfigLoader.SetNewConfig(rowNum, columnNum, imageSize);
+            ConfigLoader.getInstance().SetNewConfig(rowNum, columnNum, imageSize);
             CreateNewBoard(imageFile);
         }else{
             JOptionPane.showMessageDialog(this, "No has cargado ninguna imagen");
@@ -210,11 +204,7 @@ public class PuzzleGUI extends JFrame{
         
         if(imageSize*columnNum > 500){
             this.setSize(imageSize*columnNum,imageSize*rowNum+imageSize);
-        }
-        
-        
-        
-        
+        }                       
         this.getContentPane().add(boardView, BorderLayout.CENTER);
         this.revalidate();
         this.repaint();

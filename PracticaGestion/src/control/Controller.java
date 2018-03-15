@@ -6,10 +6,10 @@
 package control;
 
 import command.Command;
-import command.MoverCommand;
+import command.MoveCommand;
 import config.ConfigLoader;
 import config.LoadState;
-import model.Model;
+import model.BoardModel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -32,116 +32,118 @@ import view.PuzzleGUI;
  * @author pablo
  */
 public class Controller extends AbstractController {
+    //HahsMap que incluye todas las funciones a realizar mediante eventos.
 
-	private Map<String, Function> EventsFunctions = new HashMap<>();
+    private Map<String, Function> EventsFunctions = new HashMap<>();
 
-	public Controller() {
-		super();
-		movimientos = new ConcurrentLinkedDeque<>();
-		EventsFunctions.put("clutter", (String[] param) -> {
+    //Inicializamos el Controlador
+    public Controller() {
+        super();
+        movimientos = new ConcurrentLinkedDeque<>();
+        //Se generan las funciones a ejecutar cuando se produzca un evento.
+        EventsFunctions.put("clutter", (String[] param) -> {
 
-			for (int i = 0; i < PuzzleGUI.rowNum * PuzzleGUI.columnNum; i++) {
-				if (!movimientos.isEmpty()) {
-					MoverCommand movimientoAnterior = (MoverCommand) movimientos.getFirst();
-					movimientos.push(
-							new MoverCommand(movimientoAnterior.Movimiento[1], movimientoAnterior.Movimiento[0], true));
-				} else {
-					movimientos.push(new MoverCommand(1, 0, true));
-				}
-			}
+            for (int i = 0; i < PuzzleGUI.rowNum * PuzzleGUI.columnNum; i++) {
+                if (!movimientos.isEmpty()) {
+                    MoveCommand movimientoAnterior = (MoveCommand) movimientos.getFirst();
+                    movimientos.push(new MoveCommand(movimientoAnterior.Movimiento[1], movimientoAnterior.Movimiento[0], true));
+                } else {
+                    movimientos.push(new MoveCommand(1, 0, true));
+                }
+            }
 
-		});
-		EventsFunctions.put("solve", (String[] param) -> {
-			while (!movimientos.isEmpty()) {
-				movimientos.pop().undoCommand();
-			}
-		});
+        });
+        EventsFunctions.put("solve", (String[] param) -> {
+            while (!movimientos.isEmpty()) {
+                movimientos.pop().undoCommand();
+            }
+        });
 
-		EventsFunctions.put("loadImage", (String[] param) -> {
-			while (!movimientos.isEmpty()) {
-				movimientos.pop();
-			}
-			File img = PuzzleGUI.getInstance().showFileSelector();
-			PuzzleGUI.getInstance().updateBoard(img);
-			this.ReStartModel();
-			notifyObservers(99, 99);
-		});
+        EventsFunctions.put("loadImage", (String[] param) -> {
+            while (!movimientos.isEmpty()) {
+                movimientos.pop();
+            }
+            ConfigLoader.getInstance().getActualConfig().setGameName(null);
+            File img = PuzzleGUI.getInstance().showFileSelector();
+            PuzzleGUI.getInstance().updateBoard(img);
+            this.ReStartModel();
+            notifyObservers(99, 99);
+        });
 
-		EventsFunctions.put("save", (String[] param) -> {
-			ConfigLoader.SaveGame(movimientos, PuzzleGUI.getInstance().getBoardView().getImage());
-		});
+        EventsFunctions.put("save", (String[] param) -> {
+            ConfigLoader.getInstance().SaveGame(movimientos, PuzzleGUI.getInstance().getBoardView().getImage());
+        });
 
-		EventsFunctions.put("load", (String[] param) -> {
-			LoadState state = ConfigLoader.Load();
-			if (0 != state.getImagePath().compareTo("default")) {
-				PuzzleGUI.getInstance().CreateNewBoard(new File(ConfigLoader.ProyectDir + state.getImagePath()));
-				this.ReStartModel();
-			}else{
-                            PuzzleGUI.getInstance().setConfig(state.getConfig());
-                            PuzzleGUI.getInstance().LoadDefaultBoard();
-                            this.ReStartModel();
-                        }
+        EventsFunctions.put("load", (String[] param) -> {
+            LoadState state = ConfigLoader.getInstance().Load();
+            if (0 != state.getImagePath().compareTo("default")) {
+                PuzzleGUI.getInstance().CreateNewBoard(new File(ConfigLoader.ProyectDir + state.getImagePath()));
+                this.ReStartModel();
+            } else {
+                PuzzleGUI.getInstance().setConfig(state.getConfig());
+                PuzzleGUI.getInstance().LoadDefaultBoard();
+                this.ReStartModel();
+            }
 
-			while (!state.getCommand().isEmpty()) {
-				Command d = state.getCommand().pollLast();
-				d.redoCommand();
-				movimientos.push(d);
-			}
+            while (!state.getCommand().isEmpty()) {
+                Command d = state.getCommand().pollLast();
+                d.redoCommand();
+                movimientos.push(d);
+            }
 
-		});
-                
-                EventsFunctions.put("exit",(String[] param) -> {
-                    System.exit(0);
-                });
-                
-                EventsFunctions.put("info",(String[] param) -> {
-                    InfoView info = new InfoView();
-                });
-                
-                        
+        });
 
-	}
+        EventsFunctions.put("exit", (String[] param) -> {
+            System.exit(0);
+        });
 
-	Random r = new Random();
+        EventsFunctions.put("info", (String[] param) -> {
+            InfoView info = new InfoView();
+        });
 
-	@Override
-	public void actionPerformed(ActionEvent ae) {
-		// To change body of generated methods, choose Tools | Templates.
-		System.out.println(ae.getActionCommand());// devuelve un string dependiendo del boton que se pulse
-		System.out.println(ae.getID());
+    }
 
-		try {
-			EventsFunctions.get(ae.getActionCommand()).ExecuteAction(null);
+    Random r = new Random();
 
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			System.out.println("No implementado");
-		}
+    //Evento de botones
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        // To change body of generated methods, choose Tools | Templates.
+        System.out.println(ae.getActionCommand());// devuelve un string dependiendo del boton que se pulse
+        System.out.println(ae.getID());
 
-	}
+        try {
+            EventsFunctions.get(ae.getActionCommand()).ExecuteAction(null);
 
-	@Override
-	public void notifyObservers(int blankPos, int movedPos) {
-		for (int i = 0; i < observerList.size(); i++)
-			observerList.get(i).update(blankPos, movedPos); // To change body of generated methods, choose Tools |
-															// Templates.
-	}
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            System.out.println("No implementado");
+        }
 
-	public void mouseClicked(MouseEvent me) {// Metodo que recibe el evento de click del raton
-		System.out.println(me.getX() + ", " + me.getY());
-		int x = me.getX();
-		int y = me.getY();
-		if (x < PuzzleGUI.imageSize * PuzzleGUI.columnNum && y < PuzzleGUI.imageSize * PuzzleGUI.rowNum) {
-			movimientos.push(new MoverCommand(x, y));
-		}
-	}
+    }
 
-	private void ReStartModel() {
-		Model model = (Model) observerList.stream().filter(a -> (a.getClass() == Model.class)).findFirst().get();
-		observerList.remove(model);
-		model = new Model(ConfigLoader.getActualConfig().getNumRow(), ConfigLoader.getActualConfig().getNumColumn(),
-				ConfigLoader.getActualConfig().getImageSize());
-		this.addObserver(model);
-	}
+    @Override
+    public void notifyObservers(int blankPos, int movedPos) {
+        for (int i = 0; i < observerList.size(); i++) {
+            observerList.get(i).update(blankPos, movedPos); // To change body of generated methods, choose Tools |
+        }															// Templates.
+    }
+
+    public void mouseClicked(MouseEvent me) {// Metodo que recibe el evento de click del raton
+        System.out.println(me.getX() + ", " + me.getY());
+        int x = me.getX();
+        int y = me.getY();
+        if (x < PuzzleGUI.imageSize * PuzzleGUI.columnNum && y < PuzzleGUI.imageSize * PuzzleGUI.rowNum) {
+            movimientos.push(new MoveCommand(x, y));
+        }
+    }
+
+    private void ReStartModel() {
+        BoardModel model = (BoardModel) observerList.stream().filter(a -> (a.getClass() == BoardModel.class)).findFirst().get();
+        observerList.remove(model);
+        model = new BoardModel(ConfigLoader.getInstance().getActualConfig().getNumRow(), ConfigLoader.getInstance().getActualConfig().getNumColumn(),
+                ConfigLoader.getInstance().getActualConfig().getImageSize());
+        this.addObserver(model);
+    }
 
 }

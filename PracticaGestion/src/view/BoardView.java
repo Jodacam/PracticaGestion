@@ -68,7 +68,7 @@ public class BoardView extends JPanel implements Observer {
         } catch (IOException ex) {
             Logger.getLogger(BoardView.class.getName()).log(Level.SEVERE, null, ex);
         }
-        BufferedImage resizedImage = new BufferedImage(PuzzleGUI.imageSize*PuzzleGUI.columnNum,PuzzleGUI.imageSize*PuzzleGUI.rowNum,image.getType());
+        BufferedImage resizedImage = new BufferedImage(PuzzleGUI.imageSize*PuzzleGUI.columnNum,PuzzleGUI.imageSize*PuzzleGUI.rowNum,BufferedImage.TYPE_INT_RGB);
         
         
         
@@ -109,6 +109,7 @@ public class BoardView extends JPanel implements Observer {
         return(images);
     }
 
+    @Override
     public void update(int blankPos, int movedPos){
         
         if(blankPos !=99)
