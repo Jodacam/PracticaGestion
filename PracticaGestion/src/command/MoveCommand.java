@@ -5,6 +5,7 @@
  */
 package command;
 
+import control.AbstractController;
 import control.Controller;
 import java.util.Collection;
 import java.util.Random;
@@ -20,32 +21,19 @@ public class MoveCommand implements Command {
     //private Controller control;
     public int[] Movimiento;
     private transient Random r = new Random();
-    
+    private transient AbstractController controller;
     
     @Override
     public void undoCommand() {        
-    	PuzzleGUI.controller.notifyObservers(Movimiento[0],Movimiento[1]);        
+    	controller.notifyObservers(Movimiento[1],Movimiento[0]);        
     }      
-
-    public MoveCommand(int x, int y) {
-    	Movimiento = new int[2];
-    	int piezas[] = PuzzleGUI.getInstance().getBoardView().movePiece(x, y);
-    	Movimiento[1] = piezas[0];
-    	Movimiento[0] = piezas[1];
-    	PuzzleGUI.controller.notifyObservers(piezas[0], piezas[1]);
-    }
-
-    public MoveCommand(int x, int y, boolean deordenar) {
-    	Movimiento = new int[2];
-    	int piezas[] = PuzzleGUI.getInstance().getBoardView().getRandomMovement(x, y);
-    	Movimiento[1] = piezas[0];
-    	Movimiento[0] = piezas[1];
-    	PuzzleGUI.controller.notifyObservers(piezas[0], piezas[1]);
-    }
-    
+    public MoveCommand(int [] piezas,AbstractController c) {
+    	Movimiento = piezas;
+        controller = c;
+    }    
     @Override
     public void redoCommand() {            
-        PuzzleGUI.controller.notifyObservers(Movimiento[1], Movimiento[0]);           
+        controller.notifyObservers(Movimiento[0], Movimiento[1]);           
     }
     
     

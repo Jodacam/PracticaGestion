@@ -43,12 +43,17 @@ public class Controller extends AbstractController {
         //Se generan las funciones a ejecutar cuando se produzca un evento.
         EventsFunctions.put("clutter", (String[] param) -> {
 
-            for (int i = 0; i < PuzzleGUI.rowNum * PuzzleGUI.columnNum; i++) {
+            for (int i = 0; i < 40; i++) {
                 if (!movimientos.isEmpty()) {
-                    MoveCommand movimientoAnterior = (MoveCommand) movimientos.getFirst();
-                    movimientos.push(new MoveCommand(movimientoAnterior.Movimiento[1], movimientoAnterior.Movimiento[0], true));
+                    MoveCommand movimientoAnterior = (MoveCommand) movimientos.getFirst();                                       
+                    int[] movimiento = this.getViewFromObservers().getRandomMovement(movimientoAnterior.Movimiento[0], movimientoAnterior.Movimiento[1]);
+                    notifyObservers(movimiento[0],movimiento[1]);
+                    movimientos.push(new MoveCommand(movimiento,this));
                 } else {
-                    movimientos.push(new MoveCommand(1, 0, true));
+                    
+                   int[] movimiento = this.getViewFromObservers().getRandomMovement(1,0);
+                    notifyObservers(movimiento[0],movimiento[1]);
+                    movimientos.push(new MoveCommand(movimiento,this));
                 }
             }
 
@@ -133,11 +138,19 @@ public class Controller extends AbstractController {
         System.out.println(me.getX() + ", " + me.getY());
         int x = me.getX();
         int y = me.getY();
-        if (x < PuzzleGUI.imageSize * PuzzleGUI.columnNum && y < PuzzleGUI.imageSize * PuzzleGUI.rowNum) {
-            movimientos.push(new MoveCommand(x, y));
+        int imageSize = ConfigLoader.getInstance().getActualConfig().getImageSize();
+        if (x < imageSize * ConfigLoader.getInstance().getActualConfig().getNumColumn() && y < imageSize * ConfigLoader.getInstance().getActualConfig().getNumRow()) {           
+            int piezas[] = getViewFromObservers().movePiece(x, y);
+            notifyObservers(piezas[0], piezas[1]);
+            movimientos.push(new MoveCommand(piezas,this));
         }
     }
 
+    private BoardView getViewFromObservers(){
+         return  (BoardView) observerList.stream().filter(a -> (a.getClass() == BoardView.class)).findFirst().get();
+    }
+    
+    
     private void ReStartModel() {
         BoardModel model = (BoardModel) observerList.stream().filter(a -> (a.getClass() == BoardModel.class)).findFirst().get();
         observerList.remove(model);
