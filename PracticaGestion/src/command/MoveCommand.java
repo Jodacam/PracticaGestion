@@ -6,15 +6,12 @@
 package command;
 
 import control.AbstractController;
-import control.Controller;
-import java.util.Collection;
 import java.util.Random;
-import java.util.Stack;
 import view.PuzzleGUI;
 
 /**
  *
- * @author pablo
+ * @author Jose Daniel Campos y Pablo Rodriguez Vicente
  */
 public class MoveCommand implements Command {
 

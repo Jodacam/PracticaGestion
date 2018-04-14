@@ -5,13 +5,12 @@
  */
 package config;
 
-import command.Command;
 import command.MoveCommand;
 import java.util.Deque;
 
 /**
  *
- * @author Jose Daniel Campos
+ * @author Jose Daniel Campos y Pablo Rodriguez Vicente
  */
 public class LoadState {
     

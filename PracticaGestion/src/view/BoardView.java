@@ -64,7 +64,6 @@ public class BoardView extends JPanel implements Observer {
         BufferedImage image = null;               
         try {
             image = ImageIO.read(fileImage);
-            ImageIO.write(image, "jpg", new File("fotoSinresice.jpg"));
         } catch (IOException ex) {
             Logger.getLogger(BoardView.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -75,11 +74,6 @@ public class BoardView extends JPanel implements Observer {
         Graphics2D g2d = resizedImage.createGraphics();
         g2d.drawImage(image, 0, 0, PuzzleGUI.imageSize*PuzzleGUI.columnNum, PuzzleGUI.imageSize*PuzzleGUI.rowNum, null);
         g2d.dispose();        
-        try {
-            ImageIO.write(resizedImage, "jpg", new File("fotoResize.jpg"));
-        } catch (IOException ex) {
-            Logger.getLogger(BoardView.class.getName()).log(Level.SEVERE, null, ex);
-        }
         
         return(resizedImage);
     }
@@ -139,8 +133,7 @@ public class BoardView extends JPanel implements Observer {
 
     public void paint(Graphics g){
         super.paint(g);
-        //g.setColor(Color.BLACK);
-        //g.fillOval(0, 0, imageWidth, imageHeight);
+        
         for(PieceView iconImage:iconArray){
             g.drawImage(iconImage.getImage(), iconImage.getIndexColumn()*PuzzleGUI.imageSize, iconImage.getIndexRow()*PuzzleGUI.imageSize, PuzzleGUI.imageSize-1, PuzzleGUI.imageSize-1, this);
             System.out.println("pintamos");
@@ -175,10 +168,8 @@ public class BoardView extends JPanel implements Observer {
         
         int disx = Math.abs(p2.getIndexColumn() - p.getIndexColumn());
         int disy = Math.abs(p2.getIndexRow()-p.getIndexRow());             
-        if( /*inPlace*/disx + disy == 1)
+        if(disx + disy == 1)
         {
-            //Integer[] pos = {piezas[1],piezas[0]};
-        
             return piezas;
         }else{
             piezas[0] = 99;

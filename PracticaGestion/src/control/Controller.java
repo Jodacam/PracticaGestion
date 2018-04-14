@@ -14,22 +14,16 @@ import model.BoardModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.Stack;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
-import view.BoardView;
 import view.InfoView;
 import view.PuzzleGUI;
 
 /**
  *
- * @author pablo
+ * @author Jose Daniel Campos y Pablo Rodriguez Vicente
  */
 public class Controller extends AbstractController {
     //HahsMap que incluye todas las funciones a realizar mediante eventos.
@@ -70,9 +64,11 @@ public class Controller extends AbstractController {
             }
             ConfigLoader.getInstance().getActualConfig().setGameName(null);
             File img = PuzzleGUI.getInstance().showFileSelector();
-            PuzzleGUI.getInstance().updateBoard(img);
-            this.ReStartModel();
-            notifyObservers(99, 99);
+            if(img != null){
+                PuzzleGUI.getInstance().updateBoard(img);
+                this.ReStartModel();
+                notifyObservers(99, 99);
+            }
         });
 
         EventsFunctions.put("save", (String[] param) -> {
@@ -113,7 +109,7 @@ public class Controller extends AbstractController {
     //Evento de botones
     @Override
     public void actionPerformed(ActionEvent ae) {
-        // To change body of generated methods, choose Tools | Templates.
+
         System.out.println(ae.getActionCommand());// devuelve un string dependiendo del boton que se pulse
         System.out.println(ae.getID());
 
@@ -130,8 +126,8 @@ public class Controller extends AbstractController {
     @Override
     public void notifyObservers(int blankPos, int movedPos) {
         for (int i = 0; i < observerList.size(); i++) {
-            observerList.get(i).update(blankPos, movedPos); // To change body of generated methods, choose Tools |
-        }															// Templates.
+            observerList.get(i).update(blankPos, movedPos); 
+        }															
     }
 
     public void mouseClicked(MouseEvent me) {// Metodo que recibe el evento de click del raton
