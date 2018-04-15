@@ -1,0 +1,14 @@
+<storeGame>
+   <LoadState id="0">
+    <Config>
+        <numColumn>3</numColumn>
+        <numRow>3</numRow>
+        <imageSize>32</imageSize>
+        <gameName>Partida1</gameName>
+    </Config>
+    <imagePath>"Celeste.jpg"</imagePath>
+    <command>
+        Hola
+    </command>
+   </LoadState>
+</storeGame>

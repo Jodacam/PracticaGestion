@@ -7,30 +7,35 @@ package config;
 
 import command.MoveCommand;
 import java.util.Deque;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Jose Daniel Campos y Pablo Rodriguez Vicente
  */
-public class LoadState {
+@XmlRootElement(name = "LoadState")
+public class LoadStateAuxiliar {
     
     private Config config;
-    private Deque<MoveCommand> command;
+    private String command;
     private String imagePath;
     private int id;
-    public LoadState(Config config, Deque<MoveCommand> command, String imagePath, int id) {
-        this.config = config;
-        this.command = command;
-        this.imagePath = imagePath;
-        this.id = id;
-    }  
 
-    public LoadState(LoadStateAuxiliar c) {
-        config = c.getConfig();
-        imagePath = c.getImagePath();
-        id = c.getId();
-    }
     
+    
+    
+    @XmlAttribute(name = "id")
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+ 
+    @XmlElement(name = "Config")
     public Config getConfig() {
         return config;
     }
@@ -38,15 +43,15 @@ public class LoadState {
     public void setConfig(Config config) {
         this.config = config;
     }
-
-    public Deque<MoveCommand> getCommand() {
+    @XmlElement(name = "command")
+    public String getCommand() {
         return command;
     }
 
-    public void setCommand(Deque<MoveCommand> command) {
+    public void setCommand(String command) {
         this.command = command;
     }
-
+    @XmlElement(name = "imagePath")
     public String getImagePath() {
         return imagePath;
     }

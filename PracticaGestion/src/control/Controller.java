@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import view.BoardView;
 import view.InfoView;
 import view.PuzzleGUI;
 
@@ -87,7 +88,8 @@ public class Controller extends AbstractController {
             }
 
             while (!state.getCommand().isEmpty()) {
-                Command d = state.getCommand().pollLast();
+                MoveCommand d = state.getCommand().pollLast();
+                d = new MoveCommand(d.Movimiento, this);
                 d.redoCommand();
                 movimientos.push(d);
             }

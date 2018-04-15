@@ -1,5 +1,6 @@
 import config.ConfigLoader;
 import control.Controller;
+import javax.imageio.ImageIO;
 import model.*;
 import view.BoardView;
 import view.PuzzleGUI;

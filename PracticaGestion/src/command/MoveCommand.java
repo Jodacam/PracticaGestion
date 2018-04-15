@@ -16,18 +16,20 @@ import view.PuzzleGUI;
 public class MoveCommand implements Command {
 
     //private Controller control;
-    public int[] Movimiento;
-    private transient Random r = new Random();
+    public int[] Movimiento;    
     private transient AbstractController controller;
     
     @Override
     public void undoCommand() {        
     	controller.notifyObservers(Movimiento[1],Movimiento[0]);        
-    }      
+    }  
+    
     public MoveCommand(int [] piezas,AbstractController c) {
     	Movimiento = piezas;
         controller = c;
-    }    
+    }
+
+
     @Override
     public void redoCommand() {            
         controller.notifyObservers(Movimiento[0], Movimiento[1]);           

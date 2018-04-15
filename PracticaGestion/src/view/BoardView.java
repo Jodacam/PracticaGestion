@@ -12,6 +12,9 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import java.util.Iterator;
+
+
 
 /**
  * Clase que representa la vista del tablero
@@ -19,6 +22,7 @@ import javax.imageio.ImageIO;
  * @version 1.0
  */
 public class BoardView extends JPanel implements Observer {
+    
     public static final int imageWidth= 96;
     public static final int imageHeight= 96;
     private ArrayList<PieceView> iconArray = null;
@@ -61,16 +65,17 @@ public class BoardView extends JPanel implements Observer {
 
     //redimensionamos la imagen para 96*96
     private BufferedImage resizeImage(File fileImage){
-        BufferedImage image = null;               
-        try {
+        
+        BufferedImage image = null; 
+        BufferedImage resizedImage = null;
+                         
+        try {            
             image = ImageIO.read(fileImage);
         } catch (IOException ex) {
             Logger.getLogger(BoardView.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        BufferedImage resizedImage = new BufferedImage(PuzzleGUI.imageSize*PuzzleGUI.columnNum,PuzzleGUI.imageSize*PuzzleGUI.rowNum,BufferedImage.TYPE_INT_RGB);
+        }                  
         
-        
-        
+        resizedImage = new BufferedImage(PuzzleGUI.imageSize*PuzzleGUI.columnNum,PuzzleGUI.imageSize*PuzzleGUI.rowNum,BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = resizedImage.createGraphics();
         g2d.drawImage(image, 0, 0, PuzzleGUI.imageSize*PuzzleGUI.columnNum, PuzzleGUI.imageSize*PuzzleGUI.rowNum, null);
         g2d.dispose();        
