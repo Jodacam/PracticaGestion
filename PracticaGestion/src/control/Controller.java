@@ -55,6 +55,7 @@ public class Controller extends AbstractController {
         });
         EventsFunctions.put("solve", (String[] param) -> {
             while (!movimientos.isEmpty()) {
+                ConfigLoader.getInstance().DeleteMovement();
                 movimientos.pop().undoCommand();
             }
         });
@@ -78,21 +79,7 @@ public class Controller extends AbstractController {
 
         EventsFunctions.put("load", (String[] param) -> {
             LoadState state = ConfigLoader.getInstance().Load();
-            if (0 != state.getImagePath().compareTo("default")) {
-                PuzzleGUI.getInstance().CreateNewBoard(new File(ConfigLoader.ProyectDir + state.getImagePath()));
-                this.ReStartModel();
-            } else {
-                PuzzleGUI.getInstance().setConfig(state.getConfig());
-                PuzzleGUI.getInstance().LoadDefaultBoard();
-                this.ReStartModel();
-            }
-
-            while (!state.getCommand().isEmpty()) {
-                MoveCommand d = state.getCommand().pollLast();
-                d = new MoveCommand(d.Movimiento, this);
-                d.redoCommand();
-                movimientos.push(d);
-            }
+            this.LoadMovement(state);
 
         });
 
@@ -103,6 +90,18 @@ public class Controller extends AbstractController {
         EventsFunctions.put("info", (String[] param) -> {
             InfoView info = new InfoView();
         });
+        
+        EventsFunctions.put("loadDataBase", (String[] param) -> {
+            int loadName =Integer.parseInt(PuzzleGUI.getInstance().GetNameFromPanel());
+            LoadState state = ConfigLoader.getInstance().LoadFromDataBase(loadName);
+            if(state != null){
+                this.LoadMovement(state);
+            }else{
+                System.out.println("Partida No encontrada");
+            }
+        });
+        
+        
 
     }
 
@@ -140,7 +139,9 @@ public class Controller extends AbstractController {
         if (x < imageSize * ConfigLoader.getInstance().getActualConfig().getNumColumn() && y < imageSize * ConfigLoader.getInstance().getActualConfig().getNumRow()) {           
             int piezas[] = getViewFromObservers().movePiece(x, y);
             notifyObservers(piezas[0], piezas[1]);
-            movimientos.push(new MoveCommand(piezas,this));
+            MoveCommand m  = new MoveCommand(piezas,this);
+            ConfigLoader.getInstance().SaveMovement(m);
+            movimientos.push(m);
         }
     }
 
@@ -155,6 +156,24 @@ public class Controller extends AbstractController {
         model = new BoardModel(ConfigLoader.getInstance().getActualConfig().getNumRow(), ConfigLoader.getInstance().getActualConfig().getNumColumn(),
                 ConfigLoader.getInstance().getActualConfig().getImageSize());
         this.addObserver(model);
+    }
+    
+    private void LoadMovement(LoadState state) {
+        if (0 != state.getImagePath().compareTo("default")) {
+            PuzzleGUI.getInstance().CreateNewBoard(new File(ConfigLoader.ProyectDir + state.getImagePath()));
+            this.ReStartModel();
+        } else {
+            PuzzleGUI.getInstance().setConfig(state.getConfig());
+            PuzzleGUI.getInstance().LoadDefaultBoard();
+            this.ReStartModel();
+        }
+
+        while (!state.getCommand().isEmpty()) {
+            MoveCommand d = state.getCommand().pollLast();
+            d = new MoveCommand(d.Movimiento, this);
+            d.redoCommand();
+            movimientos.push(d);
+        }
     }
 
 }

@@ -7,10 +7,6 @@ package command;
 
 import control.AbstractController;
 
-import java.util.Arrays;
-import java.util.Random;
-import view.PuzzleGUI;
-
 /**
  *
  * @author Jose Daniel Campos y Pablo Rodriguez Vicente
@@ -39,7 +35,7 @@ public class MoveCommand implements Command {
 
 	@Override
 	public String toString() {
-		return "element comando{ element n1{" + Movimiento[0]+"}, element n2{ "+ Movimiento[1]  + "}}";
+		return ("element comando { element n1{'" +Movimiento[0]+"'}, element n2{'"+Movimiento[1]+"'} }");
 	}
     
     

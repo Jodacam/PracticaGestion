@@ -55,8 +55,7 @@ public class XMLDataBase implements DataBaseAbstract{
     public LoadState LoadFromDataBase(int id) {   
         LoadStateAuxiliar c = null;
         try {
-            String queryResult = new XQuery("storeGame/LoadState[@id="+id+"]").execute(dataBaseContext);
-            System.out.println(queryResult);                        
+            String queryResult = new XQuery("storeGame/LoadState[@id="+id+"]").execute(dataBaseContext);                                  
             JAXBContext context = JAXBContext.newInstance(LoadStateAuxiliar.class);            
             Unmarshaller XMLoader = context.createUnmarshaller();
             StringReader reader = new StringReader(queryResult);
@@ -73,9 +72,11 @@ public class XMLDataBase implements DataBaseAbstract{
 
 	@Override
 	public void AddMovement(MoveCommand command,int id) {
+            
 		try {
-			new XQuery("insert node " +command + "into stateGame/LoadState[@id="+ id+"]/command/last()").execute(dataBaseContext);
-		} catch (BaseXException e) {
+                    new XQuery("insert node " + command + "into storeGame/LoadState[@id=" + id + "]/command").execute(dataBaseContext);
+                    
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -83,8 +84,14 @@ public class XMLDataBase implements DataBaseAbstract{
 	}
 
 	@Override
-	public void RemoveMovement(int id) {
-		// TODO Auto-generated method stub
+	public void RemoveMovement(int id) {            
+            try {
+                new XQuery("delete node storeGame/LoadState[@id=" + id + "]/command/comando [last()]").execute(dataBaseContext);
+                
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 		
 	}
     }

@@ -7,6 +7,7 @@ package config;
 
 import command.MoveCommand;
 import java.util.Deque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  *
@@ -27,8 +28,16 @@ public class LoadState {
 
     public LoadState(LoadStateAuxiliar c) {
         config = c.getConfig();
-        imagePath = c.getImagePath();
+        imagePath = c.getImagePath().replace("\"", "");
         id = c.getId();
+        command = new ConcurrentLinkedDeque();
+        for(MoveInformation info: c.getCommand()){
+            int[] auxArray = {info.getN1(),info.getN2()};
+            MoveCommand m = new MoveCommand(auxArray,null);
+            command.add(m);      
+        }
+        
+               
     }
     
     public Config getConfig() {

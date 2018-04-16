@@ -6,7 +6,7 @@
         <imageSize>32</imageSize>
         <gameName>Partida1</gameName>
     </Config>
-    <imagePath>"Celeste.jpg"</imagePath>
+    <imagePath>"default"</imagePath>
     <command>
         <comando>
             <n1>0</n1>

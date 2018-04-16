@@ -7,8 +7,10 @@ package config;
 
 import command.MoveCommand;
 import java.util.Deque;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -19,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class LoadStateAuxiliar {
     
     private Config config;
-    private String command;
+    private List<MoveInformation> command;
     private String imagePath;
     private int id;
 
@@ -43,12 +45,13 @@ public class LoadStateAuxiliar {
     public void setConfig(Config config) {
         this.config = config;
     }
-    @XmlElement(name = "command")
-    public String getCommand() {
+    @XmlElementWrapper(name="command")
+    @XmlElement(name="comando")
+    public List<MoveInformation> getCommand() {
         return command;
     }
 
-    public void setCommand(String command) {
+    public void setCommand(List<MoveInformation> command) {
         this.command = command;
     }
     @XmlElement(name = "imagePath")

@@ -7,6 +7,7 @@ import control.AbstractController;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import org.basex.query.value.item.Int;
 
 /**
  * Clase que representa la GUI principal.
@@ -236,4 +237,7 @@ public class PuzzleGUI extends JFrame{
         JOptionPane.showMessageDialog(this, "Has Ganado");
     }
 
+    public String GetNameFromPanel (){
+        return  JOptionPane.showInputDialog(this, "Choose a name to load");
+    }
 }

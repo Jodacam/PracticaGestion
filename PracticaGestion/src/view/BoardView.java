@@ -140,8 +140,7 @@ public class BoardView extends JPanel implements Observer {
         super.paint(g);
         
         for(PieceView iconImage:iconArray){
-            g.drawImage(iconImage.getImage(), iconImage.getIndexColumn()*PuzzleGUI.imageSize, iconImage.getIndexRow()*PuzzleGUI.imageSize, PuzzleGUI.imageSize-1, PuzzleGUI.imageSize-1, this);
-            System.out.println("pintamos");
+            g.drawImage(iconImage.getImage(), iconImage.getIndexColumn()*PuzzleGUI.imageSize, iconImage.getIndexRow()*PuzzleGUI.imageSize, PuzzleGUI.imageSize-1, PuzzleGUI.imageSize-1, this);            
         }
     }
 

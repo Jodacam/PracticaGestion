@@ -157,5 +157,15 @@ public class ConfigLoader {
         ActualConfig.setNumColumn(colum);
         ActualConfig.setNumRow(row);
     }
+    
+    public void SaveMovement(MoveCommand d){
+         dataBase.AddMovement(d, 0);
+    }
+    public void DeleteMovement(){
+        dataBase.RemoveMovement(0);
+    }
+    public LoadState LoadFromDataBase(int id){
+       return dataBase.LoadFromDataBase(id);
+    }
 
 }
