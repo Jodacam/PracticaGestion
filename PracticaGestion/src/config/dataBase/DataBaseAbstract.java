@@ -5,6 +5,7 @@
  */
 package config.dataBase;
 
+import command.MoveCommand;
 import config.LoadState;
 
 /**
@@ -13,8 +14,10 @@ import config.LoadState;
  */
 public interface DataBaseAbstract {
     
-    public void Store(LoadState state);
+    public void StoreAll(LoadState state);
     public LoadState LoadFromDataBase(int id);
+    public void AddMovement(MoveCommand command,int id);
+    public void RemoveMovement(int id);
     
     
 }

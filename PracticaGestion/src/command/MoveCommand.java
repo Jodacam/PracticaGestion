@@ -6,6 +6,8 @@
 package command;
 
 import control.AbstractController;
+
+import java.util.Arrays;
 import java.util.Random;
 import view.PuzzleGUI;
 
@@ -34,6 +36,12 @@ public class MoveCommand implements Command {
     public void redoCommand() {            
         controller.notifyObservers(Movimiento[0], Movimiento[1]);           
     }
+
+	@Override
+	public String toString() {
+		return "element comando{ element n1{" + Movimiento[0]+"}, element n2{ "+ Movimiento[1]  + "}}";
+	}
+    
     
     
 

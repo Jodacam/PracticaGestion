@@ -5,6 +5,7 @@
  */
 package config.dataBase;
 
+import command.MoveCommand;
 import config.LoadState;
 
 /**
@@ -14,7 +15,7 @@ import config.LoadState;
 public class MongoDataBase implements DataBaseAbstract{
 
     @Override
-    public void Store(LoadState state) {
+    public void StoreAll(LoadState state) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -22,5 +23,17 @@ public class MongoDataBase implements DataBaseAbstract{
     public LoadState LoadFromDataBase(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+	@Override
+	public void AddMovement(MoveCommand command,int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void RemoveMovement(int id) {
+		// TODO Auto-generated method stub
+		
+	}
     
 }

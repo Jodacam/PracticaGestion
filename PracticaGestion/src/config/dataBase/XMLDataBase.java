@@ -14,12 +14,16 @@ import org.basex.core.cmd.InfoDB;
 import org.basex.core.cmd.XQuery;
 import org.basex.query.up.primitives.NewInput;
 import org.basex.query.up.primitives.db.DBAdd;
+
+import command.MoveCommand;
 import config.LoadState;
 import config.LoadStateAuxiliar;
 import java.io.File;
 import java.io.StringReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.management.Query;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
@@ -43,7 +47,7 @@ public class XMLDataBase implements DataBaseAbstract{
     }
     
     @Override
-    public void Store(LoadState state) {
+    public void StoreAll(LoadState state) {
          
     }
 
@@ -65,6 +69,23 @@ public class XMLDataBase implements DataBaseAbstract{
         }
         LoadState state = new LoadState(c);
         return state;
+	}
+
+	@Override
+	public void AddMovement(MoveCommand command,int id) {
+		try {
+			new XQuery("insert node " +command + "into stateGame/LoadState[@id="+ id+"]/command/last()").execute(dataBaseContext);
+		} catch (BaseXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public void RemoveMovement(int id) {
+		// TODO Auto-generated method stub
+		
 	}
     }
     

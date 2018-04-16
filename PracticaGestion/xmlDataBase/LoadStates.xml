@@ -8,7 +8,14 @@
     </Config>
     <imagePath>"Celeste.jpg"</imagePath>
     <command>
-        Hola
+        <comando>
+            <n1>0</n1>
+            <n2>1</n2>
+        </comando>
+        <comando>
+            <n1>1</n1>
+            <n2>2</n2>
+        </comando>
     </command>
    </LoadState>
 </storeGame>
