@@ -74,7 +74,7 @@ public class Controller extends AbstractController {
         });
 
         EventsFunctions.put("save", (String[] param) -> {
-            ConfigLoader.getInstance().SaveGame(movimientos, PuzzleGUI.getInstance().getBoardView().getImage());
+            ConfigLoader.getInstance().SaveInDataBase(PuzzleGUI.getInstance().GetNameFromPanel(),movimientos, getViewFromObservers().getImage());
         });
 
         EventsFunctions.put("load", (String[] param) -> {
@@ -92,7 +92,7 @@ public class Controller extends AbstractController {
         });
         
         EventsFunctions.put("loadDataBase", (String[] param) -> {
-            int loadName =Integer.parseInt(PuzzleGUI.getInstance().GetNameFromPanel());
+            String loadName = PuzzleGUI.getInstance().GetNameFromPanel();
             LoadState state = ConfigLoader.getInstance().LoadFromDataBase(loadName);
             if(state != null){
                 this.LoadMovement(state);

@@ -77,8 +77,7 @@ public class ConfigLoader {
         }
         ActualConfig = c;
 
-        dataBase = new XMLDataBase("LoadStates.xml", ProyectDir + FileSeparator + "xmlDataBase");
-        dataBase.LoadFromDataBase(0);
+        dataBase = new XMLDataBase("LoadStates.xml", ProyectDir + FileSeparator + "xmlDataBase");       
     }
 
     public LoadState LoadGame(File saveFile) {
@@ -112,7 +111,7 @@ public class ConfigLoader {
             c.add((MoveCommand) d);
         }
 
-        LoadState stateGame = new LoadState(ActualConfig, c, imageName, 0);
+        LoadState stateGame = new LoadState(ActualConfig, c, imageName, ActualConfig.getGameName());
         String data = JSONMapper.toJson(stateGame);
         try {
 
@@ -158,14 +157,32 @@ public class ConfigLoader {
         ActualConfig.setNumRow(row);
     }
     
-    public void SaveMovement(MoveCommand d){
-         dataBase.AddMovement(d, 0);
+    public void SaveMovement(MoveCommand d){      
+            dataBase.AddMovement(d,ActualConfig.getGameName());
     }
-    public void DeleteMovement(){
-        dataBase.RemoveMovement(0);
+    public void DeleteMovement(){               
+            dataBase.RemoveMovement(ActualConfig.getGameName());
     }
-    public LoadState LoadFromDataBase(int id){
+    public LoadState LoadFromDataBase(String id){
        return dataBase.LoadFromDataBase(id);
+    }
+    
+    public boolean SaveInDataBase(String newName,Deque<Command> list,File image){
+       
+        boolean exist = false;               
+        Deque<MoveCommand> c = new ConcurrentLinkedDeque<>();
+        list.forEach((d) -> {
+            c.add((MoveCommand) d);
+        });
+        
+        String imageName = "default";
+        if (image != null) {
+            imageName = FileSeparator + "saveGame" + FileSeparator + "imageSaves" + FileSeparator + ActualConfig.getGameName() + "_saveImage";
+        }
+        
+        LoadState state = new LoadState(ActualConfig, c,imageName, newName);       
+        dataBase.StoreAll(state);
+        return  exist;
     }
 
 }

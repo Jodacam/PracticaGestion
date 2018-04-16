@@ -1,10 +1,10 @@
 <storeGame>
-   <LoadState id="0">
+   <LoadState id="partidaPrueba">
     <Config>
         <numColumn>3</numColumn>
         <numRow>3</numRow>
         <imageSize>32</imageSize>
-        <gameName>Partida1</gameName>
+        <gameName>partidaPrueba</gameName>
     </Config>
     <imagePath>"default"</imagePath>
     <command>

@@ -48,30 +48,58 @@ public class XMLDataBase implements DataBaseAbstract{
     
     @Override
     public void StoreAll(LoadState state) {
-         
+
+        try {
+
+            String queryResult = new XQuery("storeGame/LoadState[@id=" +state.getConfig().getGameName() + "]").execute(dataBaseContext);
+            if (queryResult.isEmpty()) {
+                String insert = "insert node " + state + "into storeGame";
+                new XQuery("insert node " + state + "into storeGame").execute(dataBaseContext);
+                
+            state.getCommand().forEach((d) -> {
+                AddMovement(d, state.getConfig().getGameName());
+                }
+            );
+                
+            }
+            String queryResult2 = new XQuery("storeGame/LoadState[@id=" +state.getConfig().getGameName() + "]").execute(dataBaseContext);
+            String queryResult3 = new XQuery("storeGame").execute(dataBaseContext);
+            int i = 2;
+            
+        } catch (BaseXException ex) {
+            Logger.getLogger(XMLDataBase.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     @Override
-    public LoadState LoadFromDataBase(int id) {   
+    public LoadState LoadFromDataBase(String id) {   
         LoadStateAuxiliar c = null;
+        LoadState state = null;
         try {
             String queryResult = new XQuery("storeGame/LoadState[@id="+id+"]").execute(dataBaseContext);                                  
+           if(!queryResult.isEmpty()){
+            
             JAXBContext context = JAXBContext.newInstance(LoadStateAuxiliar.class);            
             Unmarshaller XMLoader = context.createUnmarshaller();
             StringReader reader = new StringReader(queryResult);
             c = (LoadStateAuxiliar) XMLoader.unmarshal(reader);
+            state = new LoadState(c);
+           }
             
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
 
         }
-        LoadState state = new LoadState(c);
+        
+        
+        
         return state;
 	}
 
 	@Override
-	public void AddMovement(MoveCommand command,int id) {
+	public void AddMovement(MoveCommand command,String id) {
             
 		try {
                     new XQuery("insert node " + command + "into storeGame/LoadState[@id=" + id + "]/command").execute(dataBaseContext);
@@ -84,7 +112,7 @@ public class XMLDataBase implements DataBaseAbstract{
 	}
 
 	@Override
-	public void RemoveMovement(int id) {            
+	public void RemoveMovement(String id) {            
             try {
                 new XQuery("delete node storeGame/LoadState[@id=" + id + "]/command/comando [last()]").execute(dataBaseContext);
                 

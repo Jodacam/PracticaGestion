@@ -15,9 +15,9 @@ import config.LoadState;
 public interface DataBaseAbstract {
     
     public void StoreAll(LoadState state);
-    public LoadState LoadFromDataBase(int id);
-    public void AddMovement(MoveCommand command,int id);
-    public void RemoveMovement(int id);
+    public LoadState LoadFromDataBase(String id);
+    public void AddMovement(MoveCommand command,String id);
+    public void RemoveMovement(String id);
     
     
 }

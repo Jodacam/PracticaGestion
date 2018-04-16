@@ -23,17 +23,17 @@ public class LoadStateAuxiliar {
     private Config config;
     private List<MoveInformation> command;
     private String imagePath;
-    private int id;
+    private String id;
 
     
     
     
     @XmlAttribute(name = "id")
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
  

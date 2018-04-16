@@ -18,8 +18,10 @@ public class LoadState {
     private Config config;
     private Deque<MoveCommand> command;
     private String imagePath;
-    private int id;
-    public LoadState(Config config, Deque<MoveCommand> command, String imagePath, int id) {
+    private String id;
+
+
+    public LoadState(Config config, Deque<MoveCommand> command, String imagePath, String id) {
         this.config = config;
         this.command = command;
         this.imagePath = imagePath;
@@ -34,7 +36,7 @@ public class LoadState {
         for(MoveInformation info: c.getCommand()){
             int[] auxArray = {info.getN1(),info.getN2()};
             MoveCommand m = new MoveCommand(auxArray,null);
-            command.add(m);      
+            command.addFirst(m);      
         }
         
                
@@ -63,13 +65,11 @@ public class LoadState {
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
-    
-    
-    
-    
-    
-    
-    
+
+    @Override
+    public String toString() {
+        return "element LoadState{ attribute  id {'" +id+"'},"   + config + ",element command {''} ,element imagePath{'" + imagePath + "'} } ";
+    }
     
     
     

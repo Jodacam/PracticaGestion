@@ -21,7 +21,7 @@ public class Config {
     private String gameName; 
 
     
-    
+    @XmlElement(name = "gameName")
     public String getGameName() {
         return gameName;
     }
@@ -54,6 +54,12 @@ public class Config {
     @XmlElement(name = "imageSize")
     public int getImageSize() {
         return imageSize;
+    }
+
+    @Override
+    public String toString() {
+        return "element Config { element numColumn{'" + numColumn + "'}, element numRow {'" + numRow + "'}, element imageSize {'" + imageSize + "'},"
+                + " element gameName {'" + gameName + "'} }";
     }
     
     
