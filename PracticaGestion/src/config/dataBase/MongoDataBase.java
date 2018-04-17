@@ -15,7 +15,7 @@ import config.LoadState;
 public class MongoDataBase implements DataBaseAbstract{
 
     @Override
-    public void StoreAll(LoadState state) {
+    public boolean StoreAll(LoadState state) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -26,13 +26,13 @@ public class MongoDataBase implements DataBaseAbstract{
 
 	@Override
 	public void AddMovement(MoveCommand command,String id) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void RemoveMovement(String id) {
-		// TODO Auto-generated method stub
+
 		
 	}
     

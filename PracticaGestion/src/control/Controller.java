@@ -43,12 +43,16 @@ public class Controller extends AbstractController {
                     MoveCommand movimientoAnterior = (MoveCommand) movimientos.getFirst();                                       
                     int[] movimiento = this.getViewFromObservers().getRandomMovement(movimientoAnterior.Movimiento[0], movimientoAnterior.Movimiento[1]);
                     notifyObservers(movimiento[0],movimiento[1]);
-                    movimientos.push(new MoveCommand(movimiento,this));
+                    MoveCommand dCommand = new MoveCommand(movimiento,this);
+                    ConfigLoader.getInstance().SaveMovement(dCommand);
+                    movimientos.push(dCommand);
                 } else {
                     
                    int[] movimiento = this.getViewFromObservers().getRandomMovement(1,0);
                     notifyObservers(movimiento[0],movimiento[1]);
-                    movimientos.push(new MoveCommand(movimiento,this));
+                    MoveCommand dCommand = new MoveCommand(movimiento,this);
+                    ConfigLoader.getInstance().SaveMovement(dCommand);
+                    movimientos.push(dCommand);
                 }
             }
 
@@ -74,8 +78,20 @@ public class Controller extends AbstractController {
         });
 
         EventsFunctions.put("save", (String[] param) -> {
-            ConfigLoader.getInstance().SaveInDataBase(PuzzleGUI.getInstance().GetNameFromPanel(),movimientos, getViewFromObservers().getImage());
+            ConfigLoader.getInstance().SaveGame(movimientos, getViewFromObservers().getImage());
         });
+        
+        
+		EventsFunctions.put("saveInDataBase", (String[] param) -> {
+			if (ConfigLoader.getInstance().SaveInDataBase( movimientos,
+					getViewFromObservers().getImage())) {
+				System.out.println("Partida Guardada");
+			} else {
+				 System.out.println("Partida Ya existente, por favor seleccione otro nombre");
+			}
+		});
+        
+        
 
         EventsFunctions.put("load", (String[] param) -> {
             LoadState state = ConfigLoader.getInstance().Load();
@@ -95,6 +111,7 @@ public class Controller extends AbstractController {
             String loadName = PuzzleGUI.getInstance().GetNameFromPanel();
             LoadState state = ConfigLoader.getInstance().LoadFromDataBase(loadName);
             if(state != null){
+            	ConfigLoader.getInstance().SetNewConfig(state.getConfig());
                 this.LoadMovement(state);
             }else{
                 System.out.println("Partida No encontrada");

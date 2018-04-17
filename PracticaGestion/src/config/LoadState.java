@@ -30,6 +30,7 @@ public class LoadState {
 
     public LoadState(LoadStateAuxiliar c) {
         config = c.getConfig();
+        config.setStoredInDB(true);
         imagePath = c.getImagePath().replace("\"", "");
         id = c.getId();
         command = new ConcurrentLinkedDeque();
@@ -71,6 +72,8 @@ public class LoadState {
         return "element LoadState{ attribute  id {'" +id+"'},"   + config + ",element command {''} ,element imagePath{'" + imagePath + "'} } ";
     }
     
-    
+    public String getId() {
+    	return id;
+    }
     
 }

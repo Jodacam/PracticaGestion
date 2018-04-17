@@ -76,7 +76,7 @@ public class ConfigLoader {
             Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
         }
         ActualConfig = c;
-
+        ActualConfig.setStoredInDB(false);
         dataBase = new XMLDataBase("LoadStates.xml", ProyectDir + FileSeparator + "xmlDataBase");       
     }
 
@@ -94,6 +94,7 @@ public class ConfigLoader {
         return state;
     }
 
+    
     public void SaveGame(Deque<Command> list, File image) {
         if (ActualConfig.getGameName() == null) {
             String inputString = JOptionPane.showInputDialog(null, "Please write the save name");
@@ -155,34 +156,58 @@ public class ConfigLoader {
         ActualConfig.setImageSize(size);
         ActualConfig.setNumColumn(colum);
         ActualConfig.setNumRow(row);
+        ActualConfig.setStoredInDB(false);
     }
     
-    public void SaveMovement(MoveCommand d){      
+    public void SaveMovement(MoveCommand d){    
+    	 if(ActualConfig.isStoredInDB())
             dataBase.AddMovement(d,ActualConfig.getGameName());
     }
-    public void DeleteMovement(){               
+    public void DeleteMovement(){   
+    	if(ActualConfig.isStoredInDB())
             dataBase.RemoveMovement(ActualConfig.getGameName());
     }
     public LoadState LoadFromDataBase(String id){
+   
        return dataBase.LoadFromDataBase(id);
     }
     
-    public boolean SaveInDataBase(String newName,Deque<Command> list,File image){
-       
-        boolean exist = false;               
-        Deque<MoveCommand> c = new ConcurrentLinkedDeque<>();
-        list.forEach((d) -> {
-            c.add((MoveCommand) d);
-        });
-        
-        String imageName = "default";
-        if (image != null) {
-            imageName = FileSeparator + "saveGame" + FileSeparator + "imageSaves" + FileSeparator + ActualConfig.getGameName() + "_saveImage";
-        }
-        
-        LoadState state = new LoadState(ActualConfig, c,imageName, newName);       
-        dataBase.StoreAll(state);
-        return  exist;
-    }
+	public boolean SaveInDataBase(Deque<Command> list, File image) {
+
+		boolean couldStore = true;
+
+		if (!ActualConfig.isStoredInDB()) {
+			String newName = PuzzleGUI.getInstance().GetNameFromPanel();
+			Deque<MoveCommand> c = new ConcurrentLinkedDeque<>();
+			list.forEach(d -> {
+				c.add((MoveCommand) d);
+			});
+
+			String imageName = "default";
+			if (image != null) {
+				imageName = FileSeparator + "saveGame" + FileSeparator + "imageSaves" + FileSeparator
+						+ ActualConfig.getGameName() + "_saveImage";
+			}
+			
+
+            
+			
+			LoadState state = new LoadState(ActualConfig, c, imageName, newName);
+			couldStore = dataBase.StoreAll(state);
+			if(couldStore) {
+				ActualConfig.setGameName(newName);
+				 try {
+			            if (image != null) {
+			                BufferedImage imageBuffed = ImageIO.read(image);
+			                ImageIO.write(imageBuffed, "jpg", new File(ProyectDir + imageName));
+			            }		           
+			        } catch (IOException ex) {
+			            Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
+			        }
+			}
+			ActualConfig.setStoredInDB(couldStore);
+		}
+		return couldStore;
+	}
 
 }

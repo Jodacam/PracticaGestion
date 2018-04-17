@@ -98,8 +98,12 @@ public class PuzzleGUI extends JFrame{
         JMenuItem save = new JMenuItem("Save Game");
         save.setActionCommand("save");
         
+        JMenuItem saveDB = new JMenuItem("Save In Data Base");
+        saveDB.setActionCommand("saveInDataBase");
+        
         JMenuItem loadGame = new JMenuItem("Load Local Game");
         loadGame.setActionCommand("load");
+        
         JMenuItem loadGameFromDataBase = new JMenuItem("Load Game From Data Base");
         loadGameFromDataBase.setActionCommand("loadDataBase");
         
@@ -110,6 +114,7 @@ public class PuzzleGUI extends JFrame{
         JMenuItem info = new JMenuItem("Info");
         info.setActionCommand("info");
 
+        archive.add(saveDB);
         archive.add(loadGameFromDataBase);
         archive.add(save);
         archive.add((loadGame));
@@ -119,6 +124,7 @@ public class PuzzleGUI extends JFrame{
 
         menu.add(archive);
         menu.add(help);
+        saveDB.addActionListener(controller);
         loadGameFromDataBase.addActionListener(controller);
         loadGame.addActionListener(controller);
         save.addActionListener(controller);

@@ -19,6 +19,7 @@ public class Config {
     private int numRow;
     private int imageSize;    
     private String gameName; 
+    private boolean storedInDB;
 
     
     @XmlElement(name = "gameName")
@@ -68,6 +69,14 @@ public class Config {
     public void setImageSize(int imageSize) {
         this.imageSize = imageSize;
     }
+
+	public boolean isStoredInDB() {
+		return storedInDB;
+	}
+
+	public void setStoredInDB(boolean storedInDB) {
+		this.storedInDB = storedInDB;
+	}
 
 
 
