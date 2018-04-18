@@ -64,6 +64,7 @@ public class XMLDataBase implements DataBaseAbstract {
 				  }
 				
 				couldStore = true;
+				UpdateFile();
 			}
 
 		} catch (BaseXException ex) {
@@ -101,6 +102,7 @@ public class XMLDataBase implements DataBaseAbstract {
 		try {
 			new XQuery("insert node " + command + "into "+ QUERY_INTO + id + "']/command")
 					.execute(dataBaseContext);
+			UpdateFile();
 
 		} catch (Exception e) {
 
@@ -114,12 +116,23 @@ public class XMLDataBase implements DataBaseAbstract {
 		try {
 			new XQuery("delete node "+ QUERY_INTO + id + "']/command/comando [last()]")
 					.execute(dataBaseContext);
+			UpdateFile();
 
 		} catch (Exception e) {
 
 			e.printStackTrace();
 		}
 
+	}
+	
+	private void UpdateFile() {
+		try {
+			new XQuery("for $item in /storeGame \n" + "return file:write('xmlDataBase/LoadStates.xml', $item)")
+			.execute(dataBaseContext);
+		} catch (BaseXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
     

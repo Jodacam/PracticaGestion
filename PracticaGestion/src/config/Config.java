@@ -20,6 +20,7 @@ public class Config {
     private int imageSize;    
     private String gameName; 
     private boolean storedInDB;
+    private String usedDataBase;
 
     
     @XmlElement(name = "gameName")
@@ -76,6 +77,16 @@ public class Config {
 
 	public void setStoredInDB(boolean storedInDB) {
 		this.storedInDB = storedInDB;
+	}
+    
+	
+	@XmlElement(name = "usedDataBase")
+	public String getUsedDataBase() {
+		return usedDataBase;
+	}
+
+	public void setUsedDataBase(String usedDataBase) {
+		this.usedDataBase = usedDataBase;
 	}
 
 

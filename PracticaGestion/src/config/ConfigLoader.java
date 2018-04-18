@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import command.Command;
 import command.MoveCommand;
 import config.dataBase.DataBaseAbstract;
+import config.dataBase.MongoDataBase;
 import config.dataBase.XMLDataBase;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -27,6 +28,10 @@ import javax.swing.JOptionPane;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.input.sax.XMLReaders;
+
 import view.PuzzleGUI;
 
 /**
@@ -64,21 +69,33 @@ public class ConfigLoader {
 
     }
 
-    public void LoadDefaultConfig() {
+	public void LoadDefaultConfig() {
 
-        Config c = null;
-        try {
-            JAXBContext context = JAXBContext.newInstance(Config.class);
-            Unmarshaller XMLoader = context.createUnmarshaller();
-            File xml = new File("config.xml");
-            c = (Config) XMLoader.unmarshal(xml);
-        } catch (JAXBException ex) {
-            Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        ActualConfig = c;
-        ActualConfig.setStoredInDB(false);
-        dataBase = new XMLDataBase("LoadStates.xml", ProyectDir + FileSeparator + "xmlDataBase");       
-    }
+		Config c = null;
+		try {
+			SAXBuilder builder = new SAXBuilder(XMLReaders.DTDVALIDATING);
+			File miDoc = new File("config.xml");
+			org.jdom2.Document doc;
+			doc = (org.jdom2.Document) builder.build(miDoc);
+
+			try {
+				JAXBContext context = JAXBContext.newInstance(Config.class);
+				Unmarshaller XMLoader = context.createUnmarshaller();
+				File xml = new File("config.xml");
+				c = (Config) XMLoader.unmarshal(xml);
+			} catch (JAXBException ex) {
+				Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			ActualConfig = c;
+			ActualConfig.setStoredInDB(false);
+			if (ActualConfig.getUsedDataBase().equals("XML"))
+				dataBase = new XMLDataBase("LoadStates.xml", ProyectDir + FileSeparator + "xmlDataBase");
+			else
+				dataBase = new MongoDataBase();
+		} catch (Exception e) {
+			System.out.println("XML no valido");
+		}
+	}
 
     public LoadState LoadGame(File saveFile) {
         LoadState state = null;
@@ -186,7 +203,7 @@ public class ConfigLoader {
 			String imageName = "default";
 			if (image != null) {
 				imageName = FileSeparator + "saveGame" + FileSeparator + "imageSaves" + FileSeparator
-						+ ActualConfig.getGameName() + "_saveImage";
+						+ newName + "_saveImage";
 			}
 			
 
