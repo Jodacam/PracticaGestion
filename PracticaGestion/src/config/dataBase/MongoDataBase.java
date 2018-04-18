@@ -51,7 +51,7 @@ public class MongoDataBase implements DataBaseAbstract{
         
     	String json = JSONMapper.toJson(state);
     	try {
-    	Document.parse(json); 
+    	
     	collection.insertOne(Document.parse(json));
     	
     	couldStore = true;
@@ -77,13 +77,16 @@ public class MongoDataBase implements DataBaseAbstract{
 	@Override
 	public void AddMovement(MoveCommand command,String id) {
 
-		
+		collection.updateOne(eq("id", id), );
 	}
 
 	@Override
 	public MoveCommand RemoveMovement(String id) {
-
-		
+            LoadState state = LoadFromDataBase(id);
+            String json = JSONMapper.toJson(state);
+            MoveCommand c = state.getCommand().pollLast();
+            collection.replaceOne(eq("id", id), Document.parse(json));
+            return c;		
 	}
     
 }
