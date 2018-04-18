@@ -64,11 +64,9 @@ public class BoardModel extends AbstractModel {
     @Override
     public void update(int blankPos, int movedPos) {
        if(blankPos !=99)
-        {
-        System.out.println("Board View: "+blankPos+", "+movedPos);
+        {        
         PieceModel p = iconArray.get(movedPos);
         PieceModel p2 = iconArray.get(blankPos);
-
             int x = p.getIndexColumn();
             int y = p.getIndexRow();
             p.setPosition(p2.getIndexColumn(), p2.getIndexRow());

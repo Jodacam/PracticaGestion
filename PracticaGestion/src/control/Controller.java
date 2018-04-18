@@ -116,8 +116,12 @@ public class Controller extends AbstractController {
         
         EventsFunctions.put("loadDataBase", (String[] param) -> {
             String loadName = PuzzleGUI.getInstance().GetNameFromPanel();
+            long startTime = System.currentTimeMillis();
             LoadState state = ConfigLoader.getInstance().LoadFromDataBase(loadName);
+            long endTime = System.currentTimeMillis() - startTime;
+            System.out.println(endTime);
             if(state != null){
+                
             	ConfigLoader.getInstance().SetNewConfig(state.getConfig());
                 this.LoadMovement(state);
             }else{
@@ -156,7 +160,7 @@ public class Controller extends AbstractController {
     }
 
     public void mouseClicked(MouseEvent me) {// Metodo que recibe el evento de click del raton
-        System.out.println(me.getX() + ", " + me.getY());
+        
         int x = me.getX();
         int y = me.getY();
         int imageSize = ConfigLoader.getInstance().getActualConfig().getImageSize();

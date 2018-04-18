@@ -187,8 +187,9 @@ public class ConfigLoader {
     		return null;
     }
     public LoadState LoadFromDataBase(String id){
-   
-       return dataBase.LoadFromDataBase(id);
+
+     return dataBase.LoadFromDataBase(id);
+       
     }
     
 	public boolean SaveInDataBase(Deque<Command> list, File image) {

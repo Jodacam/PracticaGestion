@@ -19,6 +19,8 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.PushOptions;
+import com.mongodb.client.model.Updates;
 
 import command.MoveCommand;
 import config.LoadState;
@@ -48,7 +50,8 @@ public class MongoDataBase implements DataBaseAbstract{
     @Override
     public boolean StoreAll(LoadState state) {
         boolean couldStore = false;
-        
+        state.getConfig().setStoredInDB(true);
+        state.getConfig().setGameName(state.getId());
     	String json = JSONMapper.toJson(state);
     	try {
     	
@@ -57,8 +60,8 @@ public class MongoDataBase implements DataBaseAbstract{
     	couldStore = true;
     	}
     	catch (Exception e) {
-			
-		}
+		
+        }
     	return couldStore;
     }
 
@@ -77,14 +80,20 @@ public class MongoDataBase implements DataBaseAbstract{
 	@Override
 	public void AddMovement(MoveCommand command,String id) {
 
-		collection.updateOne(eq("id", id), );
+                String json = JSONMapper.toJson(command);
+                PushOptions p = new PushOptions();
+                p.position(0);
+                List<Document> moves = new ArrayList<>();
+                moves.add(Document.parse(json));
+		collection.updateOne(eq("id", id), Updates.pushEach("command", moves, p)); 
+                
 	}
 
 	@Override
 	public MoveCommand RemoveMovement(String id) {
-            LoadState state = LoadFromDataBase(id);
+            LoadState state = LoadFromDataBase(id);          
+            MoveCommand c = state.getCommand().pollFirst();
             String json = JSONMapper.toJson(state);
-            MoveCommand c = state.getCommand().pollLast();
             collection.replaceOne(eq("id", id), Document.parse(json));
             return c;		
 	}

@@ -113,7 +113,6 @@ public class BoardView extends JPanel implements Observer {
         
         if(blankPos !=99)
         {
-        System.out.println("Board View: "+blankPos+", "+movedPos);
         PieceView p = iconArray.get(movedPos);
         PieceView p2 = iconArray.get(blankPos);
 
@@ -146,7 +145,7 @@ public class BoardView extends JPanel implements Observer {
 
     //Dado una posicion X e Y localizar una pieza
     private int locatePiece(int posX,int posY){
-        System.out.println("BoardView locatePiece: "+posX+", "+posY);//texto para debuggear
+       
         int posArray = (posX/PuzzleGUI.imageSize)+(posY/PuzzleGUI.imageSize*PuzzleGUI.columnNum);
         return posArray;
     }

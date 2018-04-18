@@ -9,4 +9,23 @@
     <imagePath>"default"</imagePath>
     <command/>
   </LoadState>
+  <LoadState id="Celeste">
+    <Config>
+      <numColumn>4</numColumn>
+      <numRow>4</numRow>
+      <imageSize>32</imageSize>
+      <gameName>null</gameName>
+    </Config>
+    <command>
+      <comando>
+        <n1>0</n1>
+        <n2>1</n2>
+      </comando>
+      <comando>
+        <n1>1</n1>
+        <n2>2</n2>
+      </comando>
+    </command>
+    <imagePath>\saveGame\imageSaves\Celeste_saveImage</imagePath>
+  </LoadState>
 </storeGame>
