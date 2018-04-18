@@ -17,7 +17,7 @@ public interface DataBaseAbstract {
     public boolean StoreAll(LoadState state);
     public LoadState LoadFromDataBase(String id);
     public void AddMovement(MoveCommand command,String id);
-    public void RemoveMovement(String id);
+    public MoveCommand RemoveMovement(String id);
     
     
 }

@@ -81,7 +81,7 @@ public class MongoDataBase implements DataBaseAbstract{
 	}
 
 	@Override
-	public void RemoveMovement(String id) {
+	public MoveCommand RemoveMovement(String id) {
 
 		
 	}

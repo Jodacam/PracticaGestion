@@ -180,9 +180,11 @@ public class ConfigLoader {
     	 if(ActualConfig.isStoredInDB())
             dataBase.AddMovement(d,ActualConfig.getGameName());
     }
-    public void DeleteMovement(){   
+    public MoveCommand DeleteMovement(){   
     	if(ActualConfig.isStoredInDB())
-            dataBase.RemoveMovement(ActualConfig.getGameName());
+           return dataBase.RemoveMovement(ActualConfig.getGameName());
+    	else
+    		return null;
     }
     public LoadState LoadFromDataBase(String id){
    

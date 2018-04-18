@@ -59,8 +59,15 @@ public class Controller extends AbstractController {
         });
         EventsFunctions.put("solve", (String[] param) -> {
             while (!movimientos.isEmpty()) {
-                ConfigLoader.getInstance().DeleteMovement();
-                movimientos.pop().undoCommand();
+                MoveCommand moveCommand = ConfigLoader.getInstance().DeleteMovement();
+                if(moveCommand == null)
+                	movimientos.pop().undoCommand();
+                else {
+                	movimientos.pop();
+                	moveCommand.controller = this;
+                	moveCommand.undoCommand();
+                }
+                	
             }
         });
 

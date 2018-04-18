@@ -15,7 +15,7 @@ public class MoveCommand implements Command {
 
     //private Controller control;
     public int[] Movimiento;    
-    private transient AbstractController controller;
+    public transient AbstractController controller;
     
     @Override
     public void undoCommand() {        

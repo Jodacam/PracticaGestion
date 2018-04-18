@@ -19,6 +19,8 @@ import org.basex.query.up.primitives.db.DBAdd;
 import command.MoveCommand;
 import config.LoadState;
 import config.LoadStateAuxiliar;
+import config.MoveInformation;
+
 import java.io.File;
 import java.io.StringReader;
 import java.util.logging.Level;
@@ -112,17 +114,25 @@ public class XMLDataBase implements DataBaseAbstract {
 	}
 
 	@Override
-	public void RemoveMovement(String id) {
+	public MoveCommand RemoveMovement(String id) {
+		MoveCommand moveCommand = null;
 		try {
+			String query = new XQuery(QUERY_INTO + id+"']/command/comando [last()]").execute(dataBaseContext);
 			new XQuery("delete node "+ QUERY_INTO + id + "']/command/comando [last()]")
 					.execute(dataBaseContext);
+			
+			JAXBContext context = JAXBContext.newInstance(MoveInformation.class);
+			Unmarshaller XMLoader = context.createUnmarshaller();
+			StringReader reader = new StringReader(query);
+			MoveInformation c =(MoveInformation)  XMLoader.unmarshal(reader);
+			moveCommand = new MoveCommand(new int[] {c.getN1(), c.getN2()},null);
 			UpdateFile();
 
 		} catch (Exception e) {
 
 			e.printStackTrace();
 		}
-
+		return moveCommand;
 	}
 	
 	private void UpdateFile() {
