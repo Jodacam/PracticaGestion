@@ -194,38 +194,39 @@ public class ConfigLoader {
     
 	public boolean SaveInDataBase(Deque<Command> list, File image) {
 
-		boolean couldStore = true;
+		boolean couldStore =true;
 
 		if (!ActualConfig.isStoredInDB()) {
 			String newName = PuzzleGUI.getInstance().GetNameFromPanel();
-			Deque<MoveCommand> c = new ConcurrentLinkedDeque<>();
-			list.forEach(d -> {
-				c.add((MoveCommand) d);
-			});
-
-			String imageName = "default";
-			if (image != null) {
-				imageName = FileSeparator + "saveGame" + FileSeparator + "imageSaves" + FileSeparator
-						+ newName + "_saveImage";
-			}
 			
+			if (newName != null && !newName.isEmpty() ) {
+				Deque<MoveCommand> c = new ConcurrentLinkedDeque<>();
+				list.forEach(d -> {
+					c.add((MoveCommand) d);
+				});
 
-            
-			
-			LoadState state = new LoadState(ActualConfig, c, imageName, newName);
-			couldStore = dataBase.StoreAll(state);
-			if(couldStore) {
-				ActualConfig.setGameName(newName);
-				 try {
-			            if (image != null) {
-			                BufferedImage imageBuffed = ImageIO.read(image);
-			                ImageIO.write(imageBuffed, "jpg", new File(ProyectDir + imageName));
-			            }		           
-			        } catch (IOException ex) {
-			            Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
-			        }
-			}
-			ActualConfig.setStoredInDB(couldStore);
+				String imageName = "default";
+				if (image != null) {
+					imageName = FileSeparator + "saveGame" + FileSeparator + "imageSaves" + FileSeparator + newName
+							+ "_saveImage";
+				}
+
+				LoadState state = new LoadState(ActualConfig, c, imageName, newName);
+				couldStore = dataBase.StoreAll(state);
+				if (couldStore) {
+					ActualConfig.setGameName(newName);
+					try {
+						if (image != null) {
+							BufferedImage imageBuffed = ImageIO.read(image);
+							ImageIO.write(imageBuffed, "jpg", new File(ProyectDir + imageName));
+						}
+					} catch (IOException ex) {
+						Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
+					}
+				}
+				ActualConfig.setStoredInDB(couldStore);
+			}else
+				couldStore = false;
 		}
 		return couldStore;
 	}

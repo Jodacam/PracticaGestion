@@ -6,7 +6,7 @@ import view.BoardView;
 import view.PuzzleGUI;
 
 /*
- * Copyright 2016 Miguel Ángel Rodríguez-García (miguel.rodriguez@urjc.es).
+ * Copyright 2016 Miguel Ã�ngel RodrÃ­guez-GarcÃ­a (miguel.rodriguez@urjc.es).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import view.PuzzleGUI;
 
 /**
  * Clase principal que ejecuta el juego
- * @Author Miguel Ángel
+ * @Author Miguel Ã�ngel
  * @version 1.0
  */
 public class PuzzleApp {
@@ -46,14 +46,15 @@ public class PuzzleApp {
         // Creamos el modelo
         BoardModel m = new BoardModel(rowNum, columnNum, imageSize, imageList);
         // Creamos el controlador
-        Controller c  = new Controller();
+        Controller c  = new Controller(m);
         // Inicializamos la GUI
         PuzzleGUI.initialize(c, rowNum, columnNum, imageSize, imageList);
         // Obtenemos la vista del tablero
         BoardView b = PuzzleGUI.getInstance().getBoardView();
-        // Añadimos un nuevo observador al controlador
+        // AÃ±adimos un nuevo observador al controlador
         c.addObserver(m);
-        // Visualizamos la aplicación.
+        c.setViewFromObservers();
+        // Visualizamos la aplicaciÃ³n.
         PuzzleGUI.getInstance().setVisible(true);
     }
 }
