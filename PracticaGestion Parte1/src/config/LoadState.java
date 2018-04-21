@@ -30,7 +30,6 @@ public class LoadState {
 
     public LoadState(LoadStateAuxiliar c) {
         config = c.getConfig();
-        config.setStoredInDB(true);
         imagePath = c.getImagePath().replace("\"", "");
         id = c.getId();
         command = new ConcurrentLinkedDeque();

@@ -19,8 +19,6 @@ public class Config {
     private int numRow;
     private int imageSize;    
     private String gameName; 
-    private boolean storedInDB;
-    private String usedDataBase;
 
     
     @XmlElement(name = "gameName")
@@ -63,36 +61,9 @@ public class Config {
         return "element Config { element numColumn{'" + numColumn + "'}, element numRow {'" + numRow + "'}, element imageSize {'" + imageSize + "'},"
                 + " element gameName {'" + gameName + "'} }";
     }
-    
-    
-    
-    
+ 
     public void setImageSize(int imageSize) {
         this.imageSize = imageSize;
     }
 
-	public boolean isStoredInDB() {
-		return storedInDB;
-	}
-
-	public void setStoredInDB(boolean storedInDB) {
-		this.storedInDB = storedInDB;
-	}
-    
-	
-	@XmlElement(name = "usedDataBase")
-	public String getUsedDataBase() {
-		return usedDataBase;
-	}
-
-	public void setUsedDataBase(String usedDataBase) {
-		this.usedDataBase = usedDataBase;
-	}
-
-
-
-    
-    
-    
-    
 }

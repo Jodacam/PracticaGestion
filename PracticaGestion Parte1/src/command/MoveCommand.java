@@ -25,6 +25,7 @@ public class MoveCommand implements Command {
     public MoveCommand(int [] piezas,AbstractController c) {
     	Movimiento = piezas;
         controller = c;
+        redoCommand();
     }
 
 
