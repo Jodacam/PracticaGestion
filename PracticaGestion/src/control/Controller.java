@@ -128,7 +128,13 @@ public class Controller extends AbstractController {
                 System.out.println("Partida No encontrada");
             }
         });
-        
+                       
+        EventsFunctions.put("Mongo", (String[] param)->{
+            ConfigLoader.getInstance().changeDataBase("Mongo");       
+        });
+        EventsFunctions.put("XML", (String[] param)->{
+            ConfigLoader.getInstance().changeDataBase("XML");       
+        });
         
 
     }

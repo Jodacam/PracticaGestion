@@ -7,14 +7,18 @@ package config.dataBase;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.mongodb.BasicDBObject;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import static com.mongodb.client.model.Filters.*;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mongodb.MongoClient;
+import com.mongodb.client.model.Filters;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.PushOptions;
 import com.mongodb.client.model.Updates;
 

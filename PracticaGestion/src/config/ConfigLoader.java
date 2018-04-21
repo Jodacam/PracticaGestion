@@ -230,4 +230,21 @@ public class ConfigLoader {
 		return couldStore;
 	}
 
+    public void changeDataBase(String dataBaseString) {
+       if (!dataBaseString.equals(ActualConfig.getUsedDataBase())){
+        
+        if(!ActualConfig.isStoredInDB()){
+        
+            
+        }
+        
+        else{
+        
+        }
+        
+       }else{
+       
+       }
+    }
+
 }
