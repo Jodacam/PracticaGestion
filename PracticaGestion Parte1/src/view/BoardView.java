@@ -18,7 +18,7 @@ import java.util.Iterator;
 
 /**
  * Clase que representa la vista del tablero
- * @author Miguel Ángel
+ * @author Miguel Ã�ngel
  * @version 1.0
  */
 public class BoardView extends JPanel implements Observer {
@@ -29,9 +29,15 @@ public class BoardView extends JPanel implements Observer {
     private int blankPiece;
     private File image;
     private Random r = new Random();
+    private int columnNum;
+    private int rowNum;
+    private int imageSize;
 
     public BoardView(int rowNum, int columnNum,int imageSize, String[] imageList){
         super();
+        this.columnNum = columnNum;
+        this.rowNum = rowNum;
+        this.imageSize = imageSize;
         iconArray = new ArrayList();
         int leng = rowNum*columnNum;
         blankPiece = 0;
@@ -46,7 +52,9 @@ public class BoardView extends JPanel implements Observer {
     public BoardView(int rowNum, int columnNum, int imageSize, File imageFile){
         super();
         image = imageFile;
-        
+        this.columnNum = columnNum;
+        this.rowNum = rowNum;
+        this.imageSize = imageSize;
         iconArray = new ArrayList<>();
         BufferedImage b = resizeImage(imageFile);
         Image[] imageList = splitImage(b);
@@ -75,9 +83,9 @@ public class BoardView extends JPanel implements Observer {
             Logger.getLogger(BoardView.class.getName()).log(Level.SEVERE, null, ex);
         }                  
         
-        resizedImage = new BufferedImage(PuzzleGUI.imageSize*PuzzleGUI.columnNum,PuzzleGUI.imageSize*PuzzleGUI.rowNum,BufferedImage.TYPE_INT_RGB);
+        resizedImage = new BufferedImage(imageSize*columnNum,imageSize*rowNum,BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = resizedImage.createGraphics();
-        g2d.drawImage(image, 0, 0, PuzzleGUI.imageSize*PuzzleGUI.columnNum, PuzzleGUI.imageSize*PuzzleGUI.rowNum, null);
+        g2d.drawImage(image, 0, 0, imageSize*columnNum, imageSize*rowNum, null);
         g2d.dispose();        
         
         return(resizedImage);
@@ -85,23 +93,23 @@ public class BoardView extends JPanel implements Observer {
 
 
 
-    //dividimos la imagen en el número
+    //dividimos la imagen en el nÃºmero
     private BufferedImage[] splitImage(BufferedImage image){
-        //Divisor de imágenes
+        //Divisor de imÃ¡genes
 
-        BufferedImage images[] = new BufferedImage[PuzzleGUI.getInstance().columnNum*PuzzleGUI.getInstance().rowNum];
+        BufferedImage images[] = new BufferedImage[columnNum*rowNum];
         
-        for(int i =0; i < PuzzleGUI.rowNum; i++){
-            for(int j =0; j < PuzzleGUI.columnNum; j++){
-                BufferedImage pieza = image.getSubimage(j*PuzzleGUI.imageSize, i*PuzzleGUI.imageSize, PuzzleGUI.imageSize, PuzzleGUI.imageSize);
+        for(int i =0; i < rowNum; i++){
+            for(int j =0; j < columnNum; j++){
+                BufferedImage pieza = image.getSubimage(j*imageSize, i*imageSize, imageSize, imageSize);
                 /*try {
-                    //ImageIO.write(pieza, "jpg", new File("foto"+i*PuzzleGUI.columnNum+j+".jpg"));
+                    //ImageIO.write(pieza, "jpg", new File("foto"+i*columnNum+j+".jpg"));
                 } catch (IOException ex) {
                     Logger.getLogger(BoardView.class.getName()).log(Level.SEVERE, null, ex);
                 }*/
                 
                 
-                images[i*PuzzleGUI.columnNum+j] = pieza;
+                images[i*columnNum+j] = pieza;
             }
         }
         
@@ -123,8 +131,6 @@ public class BoardView extends JPanel implements Observer {
             iconArray.set(blankPos, p);
             iconArray.set(movedPos, p2);
             blankPiece = movedPos;    
-            //Integer[] pos = {movedPos,blankPos};
-            //PuzzleGUI.getInstance().getCommand().setMovimiento(pos);
             
         }
         this.repaint();
@@ -139,14 +145,14 @@ public class BoardView extends JPanel implements Observer {
         super.paint(g);
         
         for(PieceView iconImage:iconArray){
-            g.drawImage(iconImage.getImage(), iconImage.getIndexColumn()*PuzzleGUI.imageSize, iconImage.getIndexRow()*PuzzleGUI.imageSize, PuzzleGUI.imageSize-1, PuzzleGUI.imageSize-1, this);            
+            g.drawImage(iconImage.getImage(), iconImage.getIndexColumn()*imageSize, iconImage.getIndexRow()*imageSize, imageSize-1, imageSize-1, this);            
         }
     }
 
     //Dado una posicion X e Y localizar una pieza
     private int locatePiece(int posX,int posY){
        
-        int posArray = (posX/PuzzleGUI.imageSize)+(posY/PuzzleGUI.imageSize*PuzzleGUI.columnNum);
+        int posArray = (posX/imageSize)+(posY/imageSize*columnNum);
         return posArray;
     }
 
@@ -203,7 +209,7 @@ public class BoardView extends JPanel implements Observer {
                 if(move == 0){
                     if(piezaMoverFila-1>-1){
                         
-                        int posMover = (piezaMoverFila-1)*PuzzleGUI.columnNum+piezaMoverColumna;
+                        int posMover = (piezaMoverFila-1)*columnNum+piezaMoverColumna;
                     
                         if(posMover != lastPos){
                             randomMove[0] = pos;
@@ -214,9 +220,9 @@ public class BoardView extends JPanel implements Observer {
                     }
                 }
                 if(move == 1){
-                    if(piezaMoverFila+1<PuzzleGUI.rowNum){
+                    if(piezaMoverFila+1<rowNum){
                         
-                        int posMover = (piezaMoverFila+1)*PuzzleGUI.columnNum+piezaMoverColumna;
+                        int posMover = (piezaMoverFila+1)*columnNum+piezaMoverColumna;
                     
                         if(posMover != lastPos){
                             randomMove[0] = pos;
@@ -229,7 +235,7 @@ public class BoardView extends JPanel implements Observer {
                 if(move == 2){
                     if(piezaMoverColumna-1>-1){
                         
-                        int posMover = piezaMoverFila*PuzzleGUI.columnNum+piezaMoverColumna-1;
+                        int posMover = piezaMoverFila*columnNum+piezaMoverColumna-1;
                     
                         if(posMover != lastPos){
                             randomMove[0] = pos;
@@ -240,9 +246,9 @@ public class BoardView extends JPanel implements Observer {
                     }
                 }
                 if(move == 3){
-                    if(piezaMoverColumna+1<PuzzleGUI.columnNum){
+                    if(piezaMoverColumna+1<columnNum){
                         
-                        int posMover = piezaMoverFila*PuzzleGUI.columnNum+piezaMoverColumna+1;
+                        int posMover = piezaMoverFila*columnNum+piezaMoverColumna+1;
                     
                         if(posMover != lastPos){
                             randomMove[0] = pos;

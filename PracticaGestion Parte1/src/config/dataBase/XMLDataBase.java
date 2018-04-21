@@ -6,6 +6,8 @@
 package config.dataBase;
 
 import config.Config;
+import config.ConfigLoader;
+
 import org.basex.core.BaseXException;
 import org.basex.core.Context;
 import org.basex.core.cmd.Add;
@@ -51,7 +53,7 @@ public class XMLDataBase implements DataBaseAbstract {
 
 	@Override
 	public boolean StoreAll(LoadState state) {
-
+		state.getConfig().setGameName(state.getId());
 		boolean couldStore = false;
 		try {
 
@@ -117,7 +119,9 @@ public class XMLDataBase implements DataBaseAbstract {
 	public MoveCommand RemoveMovement(String id) {
 		MoveCommand moveCommand = null;
 		try {
+                        //Obtengo el Comando
 			String query = new XQuery(QUERY_INTO + id+"']/command/comando [last()]").execute(dataBaseContext);
+                        // Lo elimino
 			new XQuery("delete node "+ QUERY_INTO + id + "']/command/comando [last()]")
 					.execute(dataBaseContext);
 			
@@ -137,13 +141,19 @@ public class XMLDataBase implements DataBaseAbstract {
 	
 	private void UpdateFile() {
 		try {
-			new XQuery("for $item in /storeGame \n" + "return file:write('xmlDataBase/LoadStates.xml', $item)")
+			new XQuery("for $item in /storeGame \n" + "return file:write('xmlDataBase"+ConfigLoader.FileSeparator+"LoadStates.xml', $item)")
 			.execute(dataBaseContext);
 		} catch (BaseXException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+
+    @Override
+    public void CloseDataBase() {
+        dataBaseContext.closeDB();
+        dataBaseContext.close();
+    }
 }
     
 

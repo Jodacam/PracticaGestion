@@ -265,7 +265,11 @@ public class PuzzleGUI extends JFrame{
         JOptionPane.showMessageDialog(this, "Has Ganado");
     }
 
-    public String GetNameFromPanel (){
-        return  JOptionPane.showInputDialog(this, "Choose a name to load");
+    public String GetFromPanel (String text){
+        return  JOptionPane.showInputDialog(this, text);
+    }
+
+    public void ShowMessage(String Message) {
+         JOptionPane.showMessageDialog(this, Message);
     }
 }

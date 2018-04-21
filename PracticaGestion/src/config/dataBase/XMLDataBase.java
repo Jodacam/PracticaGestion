@@ -119,7 +119,9 @@ public class XMLDataBase implements DataBaseAbstract {
 	public MoveCommand RemoveMovement(String id) {
 		MoveCommand moveCommand = null;
 		try {
+                        //Obtengo el Comando
 			String query = new XQuery(QUERY_INTO + id+"']/command/comando [last()]").execute(dataBaseContext);
+                        // Lo elimino
 			new XQuery("delete node "+ QUERY_INTO + id + "']/command/comando [last()]")
 					.execute(dataBaseContext);
 			
@@ -146,6 +148,12 @@ public class XMLDataBase implements DataBaseAbstract {
 			e.printStackTrace();
 		}
 	}
+
+    @Override
+    public void CloseDataBase() {
+        dataBaseContext.closeDB();
+        dataBaseContext.close();
+    }
 }
     
 

@@ -197,7 +197,7 @@ public class ConfigLoader {
 		boolean couldStore =true;
 
 		if (!ActualConfig.isStoredInDB()) {
-			String newName = PuzzleGUI.getInstance().GetNameFromPanel();
+			String newName = PuzzleGUI.getInstance().GetFromPanel("Write a name for the save data");
 			
 			if (newName != null && !newName.isEmpty() ) {
 				Deque<MoveCommand> c = new ConcurrentLinkedDeque<>();
@@ -232,20 +232,40 @@ public class ConfigLoader {
 	}
 
     public void changeDataBase(String dataBaseString) {
-       if (!dataBaseString.equals(ActualConfig.getUsedDataBase())){
-        
-        if(!ActualConfig.isStoredInDB()){
-        
-            
+        if (!dataBaseString.equals(ActualConfig.getUsedDataBase())) {
+            LoadState load = dataBase.LoadFromDataBase(ActualConfig.getGameName());
+            dataBase.CloseDataBase();
+            dataBase = dataBaseString.equals("XML") ? new XMLDataBase("LoadStates.xml", ProyectDir + FileSeparator + "xmlDataBase") : new MongoDataBase();
+            if (!ActualConfig.isStoredInDB()) {
+                ActualConfig.setUsedDataBase(dataBaseString);
+                PuzzleGUI.getInstance().ShowMessage("Base de Datos cambiada a " + dataBaseString + "Recuerda tu partida aún no esta guardada en la base de datos");
+            } else {                             
+                    String name = null;
+                    boolean notStore = true;
+                    while (notStore) {
+                        notStore = false;
+                        name = PuzzleGUI.getInstance().GetFromPanel("Dado el cambio de Base datos, esta será guardada, elija un nombre para guardar");
+                        load.setId(name);
+                        load.getConfig().setGameName(name);
+                        load.getConfig().setUsedDataBase(dataBaseString);                      
+                        if (name != null && !name.isEmpty()) {
+                             notStore = !dataBase.StoreAll(load);
+                            
+                        }else{
+                              notStore = true;  
+                        PuzzleGUI.getInstance().ShowMessage("No se pudo guardar la partida, por favor seleccione otro nombre");
+                        }
+
+                    }
+                    ActualConfig.setUsedDataBase(dataBaseString);
+                    PuzzleGUI.getInstance().ShowMessage("Base de Datos cambiada a " + dataBaseString);
+                
+
+            }
+
+        } else {
+            PuzzleGUI.getInstance().ShowMessage("Base de Datos ya utilizada");
         }
-        
-        else{
-        
-        }
-        
-       }else{
-       
-       }
     }
 
 }

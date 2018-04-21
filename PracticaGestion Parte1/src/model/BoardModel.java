@@ -7,7 +7,6 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Random;
-import view.PuzzleGUI;
 
 /**
  *
@@ -74,9 +73,6 @@ public class BoardModel extends AbstractModel {
             iconArray.set(blankPos, p);
             iconArray.set(movedPos, p2);
             blankPiece = movedPos;    
-            if(isPuzzleSolve()){
-                PuzzleGUI.getInstance().mensajeVictoria();
-            }
             
         }
         

@@ -14,4 +14,4 @@
     <!ELEMENT usedDataBase (#PCDATA)>
     
 ]>
-<Config><numColumn>3</numColumn><numRow>3</numRow><imageSize>32</imageSize><usedDataBase>Mongo</usedDataBase></Config>
+<Config><numColumn>3</numColumn><numRow>3</numRow><imageSize>32</imageSize><usedDataBase>XML</usedDataBase></Config>

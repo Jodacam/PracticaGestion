@@ -7,18 +7,14 @@ package config.dataBase;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.mongodb.BasicDBObject;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import static com.mongodb.client.model.Filters.*;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mongodb.MongoClient;
-import com.mongodb.client.model.Filters;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.PushOptions;
 import com.mongodb.client.model.Updates;
 
@@ -34,11 +30,12 @@ public class MongoDataBase implements DataBaseAbstract{
 	final Gson JSONMapper = new Gson();
 	private MongoDatabase database;
 	private MongoCollection<Document> collection;
+        MongoClient mongoClient;
 	public  MongoDataBase() {
 		MongoClientURI uri = new MongoClientURI(
 				"mongodb+srv://admin:.99Kwo@gestiondatos-pzwlg.mongodb.net/gestion");
 
-			MongoClient mongoClient = new MongoClient(uri);
+			 mongoClient = new MongoClient(uri);
 			database = mongoClient.getDatabase("gestion");
 			System.out.println(database.getName());
 			collection = database.getCollection("partida",Document.class);
@@ -79,7 +76,7 @@ public class MongoDataBase implements DataBaseAbstract{
 
 	@Override
 	public void AddMovement(MoveCommand command,String id) {
-
+            
                 String json = JSONMapper.toJson(command);
                 PushOptions p = new PushOptions();
                 p.position(0);
@@ -97,5 +94,10 @@ public class MongoDataBase implements DataBaseAbstract{
             collection.replaceOne(eq("id", id), Document.parse(json));
             return c;		
 	}
+
+    @Override
+    public void CloseDataBase() {
+        mongoClient.close();
+    }
     
 }

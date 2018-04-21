@@ -18,6 +18,7 @@ public interface DataBaseAbstract {
     public LoadState LoadFromDataBase(String id);
     public void AddMovement(MoveCommand command,String id);
     public MoveCommand RemoveMovement(String id);
+    public void CloseDataBase();
     
     
 }

@@ -32,6 +32,9 @@ public class Controller extends AbstractController {
     private Map<String, Function> EventsFunctions = new HashMap<>();
     private BoardView viewInstance;
     private BoardModel modelInstance;
+    private long totalTimeInsert;
+    private long totalTimeRemove;
+   
     //Inicializamos el Controlador
     public Controller(BoardModel m) {
         super();
@@ -50,6 +53,7 @@ public class Controller extends AbstractController {
                     ConfigLoader.getInstance().SaveMovement(dCommand);
                     long endTime = System.currentTimeMillis() - startTime;
                     System.out.println(endTime);
+                    totalTimeInsert+=endTime;
                     movimientos.push(dCommand);
                 } else {
                     
@@ -60,6 +64,7 @@ public class Controller extends AbstractController {
                     movimientos.push(dCommand);
                 }
             }
+            PuzzleGUI.getInstance().ShowMessage("Tiempo Medio de insercion en " + ConfigLoader.getInstance().getActualConfig().getUsedDataBase()+ ": ");
 
         });
         EventsFunctions.put("solve", (String[] param) -> {
@@ -101,9 +106,9 @@ public class Controller extends AbstractController {
 		EventsFunctions.put("saveInDataBase", (String[] param) -> {
 			if (ConfigLoader.getInstance().SaveInDataBase( movimientos,
 					viewInstance.getImage())) {
-				System.out.println("Partida Guardada");
+				PuzzleGUI.getInstance().ShowMessage("Partida Guardada");
 			} else {
-				 System.out.println("Partida Ya existente, por favor seleccione otro nombre");
+				PuzzleGUI.getInstance().ShowMessage("No se ha podido Guardar la partida. Nombre ya elegido o nombre vacio");
 			}
 		});
         
@@ -124,7 +129,7 @@ public class Controller extends AbstractController {
         });
         
         EventsFunctions.put("loadDataBase", (String[] param) -> {
-            String loadName = PuzzleGUI.getInstance().GetNameFromPanel();
+            String loadName = PuzzleGUI.getInstance().GetFromPanel("Choose a Name to load");
             long startTime = System.currentTimeMillis();
             LoadState state = ConfigLoader.getInstance().LoadFromDataBase(loadName);
             long endTime = System.currentTimeMillis() - startTime;
@@ -134,7 +139,7 @@ public class Controller extends AbstractController {
             	ConfigLoader.getInstance().SetNewConfig(state.getConfig());
                 this.LoadMovement(state);
             }else{
-                System.out.println("Partida No encontrada");
+                PuzzleGUI.getInstance().ShowMessage("Partida no encontrada");
             }
         });
                        

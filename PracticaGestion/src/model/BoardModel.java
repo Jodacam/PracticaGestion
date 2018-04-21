@@ -7,7 +7,6 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Random;
-import view.PuzzleGUI;
 
 /**
  *

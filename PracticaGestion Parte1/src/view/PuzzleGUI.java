@@ -95,6 +95,9 @@ public class PuzzleGUI extends JFrame{
         JMenu archive = new JMenu("Archive");
         JMenu help = new JMenu("Help");
 
+        JMenu data = new JMenu("DataBase");
+        
+        
         JMenuItem save = new JMenuItem("Save Game");
         save.setActionCommand("save");
         
@@ -114,6 +117,14 @@ public class PuzzleGUI extends JFrame{
         JMenuItem info = new JMenuItem("Info");
         info.setActionCommand("info");
 
+        JMenuItem mongo = new JMenuItem("Change to Mongo");
+        mongo.setActionCommand("Mongo");
+        JMenuItem xml = new JMenuItem("Change to XML");
+        xml.setActionCommand("XML");
+        
+        
+        
+        
         archive.add(saveDB);
         archive.add(loadGameFromDataBase);
         archive.add(save);
@@ -121,8 +132,14 @@ public class PuzzleGUI extends JFrame{
         archive.add(load);
         archive.add(exit);
         help.add(info);
-
+        
+        data.add(mongo);
+        data.add(xml);
+        
+        
+       
         menu.add(archive);
+        menu.add(data);
         menu.add(help);
         saveDB.addActionListener(controller);
         loadGameFromDataBase.addActionListener(controller);
@@ -131,6 +148,8 @@ public class PuzzleGUI extends JFrame{
         load.addActionListener(controller);
         exit.addActionListener(controller);
         info.addActionListener(controller);
+        mongo.addActionListener(controller);
+        xml.addActionListener(controller);
 
         return(menu);
     }
@@ -246,7 +265,11 @@ public class PuzzleGUI extends JFrame{
         JOptionPane.showMessageDialog(this, "Has Ganado");
     }
 
-    public String GetNameFromPanel (){
-        return  JOptionPane.showInputDialog(this, "Choose a name to load");
+    public String GetFromPanel (String text){
+        return  JOptionPane.showInputDialog(this, text);
+    }
+
+    public void ShowMessage(String Message) {
+         JOptionPane.showMessageDialog(this, Message);
     }
 }
