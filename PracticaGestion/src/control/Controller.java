@@ -30,10 +30,12 @@ public class Controller extends AbstractController {
     //HahsMap que incluye todas las funciones a realizar mediante eventos.
 
     private Map<String, Function> EventsFunctions = new HashMap<>();
-
+    private BoardView viewInstance;
+    private BoardModel modelInstance;
     //Inicializamos el Controlador
-    public Controller() {
+    public Controller(BoardModel m) {
         super();
+        modelInstance = m;       
         movimientos = new ConcurrentLinkedDeque<>();
         //Se generan las funciones a ejecutar cuando se produzca un evento.
         EventsFunctions.put("clutter", (String[] param) -> {
@@ -41,14 +43,17 @@ public class Controller extends AbstractController {
             for (int i = 0; i < 40; i++) {
                 if (!movimientos.isEmpty()) {
                     MoveCommand movimientoAnterior = (MoveCommand) movimientos.getFirst();                                       
-                    int[] movimiento = this.getViewFromObservers().getRandomMovement(movimientoAnterior.Movimiento[0], movimientoAnterior.Movimiento[1]);
+                    int[] movimiento = viewInstance.getRandomMovement(movimientoAnterior.Movimiento[0], movimientoAnterior.Movimiento[1]);
                     notifyObservers(movimiento[0],movimiento[1]);
                     MoveCommand dCommand = new MoveCommand(movimiento,this);
+                    long startTime = System.currentTimeMillis();
                     ConfigLoader.getInstance().SaveMovement(dCommand);
+                    long endTime = System.currentTimeMillis() - startTime;
+                    System.out.println(endTime);
                     movimientos.push(dCommand);
                 } else {
                     
-                   int[] movimiento = this.getViewFromObservers().getRandomMovement(1,0);
+                   int[] movimiento = viewInstance.getRandomMovement(1,0);
                     notifyObservers(movimiento[0],movimiento[1]);
                     MoveCommand dCommand = new MoveCommand(movimiento,this);
                     ConfigLoader.getInstance().SaveMovement(dCommand);
@@ -59,16 +64,19 @@ public class Controller extends AbstractController {
         });
         EventsFunctions.put("solve", (String[] param) -> {
             while (!movimientos.isEmpty()) {
+            	long startTime = System.currentTimeMillis();
                 MoveCommand moveCommand = ConfigLoader.getInstance().DeleteMovement();
+                long endTime = System.currentTimeMillis() - startTime;
+                System.out.println(endTime);
                 if(moveCommand == null)
                 	movimientos.pop().undoCommand();
                 else {
                 	movimientos.pop();
                 	moveCommand.controller = this;
-                	moveCommand.undoCommand();
-                }
-                	
+                	moveCommand.undoCommand();               	
+                }               	
             }
+            PuzzleGUI.getInstance().mensajeVictoria();
         });
 
         EventsFunctions.put("loadImage", (String[] param) -> {
@@ -80,18 +88,19 @@ public class Controller extends AbstractController {
             if(img != null){
                 PuzzleGUI.getInstance().updateBoard(img);
                 this.ReStartModel();
+                setViewFromObservers();
                 notifyObservers(99, 99);
             }
         });
 
         EventsFunctions.put("save", (String[] param) -> {
-            ConfigLoader.getInstance().SaveGame(movimientos, getViewFromObservers().getImage());
+            ConfigLoader.getInstance().SaveGame(movimientos,viewInstance.getImage());
         });
         
         
 		EventsFunctions.put("saveInDataBase", (String[] param) -> {
 			if (ConfigLoader.getInstance().SaveInDataBase( movimientos,
-					getViewFromObservers().getImage())) {
+					viewInstance.getImage())) {
 				System.out.println("Partida Guardada");
 			} else {
 				 System.out.println("Partida Ya existente, por favor seleccione otro nombre");
@@ -171,34 +180,41 @@ public class Controller extends AbstractController {
         int y = me.getY();
         int imageSize = ConfigLoader.getInstance().getActualConfig().getImageSize();
         if (x < imageSize * ConfigLoader.getInstance().getActualConfig().getNumColumn() && y < imageSize * ConfigLoader.getInstance().getActualConfig().getNumRow()) {           
-            int piezas[] = getViewFromObservers().movePiece(x, y);
+            int piezas[] = viewInstance.movePiece(x, y);
             notifyObservers(piezas[0], piezas[1]);
             MoveCommand m  = new MoveCommand(piezas,this);
-            ConfigLoader.getInstance().SaveMovement(m);
+            long startTime = System.currentTimeMillis();
+            ConfigLoader.getInstance().SaveMovement(m);           
+            long endTime = System.currentTimeMillis() - startTime;
+            System.out.println(endTime);
             movimientos.push(m);
+            if (modelInstance.isPuzzleSolve()) {
+            	PuzzleGUI.getInstance().mensajeVictoria();
+            }
         }
     }
 
-    private BoardView getViewFromObservers(){
-         return  (BoardView) observerList.stream().filter(a -> (a.getClass() == BoardView.class)).findFirst().get();
-    }
+    public void setViewFromObservers(){
+        viewInstance =  (BoardView) observerList.stream().filter(a -> (a.getClass() == BoardView.class)).findFirst().get();
+   }
     
     
-    private void ReStartModel() {
-        BoardModel model = (BoardModel) observerList.stream().filter(a -> (a.getClass() == BoardModel.class)).findFirst().get();
-        observerList.remove(model);
-        model = new BoardModel(ConfigLoader.getInstance().getActualConfig().getNumRow(), ConfigLoader.getInstance().getActualConfig().getNumColumn(),
+    private void ReStartModel() {      
+        observerList.remove(modelInstance);
+        modelInstance = new BoardModel(ConfigLoader.getInstance().getActualConfig().getNumRow(), ConfigLoader.getInstance().getActualConfig().getNumColumn(),
                 ConfigLoader.getInstance().getActualConfig().getImageSize());
-        this.addObserver(model);
+        this.addObserver(modelInstance);
     }
     
     private void LoadMovement(LoadState state) {
         if (0 != state.getImagePath().compareTo("default")) {
             PuzzleGUI.getInstance().CreateNewBoard(new File(ConfigLoader.ProyectDir + state.getImagePath()));
+            setViewFromObservers();
             this.ReStartModel();
         } else {
             PuzzleGUI.getInstance().setConfig(state.getConfig());
             PuzzleGUI.getInstance().LoadDefaultBoard();
+            setViewFromObservers();
             this.ReStartModel();
         }
 

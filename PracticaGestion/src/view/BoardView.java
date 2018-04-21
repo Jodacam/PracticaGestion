@@ -18,7 +18,7 @@ import java.util.Iterator;
 
 /**
  * Clase que representa la vista del tablero
- * @author Miguel Ángel
+ * @author Miguel Ã�ngel
  * @version 1.0
  */
 public class BoardView extends JPanel implements Observer {
@@ -85,9 +85,9 @@ public class BoardView extends JPanel implements Observer {
 
 
 
-    //dividimos la imagen en el número
+    //dividimos la imagen en el nÃºmero
     private BufferedImage[] splitImage(BufferedImage image){
-        //Divisor de imágenes
+        //Divisor de imÃ¡genes
 
         BufferedImage images[] = new BufferedImage[PuzzleGUI.getInstance().columnNum*PuzzleGUI.getInstance().rowNum];
         
@@ -123,8 +123,6 @@ public class BoardView extends JPanel implements Observer {
             iconArray.set(blankPos, p);
             iconArray.set(movedPos, p2);
             blankPiece = movedPos;    
-            //Integer[] pos = {movedPos,blankPos};
-            //PuzzleGUI.getInstance().getCommand().setMovimiento(pos);
             
         }
         this.repaint();
