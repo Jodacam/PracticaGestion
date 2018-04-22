@@ -90,7 +90,7 @@ public class ConfigLoader {
         }
     }
 
-    public LoadState LoadGame(File saveFile) {
+    private LoadState LoadGame(File saveFile) {
         LoadState state = null;
         try {
             FileReader reader = new FileReader(saveFile);
