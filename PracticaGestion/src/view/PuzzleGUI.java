@@ -265,8 +265,15 @@ public class PuzzleGUI extends JFrame{
         JOptionPane.showMessageDialog(this, "Has Ganado");
     }
 
-    public String GetFromPanel (String text){
-        return  JOptionPane.showInputDialog(this, text);
+    public String GetFromPanel (String text,String[] games){
+        String l = "Games in database \n";
+        
+        for(int i=0; i<games.length; i++){
+            l+= games[i]+"\n";
+        }
+            
+        l+=text;
+        return  JOptionPane.showInputDialog(this, l);
     }
 
     public void ShowMessage(String Message) {

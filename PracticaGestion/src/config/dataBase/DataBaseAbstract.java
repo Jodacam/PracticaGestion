@@ -19,6 +19,6 @@ public interface DataBaseAbstract {
     public void AddMovement(MoveCommand command,String id);
     public MoveCommand RemoveMovement(String id);
     public void CloseDataBase();
-    
-    
+    public String[] GetGames();
+    public void RemoveAllMovements(String id);
 }

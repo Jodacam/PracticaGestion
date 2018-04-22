@@ -69,33 +69,34 @@ public class ConfigLoader {
 
     }
 
-	public void LoadDefaultConfig() {
+    public void LoadDefaultConfig() {
 
-		Config c = null;
-		try {
-			SAXBuilder builder = new SAXBuilder(XMLReaders.DTDVALIDATING);
-			File miDoc = new File("config.xml");
-			org.jdom2.Document doc;
-			doc = (org.jdom2.Document) builder.build(miDoc);
+        Config c = null;
+        try {
+            SAXBuilder builder = new SAXBuilder(XMLReaders.DTDVALIDATING);
+            File miDoc = new File("config.xml");
+            org.jdom2.Document doc;
+            doc = (org.jdom2.Document) builder.build(miDoc);
 
-			try {
-				JAXBContext context = JAXBContext.newInstance(Config.class);
-				Unmarshaller XMLoader = context.createUnmarshaller();
-				File xml = new File("config.xml");
-				c = (Config) XMLoader.unmarshal(xml);
-			} catch (JAXBException ex) {
-				Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
-			}
-			ActualConfig = c;
-			ActualConfig.setStoredInDB(false);
-			if (ActualConfig.getUsedDataBase().equals("XML"))
-				dataBase = new XMLDataBase("LoadStates.xml", ProyectDir + FileSeparator + "xmlDataBase");
-			else
-				dataBase = new MongoDataBase();
-		} catch (Exception e) {
-			System.out.println("XML no valido");
-		}
-	}
+            try {
+                JAXBContext context = JAXBContext.newInstance(Config.class);
+                Unmarshaller XMLoader = context.createUnmarshaller();
+                File xml = new File("config.xml");
+                c = (Config) XMLoader.unmarshal(xml);
+            } catch (JAXBException ex) {
+                Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ActualConfig = c;
+            ActualConfig.setStoredInDB(false);
+            if (ActualConfig.getUsedDataBase().equals("XML")) {
+                dataBase = new XMLDataBase("LoadStates.xml", ProyectDir + FileSeparator + "xmlDataBase");
+            } else {
+                dataBase = new MongoDataBase();
+            }
+        } catch (Exception e) {
+            System.out.println("XML no valido");
+        }
+    }
 
     public LoadState LoadGame(File saveFile) {
         LoadState state = null;
@@ -111,7 +112,6 @@ public class ConfigLoader {
         return state;
     }
 
-    
     public void SaveGame(Deque<Command> list, File image) {
         if (ActualConfig.getGameName() == null) {
             String inputString = JOptionPane.showInputDialog(null, "Please write the save name");
@@ -175,61 +175,67 @@ public class ConfigLoader {
         ActualConfig.setNumRow(row);
         ActualConfig.setStoredInDB(false);
     }
-    
-    public void SaveMovement(MoveCommand d){    
-    	 if(ActualConfig.isStoredInDB())
-            dataBase.AddMovement(d,ActualConfig.getGameName());
+
+    public void SaveMovement(MoveCommand d) {
+        if (ActualConfig.isStoredInDB()) {
+            dataBase.AddMovement(d, ActualConfig.getGameName());
+        }
     }
-    public MoveCommand DeleteMovement(){   
-    	if(ActualConfig.isStoredInDB())
-           return dataBase.RemoveMovement(ActualConfig.getGameName());
-    	else
-    		return null;
+
+    public MoveCommand DeleteMovement() {
+        if (ActualConfig.isStoredInDB()) {
+            return dataBase.RemoveMovement(ActualConfig.getGameName());
+        } else {
+            return null;
+        }
     }
-    public LoadState LoadFromDataBase(String id){
 
-     return dataBase.LoadFromDataBase(id);
-       
+    public LoadState LoadFromDataBase(String id) {
+
+        return dataBase.LoadFromDataBase(id);
+
     }
-    
-	public boolean SaveInDataBase(Deque<Command> list, File image) {
 
-		boolean couldStore =true;
+    public boolean SaveInDataBase(Deque<Command> list, File image) {
 
-		if (!ActualConfig.isStoredInDB()) {
-			String newName = PuzzleGUI.getInstance().GetFromPanel("Write a name for the save data");
-			
-			if (newName != null && !newName.isEmpty() ) {
-				Deque<MoveCommand> c = new ConcurrentLinkedDeque<>();
-				list.forEach(d -> {
-					c.add((MoveCommand) d);
-				});
+        boolean couldStore = true;
 
-				String imageName = "default";
-				if (image != null) {
-					imageName = FileSeparator + "saveGame" + FileSeparator + "imageSaves" + FileSeparator + newName
-							+ "_saveImage";
-				}
+        if (!ActualConfig.isStoredInDB()) {
+            String[] games = GetGames();
+            String newName = PuzzleGUI.getInstance().GetFromPanel("Write a name for the save data",games);
 
-				LoadState state = new LoadState(ActualConfig, c, imageName, newName);
-				couldStore = dataBase.StoreAll(state);
-				if (couldStore) {
-					ActualConfig.setGameName(newName);
-					try {
-						if (image != null) {
-							BufferedImage imageBuffed = ImageIO.read(image);
-							ImageIO.write(imageBuffed, "jpg", new File(ProyectDir + imageName));
-						}
-					} catch (IOException ex) {
-						Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
-					}
-				}
-				ActualConfig.setStoredInDB(couldStore);
-			}else
-				couldStore = false;
-		}
-		return couldStore;
-	}
+            if (newName != null && !newName.isEmpty()) {
+                Deque<MoveCommand> c = new ConcurrentLinkedDeque<>();
+                list.forEach(d -> {
+                    c.add((MoveCommand) d);
+                });
+
+                String imageName = "default";
+                if (image != null) {
+                    imageName = FileSeparator + "saveGame" + FileSeparator + "imageSaves" + FileSeparator + newName
+                            + "_saveImage";
+                }
+
+                LoadState state = new LoadState(ActualConfig, c, imageName, newName);
+                couldStore = dataBase.StoreAll(state);
+                if (couldStore) {
+                    ActualConfig.setGameName(newName);
+                    try {
+                        if (image != null) {
+                            BufferedImage imageBuffed = ImageIO.read(image);
+                            ImageIO.write(imageBuffed, "jpg", new File(ProyectDir + imageName));
+                        }
+                    } catch (IOException ex) {
+                        Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                ActualConfig.setStoredInDB(couldStore);
+            } else {
+                couldStore = false;
+            }
+        }
+        return couldStore;
+    }
 
     public void changeDataBase(String dataBaseString) {
         if (!dataBaseString.equals(ActualConfig.getUsedDataBase())) {
@@ -239,33 +245,42 @@ public class ConfigLoader {
             if (!ActualConfig.isStoredInDB()) {
                 ActualConfig.setUsedDataBase(dataBaseString);
                 PuzzleGUI.getInstance().ShowMessage("Base de Datos cambiada a " + dataBaseString + "Recuerda tu partida aún no esta guardada en la base de datos");
-            } else {                             
-                    String name = null;
-                    boolean notStore = true;
-                    while (notStore) {
-                        notStore = false;
-                        name = PuzzleGUI.getInstance().GetFromPanel("Dado el cambio de Base datos, esta será guardada, elija un nombre para guardar");
-                        load.setId(name);
-                        load.getConfig().setGameName(name);
-                        load.getConfig().setUsedDataBase(dataBaseString);                      
-                        if (name != null && !name.isEmpty()) {
-                             notStore = !dataBase.StoreAll(load);
-                            
-                        }else{
-                              notStore = true;  
-                        PuzzleGUI.getInstance().ShowMessage("No se pudo guardar la partida, por favor seleccione otro nombre");
-                        }
+            } else {
+                String name = null;
+                boolean notStore = true;
+                while (notStore) {
+                    notStore = false;
+                    String[] games = GetGames();
+                    name = PuzzleGUI.getInstance().GetFromPanel("Dado el cambio de Base datos, esta será guardada, elija un nombre para guardar",games);
+                    load.setId(name);
+                    load.getConfig().setGameName(name);
+                    load.getConfig().setUsedDataBase(dataBaseString);
+                    if (name != null && !name.isEmpty()) {
+                        notStore = !dataBase.StoreAll(load);
 
+                    } else {
+                        notStore = true;
+                        PuzzleGUI.getInstance().ShowMessage("No se pudo guardar la partida, por favor seleccione otro nombre");
                     }
-                    ActualConfig.setUsedDataBase(dataBaseString);
-                    PuzzleGUI.getInstance().ShowMessage("Base de Datos cambiada a " + dataBaseString);
-                
+
+                }
+                ActualConfig.setUsedDataBase(dataBaseString);
+                PuzzleGUI.getInstance().ShowMessage("Base de Datos cambiada a " + dataBaseString);
 
             }
 
         } else {
             PuzzleGUI.getInstance().ShowMessage("Base de Datos ya utilizada");
         }
+    }
+    
+    public String[] GetGames(){
+        String[] games = dataBase.GetGames();
+        return games;
+    }
+    
+    public void RemoveAllMovements(String id){
+        dataBase.RemoveAllMovements(id);
     }
 
 }

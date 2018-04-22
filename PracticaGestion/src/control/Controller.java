@@ -129,7 +129,8 @@ public class Controller extends AbstractController {
         });
         
         EventsFunctions.put("loadDataBase", (String[] param) -> {
-            String loadName = PuzzleGUI.getInstance().GetFromPanel("Choose a Name to load");
+            String[] games = ConfigLoader.getInstance().GetGames();
+            String loadName = PuzzleGUI.getInstance().GetFromPanel("Choose a Name to load",games);
             long startTime = System.currentTimeMillis();
             LoadState state = ConfigLoader.getInstance().LoadFromDataBase(loadName);
             long endTime = System.currentTimeMillis() - startTime;
@@ -195,6 +196,8 @@ public class Controller extends AbstractController {
             movimientos.push(m);
             if (modelInstance.isPuzzleSolve()) {
             	PuzzleGUI.getInstance().mensajeVictoria();
+                movimientos.clear();
+                ConfigLoader.getInstance().RemoveAllMovements(ConfigLoader.getInstance().getActualConfig().getGameName());
             }
         }
     }
