@@ -94,12 +94,21 @@ public class PuzzleGUI extends JFrame{
         JMenuBar menu = new JMenuBar();
         JMenu archive = new JMenu("Archive");
         JMenu help = new JMenu("Help");
-    
+
+        JMenu data = new JMenu("DataBase");
+        
+        
         JMenuItem save = new JMenuItem("Save Game");
         save.setActionCommand("save");
         
+        JMenuItem saveDB = new JMenuItem("Save In Data Base");
+        saveDB.setActionCommand("saveInDataBase");
+        
         JMenuItem loadGame = new JMenuItem("Load Local Game");
         loadGame.setActionCommand("load");
+        
+        JMenuItem loadGameFromDataBase = new JMenuItem("Load Game From Data Base");
+        loadGameFromDataBase.setActionCommand("loadDataBase");
         
         JMenuItem load = new JMenuItem("Load New Image");
         load.setActionCommand("loadImage");
@@ -108,19 +117,39 @@ public class PuzzleGUI extends JFrame{
         JMenuItem info = new JMenuItem("Info");
         info.setActionCommand("info");
 
+        JMenuItem mongo = new JMenuItem("Change to Mongo");
+        mongo.setActionCommand("Mongo");
+        JMenuItem xml = new JMenuItem("Change to XML");
+        xml.setActionCommand("XML");
+        
+        
+        
+        
+        archive.add(saveDB);
+        archive.add(loadGameFromDataBase);
         archive.add(save);
         archive.add((loadGame));
         archive.add(load);
         archive.add(exit);
         help.add(info);
+        
+        data.add(mongo);
+        data.add(xml);
+        
+        
        
         menu.add(archive);
+        menu.add(data);
         menu.add(help);
+        saveDB.addActionListener(controller);
+        loadGameFromDataBase.addActionListener(controller);
         loadGame.addActionListener(controller);
         save.addActionListener(controller);
         load.addActionListener(controller);
         exit.addActionListener(controller);
         info.addActionListener(controller);
+        mongo.addActionListener(controller);
+        xml.addActionListener(controller);
 
         return(menu);
     }
@@ -236,8 +265,15 @@ public class PuzzleGUI extends JFrame{
         JOptionPane.showMessageDialog(this, "Has Ganado");
     }
 
-    public String GetFromPanel (String text){
-        return  JOptionPane.showInputDialog(this, text);
+    public String GetFromPanel (String text,String[] games){
+        String l = "Games in database \n";
+        
+        for(int i=0; i<games.length; i++){
+            l+= games[i]+"\n";
+        }
+            
+        l+=text;
+        return  JOptionPane.showInputDialog(this, l);
     }
 
     public void ShowMessage(String Message) {

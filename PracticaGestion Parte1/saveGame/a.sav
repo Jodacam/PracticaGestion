@@ -1,0 +1,1 @@
+{"config":{"numColumn":3,"numRow":3,"imageSize":32,"gameName":"a","storedInDB":false,"usedDataBase":"XML"},"command":[{"Movimiento":[1,2]},{"Movimiento":[0,1]}],"imagePath":"\\saveGame\\imageSaves\\a_saveImage","id":"a"}

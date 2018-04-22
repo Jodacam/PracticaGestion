@@ -64,15 +64,18 @@ public class Controller extends AbstractController {
                     movimientos.push(dCommand);
                 }
             }
-            PuzzleGUI.getInstance().ShowMessage("Tiempo Medio de insercion en " + ConfigLoader.getInstance().getActualConfig().getUsedDataBase()+ ": ");
+            PuzzleGUI.getInstance().ShowMessage("Tiempo Medio de insercion en " + ConfigLoader.getInstance().getActualConfig().getUsedDataBase()+ ": "+ totalTimeInsert/40);
+            totalTimeInsert= 0;
 
         });
         EventsFunctions.put("solve", (String[] param) -> {
+            int size = movimientos.size();
             while (!movimientos.isEmpty()) {
             	long startTime = System.currentTimeMillis();
                 MoveCommand moveCommand = ConfigLoader.getInstance().DeleteMovement();
                 long endTime = System.currentTimeMillis() - startTime;
                 System.out.println(endTime);
+                totalTimeRemove += endTime;
                 if(moveCommand == null)
                 	movimientos.pop().undoCommand();
                 else {
@@ -82,6 +85,8 @@ public class Controller extends AbstractController {
                 }               	
             }
             PuzzleGUI.getInstance().mensajeVictoria();
+            PuzzleGUI.getInstance().ShowMessage("Tiempo Medio de recogida en " + ConfigLoader.getInstance().getActualConfig().getUsedDataBase()+ ": "+ totalTimeRemove/size);
+            totalTimeRemove = 0;
         });
 
         EventsFunctions.put("loadImage", (String[] param) -> {
@@ -115,6 +120,7 @@ public class Controller extends AbstractController {
         
 
         EventsFunctions.put("load", (String[] param) -> {
+            
             LoadState state = ConfigLoader.getInstance().Load();
             this.LoadMovement(state);
 
@@ -215,6 +221,7 @@ public class Controller extends AbstractController {
     }
     
     private void LoadMovement(LoadState state) {
+        movimientos.clear();
         if (0 != state.getImagePath().compareTo("default")) {
             PuzzleGUI.getInstance().CreateNewBoard(new File(ConfigLoader.ProyectDir + state.getImagePath()));
             setViewFromObservers();

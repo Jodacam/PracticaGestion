@@ -20,6 +20,7 @@ public class Config {
     private int imageSize;    
     private String gameName; 
 
+
     
     @XmlElement(name = "gameName")
     public String getGameName() {
@@ -61,9 +62,15 @@ public class Config {
         return "element Config { element numColumn{'" + numColumn + "'}, element numRow {'" + numRow + "'}, element imageSize {'" + imageSize + "'},"
                 + " element gameName {'" + gameName + "'} }";
     }
- 
+    
+    
+    
+    
     public void setImageSize(int imageSize) {
         this.imageSize = imageSize;
-    }
-
+    }    
+	
+    
+       
+    
 }

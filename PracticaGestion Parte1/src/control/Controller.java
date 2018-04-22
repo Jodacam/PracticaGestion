@@ -32,8 +32,6 @@ public class Controller extends AbstractController {
     private Map<String, Function> EventsFunctions = new HashMap<>();
     private BoardView viewInstance;
     private BoardModel modelInstance;
-    private long totalTimeInsert;
-    private long totalTimeRemove;
    
     //Inicializamos el Controlador
     public Controller(BoardModel m) {
@@ -47,22 +45,29 @@ public class Controller extends AbstractController {
                 if (!movimientos.isEmpty()) {
                     MoveCommand movimientoAnterior = (MoveCommand) movimientos.getFirst();                                       
                     int[] movimiento = viewInstance.getRandomMovement(movimientoAnterior.Movimiento[0], movimientoAnterior.Movimiento[1]);
-                    MoveCommand dCommand = new MoveCommand(movimiento,this);
+                    notifyObservers(movimiento[0],movimiento[1]);
+                    MoveCommand dCommand = new MoveCommand(movimiento,this);                  
                     movimientos.push(dCommand);
                 } else {
-                    int[] movimiento = viewInstance.getRandomMovement(1,0);
-                    MoveCommand dCommand = new MoveCommand(movimiento,this);
+                    
+                   int[] movimiento = viewInstance.getRandomMovement(1,0);
+                    notifyObservers(movimiento[0],movimiento[1]);
+                    MoveCommand dCommand = new MoveCommand(movimiento,this);                 
                     movimientos.push(dCommand);
                 }
             }
+
+
         });
         EventsFunctions.put("solve", (String[] param) -> {
+            int size = movimientos.size();
             while (!movimientos.isEmpty()) {
-                movimientos.pop().undoCommand();       	
+
+                movimientos.pop().undoCommand();
+
             }
-            if(modelInstance.isPuzzleSolve()){
-                PuzzleGUI.getInstance().mensajeVictoria();
-            }
+
+            PuzzleGUI.getInstance().mensajeVictoria();
         });
 
         EventsFunctions.put("loadImage", (String[] param) -> {
@@ -81,11 +86,12 @@ public class Controller extends AbstractController {
 
         EventsFunctions.put("save", (String[] param) -> {
             ConfigLoader.getInstance().SaveGame(movimientos,viewInstance.getImage());
-        });	
-
-        EventsFunctions.put("load", (String[] param) -> {
+        });
+                		       
+        EventsFunctions.put("load", (String[] param) -> {           
             LoadState state = ConfigLoader.getInstance().Load();
             this.LoadMovement(state);
+
         });
 
         EventsFunctions.put("exit", (String[] param) -> {
@@ -95,7 +101,10 @@ public class Controller extends AbstractController {
         EventsFunctions.put("info", (String[] param) -> {
             InfoView info = new InfoView();
         });
-                     
+        
+        
+        
+
     }
 
     Random r = new Random();
@@ -131,11 +140,13 @@ public class Controller extends AbstractController {
         int imageSize = ConfigLoader.getInstance().getActualConfig().getImageSize();
         if (x < imageSize * ConfigLoader.getInstance().getActualConfig().getNumColumn() && y < imageSize * ConfigLoader.getInstance().getActualConfig().getNumRow()) {           
             int piezas[] = viewInstance.movePiece(x, y);
-            MoveCommand m  = new MoveCommand(piezas,this);
+            notifyObservers(piezas[0], piezas[1]);
+            MoveCommand m  = new MoveCommand(piezas,this);        
             movimientos.push(m);
             if (modelInstance.isPuzzleSolve()) {
             	PuzzleGUI.getInstance().mensajeVictoria();
                 movimientos.clear();
+                
             }
         }
     }
@@ -153,6 +164,7 @@ public class Controller extends AbstractController {
     }
     
     private void LoadMovement(LoadState state) {
+        movimientos.clear();
         if (0 != state.getImagePath().compareTo("default")) {
             PuzzleGUI.getInstance().CreateNewBoard(new File(ConfigLoader.ProyectDir + state.getImagePath()));
             setViewFromObservers();

@@ -8,6 +8,7 @@ package config;
 import com.google.gson.Gson;
 import command.Command;
 import command.MoveCommand;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,6 +26,7 @@ import javax.swing.JOptionPane;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.input.sax.XMLReaders;
 
@@ -64,28 +66,29 @@ public class ConfigLoader {
 
     }
 
-	public void LoadDefaultConfig() {
+    public void LoadDefaultConfig() {
 
-		Config c = null;
-		try {
-			SAXBuilder builder = new SAXBuilder(XMLReaders.DTDVALIDATING);
-			File miDoc = new File("config.xml");
-			org.jdom2.Document doc;
-			doc = (org.jdom2.Document) builder.build(miDoc);
+        Config c = null;
+        try {
+            SAXBuilder builder = new SAXBuilder(XMLReaders.DTDVALIDATING);
+            File miDoc = new File("config.xml");
+            org.jdom2.Document doc;
+            doc = (org.jdom2.Document) builder.build(miDoc);
 
-			try {
-				JAXBContext context = JAXBContext.newInstance(Config.class);
-				Unmarshaller XMLoader = context.createUnmarshaller();
-				File xml = new File("config.xml");
-				c = (Config) XMLoader.unmarshal(xml);
-			} catch (JAXBException ex) {
-				Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
-			}
-			ActualConfig = c;
-		} catch (Exception e) {
-			System.out.println("XML no valido");
-		}
-	}
+            try {
+                JAXBContext context = JAXBContext.newInstance(Config.class);
+                Unmarshaller XMLoader = context.createUnmarshaller();
+                File xml = new File("config.xml");
+                c = (Config) XMLoader.unmarshal(xml);
+            } catch (JAXBException ex) {
+                Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ActualConfig = c;
+                   
+        } catch (Exception e) {
+            System.out.println("XML no valido");
+        }
+    }
 
     public LoadState LoadGame(File saveFile) {
         LoadState state = null;
@@ -101,7 +104,6 @@ public class ConfigLoader {
         return state;
     }
 
-    
     public void SaveGame(Deque<Command> list, File image) {
         if (ActualConfig.getGameName() == null) {
             String inputString = JOptionPane.showInputDialog(null, "Please write the save name");
@@ -165,4 +167,5 @@ public class ConfigLoader {
         ActualConfig.setNumRow(row);
     }
 
+   
 }

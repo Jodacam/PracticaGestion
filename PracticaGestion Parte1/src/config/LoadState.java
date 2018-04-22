@@ -27,20 +27,7 @@ public class LoadState {
         this.imagePath = imagePath;
         this.id = id;
     }  
-
-    public LoadState(LoadStateAuxiliar c) {
-        config = c.getConfig();
-        imagePath = c.getImagePath().replace("\"", "");
-        id = c.getId();
-        command = new ConcurrentLinkedDeque();
-        for(MoveInformation info: c.getCommand()){
-            int[] auxArray = {info.getN1(),info.getN2()};
-            MoveCommand m = new MoveCommand(auxArray,null);
-            command.addFirst(m);      
-        }
-        
-               
-    }
+                   
     
     public Config getConfig() {
         return config;
