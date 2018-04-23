@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE Config [
+    <!ELEMENT Config (numColumn|numRow|imageSize|usedDataBase)*>
+
+    <!--- Put your DTDDoc comment here. -->
+    <!ELEMENT numColumn (#PCDATA)>
+
+    <!--- Put your DTDDoc comment here. -->
+    <!ELEMENT numRow (#PCDATA)>
+
+    <!--- Put your DTDDoc comment here. -->
+    <!ELEMENT imageSize (#PCDATA)>
+
+    <!ELEMENT usedDataBase (#PCDATA)>
+    
+]>
+<Config><numColumn>3</numColumn><numRow>3</numRow><imageSize>32</imageSize><usedDataBase>XML</usedDataBase></Config>
