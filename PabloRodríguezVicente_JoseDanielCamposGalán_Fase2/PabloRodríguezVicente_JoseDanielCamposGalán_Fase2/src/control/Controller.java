@@ -5,6 +5,7 @@
  */
 package control;
 
+import com.sun.media.sound.ModelAbstractChannelMixer;
 import command.Command;
 import command.MoveCommand;
 import config.ConfigLoader;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import model.AbstractModel;
 import view.BoardView;
 import view.InfoView;
 import view.PuzzleGUI;
@@ -31,7 +33,7 @@ public class Controller extends AbstractController {
 
     private Map<String, Function> EventsFunctions = new HashMap<>();
     private BoardView viewInstance;
-    private BoardModel modelInstance;
+    private AbstractModel modelInstance;
     private long totalTimeInsert;
     private long totalTimeRemove;
    
@@ -52,7 +54,7 @@ public class Controller extends AbstractController {
                     notifyObservers(movimiento[0],movimiento[1]);
                     MoveCommand dCommand = new MoveCommand(movimiento,this);
                     long startTime = System.currentTimeMillis();
-                    ConfigLoader.getInstance().SaveMovement(dCommand);
+                    modelInstance.AddMovement(dCommand);
                     long endTime = System.currentTimeMillis() - startTime;
                     System.out.println(endTime);
                     totalTimeInsert+=endTime;
@@ -62,7 +64,7 @@ public class Controller extends AbstractController {
                    int[] movimiento = viewInstance.getRandomMovement(1,0);
                     notifyObservers(movimiento[0],movimiento[1]);
                     MoveCommand dCommand = new MoveCommand(movimiento,this);
-                    ConfigLoader.getInstance().SaveMovement(dCommand);
+                    modelInstance.AddMovement(dCommand);
                     movimientos.push(dCommand);
                 }
             }
@@ -95,7 +97,7 @@ public class Controller extends AbstractController {
             while (!movimientos.isEmpty()) {
                 movimientos.pop();
             }
-            ConfigLoader.getInstance().getActualConfig().setGameName(null);
+            modelInstance.ActualConfig.setGameName(null);
             File img = PuzzleGUI.getInstance().showFileSelector();
             if(img != null){
                 PuzzleGUI.getInstance().updateBoard(img);
@@ -106,25 +108,32 @@ public class Controller extends AbstractController {
         });
 
         EventsFunctions.put("save", (String[] param) -> {
-            ConfigLoader.getInstance().SaveGame(movimientos,viewInstance.getImage());
-        });
-        
-        
-		EventsFunctions.put("saveInDataBase", (String[] param) -> {
-			if (ConfigLoader.getInstance().SaveInDataBase( movimientos,
+           if (modelInstance.StoreAll(movimientos,
 					viewInstance.getImage())) {
 				PuzzleGUI.getInstance().ShowMessage("Partida Guardada");
 			} else {
 				PuzzleGUI.getInstance().ShowMessage("No se ha podido Guardar la partida. Nombre ya elegido o nombre vacio");
 			}
-		});
+	});
+       
+        
+        
+		
+        
         
         
 
         EventsFunctions.put("load", (String[] param) -> {
             
-            LoadState state = ConfigLoader.getInstance().Load();
-            this.LoadMovement(state);
+            LoadState state = modelInstance.LoadFromDataBase();
+             if(state != null){               
+            	modelInstance.ActualConfig = state.getConfig();
+                this.LoadMovement(state);
+            }else{
+                PuzzleGUI.getInstance().ShowMessage("Partida no encontrada");
+            }
+             
+             
 
         });
 
@@ -192,20 +201,20 @@ public class Controller extends AbstractController {
         
         int x = me.getX();
         int y = me.getY();
-        int imageSize = ConfigLoader.getInstance().getActualConfig().getImageSize();
-        if (x < imageSize * ConfigLoader.getInstance().getActualConfig().getNumColumn() && y < imageSize * ConfigLoader.getInstance().getActualConfig().getNumRow()) {           
+        int imageSize = modelInstance.ActualConfig.getImageSize();
+        if (x < imageSize * modelInstance.ActualConfig.getNumColumn() && y < imageSize * modelInstance.ActualConfig.getNumRow()) {           
             int piezas[] = viewInstance.movePiece(x, y);
             notifyObservers(piezas[0], piezas[1]);
             MoveCommand m  = new MoveCommand(piezas,this);
             long startTime = System.currentTimeMillis();
-            ConfigLoader.getInstance().SaveMovement(m);           
+            modelInstance.AddMovement(m);           
             long endTime = System.currentTimeMillis() - startTime;
             System.out.println(endTime);
             movimientos.push(m);
             if (modelInstance.isPuzzleSolve()) {
             	PuzzleGUI.getInstance().ShowMessage("Has Ganado!");
                 movimientos.clear();
-                ConfigLoader.getInstance().RemoveAllMovements(ConfigLoader.getInstance().getActualConfig().getGameName());
+                modelInstance.RemoveAllMovements(modelInstance.ActualConfig.getGameName());
             }
         }
     }

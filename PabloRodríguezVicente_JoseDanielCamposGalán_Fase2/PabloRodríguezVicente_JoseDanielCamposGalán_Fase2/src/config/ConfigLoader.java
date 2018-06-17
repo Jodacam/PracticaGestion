@@ -18,6 +18,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.logging.Level;
@@ -123,11 +124,11 @@ public class ConfigLoader {
             imageName = FileSeparator + "saveGame" + FileSeparator + "imageSaves" + FileSeparator + ActualConfig.getGameName() + "_saveImage";
         }
 
-        Deque<MoveCommand> c = new ConcurrentLinkedDeque<MoveCommand>();
+        Deque<MoveCommand> c = new ArrayDeque<MoveCommand>();
 
-        for (Command d : list) {
+        list.forEach((d) -> {
             c.add((MoveCommand) d);
-        }
+        });
 
         LoadState stateGame = new LoadState(ActualConfig, c, imageName, ActualConfig.getGameName());
         String data = JSONMapper.toJson(stateGame);

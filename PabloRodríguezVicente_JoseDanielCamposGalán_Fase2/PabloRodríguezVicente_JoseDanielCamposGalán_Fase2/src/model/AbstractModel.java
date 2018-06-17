@@ -1,5 +1,13 @@
 package model;
 
+import com.google.gson.Gson;
+import command.Command;
+import command.MoveCommand;
+import config.Config;
+import config.LoadState;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Deque;
 import observer.Observer;
 
 /**
@@ -7,7 +15,7 @@ import observer.Observer;
  * @author Miguel Ángel
  * @version 1.0
  */
-public abstract class AbstractModel<PieceModel> implements Observer {
+public abstract class AbstractModel implements Observer {
     //número de filas
     protected int rowNum=0;
     //número de columnas
@@ -17,7 +25,16 @@ public abstract class AbstractModel<PieceModel> implements Observer {
     //lista de images
     protected String[] imageList=null;
     
+     ArrayList<PieceModel> iconArray = null;
+     int blankPiece;
     
+    public Config ActualConfig;
+    public String gameName;
+
+    public static final String ProyectDir = System.getProperty("user.dir");
+    public static final String FileSeparator = System.getProperty("file.separator");
+    
+    static final Gson JSONMapper = new Gson();
 
     //constructor de la clase.
     public AbstractModel(int rowNum, int columnNum,int pieceSize, String[] imageList) {
@@ -68,4 +85,33 @@ public abstract class AbstractModel<PieceModel> implements Observer {
     public int getPieceSize(){
         return pieceSize;
     }
+     
+   
+    public void update(int blankPos, int movedPos) {
+       if(blankPos !=99)
+        {        
+        PieceModel p = iconArray.get(movedPos);
+        PieceModel p2 = iconArray.get(blankPos);
+            int x = p.getIndexColumn();
+            int y = p.getIndexRow();
+            p.setPosition(p2.getIndexColumn(), p2.getIndexRow());
+            p2.setPosition(x, y);       
+            iconArray.set(blankPos, p);
+            iconArray.set(movedPos, p2);
+            blankPiece = movedPos;    
+            
+        }
+        
+    }
+    
+    
+    
+    public abstract boolean StoreAll(Deque<Command> list, File image);
+    public abstract LoadState LoadFromDataBase();
+    public abstract void AddMovement(MoveCommand command);
+    public abstract MoveCommand RemoveMovement();
+    public abstract void CloseDataBase();
+    
+    public abstract void RemoveAllMovements(String id);
+    
 }

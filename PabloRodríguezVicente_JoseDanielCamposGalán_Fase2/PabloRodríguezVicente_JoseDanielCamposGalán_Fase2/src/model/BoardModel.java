@@ -5,8 +5,29 @@
  */
 package model;
 
+import command.Command;
+import command.MoveCommand;
+import config.ConfigLoader;
+import static config.ConfigLoader.FileSeparator;
+import static config.ConfigLoader.ProyectDir;
+import config.LoadState;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import view.PuzzleGUI;
 
 /**
  *
@@ -14,8 +35,7 @@ import java.util.Random;
  */
 public class BoardModel extends AbstractModel {
 
-    private ArrayList<PieceModel> iconArray = null;
-    private int blankPiece;
+  
     private Random r = new Random();
     
     public BoardModel(int rowNum, int columnNum, int pieceSize, String[] imageList) {
@@ -60,28 +80,96 @@ public class BoardModel extends AbstractModel {
 
 
 
-    @Override
-    public void update(int blankPos, int movedPos) {
-       if(blankPos !=99)
-        {        
-        PieceModel p = iconArray.get(movedPos);
-        PieceModel p2 = iconArray.get(blankPos);
-            int x = p.getIndexColumn();
-            int y = p.getIndexRow();
-            p.setPosition(p2.getIndexColumn(), p2.getIndexRow());
-            p2.setPosition(x, y);       
-            iconArray.set(blankPos, p);
-            iconArray.set(movedPos, p2);
-            blankPiece = movedPos;    
-            
-        }
-        
-    }
+   
 
     //Este metodo ha sido movido a BoardView
     @Override
     public int[] getRandomMovement(int lastPos, int pos) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
     
+    
+    
+    @Override
+    public boolean StoreAll(Deque list, File image) {
+          
+        
+        
+        if (ActualConfig.getGameName() == null) {
+            String inputString = JOptionPane.showInputDialog(null, "Please write the save name");
+            ActualConfig.setGameName(inputString);
+        }
+
+        String imageName = "default";
+        if (image != null) {
+            imageName = FileSeparator + "saveGame" + FileSeparator + "imageSaves" + FileSeparator + ActualConfig.getGameName() + "_saveImage";
+        }
+
+        Deque<MoveCommand> c = new ArrayDeque<MoveCommand>();
+
+        list.forEach((d) -> {
+            c.add((MoveCommand) d);
+        });
+
+        LoadState stateGame = new LoadState(ActualConfig, c, imageName, ActualConfig.getGameName());
+        String data = JSONMapper.toJson(stateGame);
+        try {
+
+            if (image != null) {
+                BufferedImage imageBuffed = ImageIO.read(image);
+                ImageIO.write(imageBuffed, "jpg", new File(ProyectDir + imageName));
+            }
+            FileWriter writer = new FileWriter(ProyectDir + FileSeparator + "saveGame" + FileSeparator + ActualConfig.getGameName() + ".sav");
+            PrintWriter w = new PrintWriter(writer);
+            w.print(data);
+            w.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        
+        return  true;
+    }
+
+    @Override
+    public LoadState LoadFromDataBase() {
+ 
+            return LoadGame(PuzzleGUI.getInstance().showFileSelector());
+    }
+    
+
+    @Override
+    public void AddMovement(MoveCommand command) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public MoveCommand RemoveMovement() {
+        return null;
+    }
+
+    @Override
+    public void CloseDataBase() {
+       
+    }
+
+
+
+    @Override
+    public void RemoveAllMovements(String id) {
+        
+    }
+    
+    
+   private LoadState LoadGame(File saveFile) {
+        LoadState state = null;
+        try {
+            FileReader reader = new FileReader(saveFile);
+            state = JSONMapper.fromJson(reader, LoadState.class);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+        return state;
+    }
 }
