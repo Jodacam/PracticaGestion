@@ -36,6 +36,24 @@ public abstract class AbstractModel implements Observer {
     
     static final Gson JSONMapper = new Gson();
 
+    public static AbstractModel InstanciateModel(int rowNum, int columnNum,int pieceSize, String type){
+    AbstractModel model = null;
+    switch (type){
+        case "Mongo":
+            break;
+        case "XML" :
+             break;
+        case "Local":
+            model = new BoardModel(rowNum, columnNum, pieceSize);
+            break;
+        default:
+            model = new BoardModel(rowNum, columnNum, pieceSize);
+    }            
+    return  model;
+    }
+    
+    
+    
     //constructor de la clase.
     public AbstractModel(int rowNum, int columnNum,int pieceSize, String[] imageList) {
         this.rowNum = rowNum;
@@ -52,6 +70,10 @@ public abstract class AbstractModel implements Observer {
         this.imageList = null;
     }
 
+    
+    
+    
+    
     /**
      * Añade una nueva pieza en el modelo
      * @param id identificador de la pieza
@@ -110,8 +132,7 @@ public abstract class AbstractModel implements Observer {
     public abstract LoadState LoadFromDataBase();
     public abstract void AddMovement(MoveCommand command);
     public abstract MoveCommand RemoveMovement();
-    public abstract void CloseDataBase();
-    
+    public abstract void CloseDataBase();   
     public abstract void RemoveAllMovements(String id);
     
 }

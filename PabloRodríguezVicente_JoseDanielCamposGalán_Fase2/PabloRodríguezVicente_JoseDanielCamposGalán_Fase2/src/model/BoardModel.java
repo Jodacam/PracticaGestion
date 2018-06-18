@@ -7,9 +7,9 @@ package model;
 
 import command.Command;
 import command.MoveCommand;
+import config.Config;
 import config.ConfigLoader;
-import static config.ConfigLoader.FileSeparator;
-import static config.ConfigLoader.ProyectDir;
+
 import config.LoadState;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -25,7 +25,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
+
 import javax.swing.JOptionPane;
 import view.PuzzleGUI;
 
@@ -37,7 +37,7 @@ public class BoardModel extends AbstractModel {
 
   
     private Random r = new Random();
-    
+    private Deque<Command> movimientos;
     public BoardModel(int rowNum, int columnNum, int pieceSize, String[] imageList) {
         super(rowNum, columnNum, pieceSize, imageList);
         iconArray = new ArrayList<>();
@@ -50,6 +50,7 @@ public class BoardModel extends AbstractModel {
     
     public BoardModel(int rowNum, int columnNum, int pieceSize) {
         super(rowNum, columnNum, pieceSize);
+        movimientos = new ArrayDeque<>();
         iconArray = new ArrayList<>();
         blankPiece = 0;
         for (int i = 0; i < columnNum*rowNum; i++) {
@@ -96,14 +97,14 @@ public class BoardModel extends AbstractModel {
           
         
         
-        if (ActualConfig.getGameName() == null) {
+        if (gameName == null) {
             String inputString = JOptionPane.showInputDialog(null, "Please write the save name");
-            ActualConfig.setGameName(inputString);
+           gameName = inputString;
         }
 
         String imageName = "default";
         if (image != null) {
-            imageName = FileSeparator + "saveGame" + FileSeparator + "imageSaves" + FileSeparator + ActualConfig.getGameName() + "_saveImage";
+            imageName = FileSeparator + "saveGame" + FileSeparator + "imageSaves" + FileSeparator + gameName + "_saveImage";
         }
 
         Deque<MoveCommand> c = new ArrayDeque<MoveCommand>();
@@ -112,7 +113,14 @@ public class BoardModel extends AbstractModel {
             c.add((MoveCommand) d);
         });
 
-        LoadState stateGame = new LoadState(ActualConfig, c, imageName, ActualConfig.getGameName());
+        Config con = new Config();
+        con.setGameName(gameName);
+        con.setImageSize(pieceSize);
+        con.setNumColumn(columnNum);
+        con.setUsedDataBase("Local");
+        con.setNumRow(rowNum);
+        
+        LoadState stateGame = new LoadState(con, c, imageName, gameName);
         String data = JSONMapper.toJson(stateGame);
         try {
 
@@ -120,7 +128,7 @@ public class BoardModel extends AbstractModel {
                 BufferedImage imageBuffed = ImageIO.read(image);
                 ImageIO.write(imageBuffed, "jpg", new File(ProyectDir + imageName));
             }
-            FileWriter writer = new FileWriter(ProyectDir + FileSeparator + "saveGame" + FileSeparator + ActualConfig.getGameName() + ".sav");
+            FileWriter writer = new FileWriter(ProyectDir + FileSeparator + "saveGame" + FileSeparator + gameName + ".sav");
             PrintWriter w = new PrintWriter(writer);
             w.print(data);
             w.close();
@@ -133,20 +141,19 @@ public class BoardModel extends AbstractModel {
     }
 
     @Override
-    public LoadState LoadFromDataBase() {
- 
+    public LoadState LoadFromDataBase() { 
             return LoadGame(PuzzleGUI.getInstance().showFileSelector());
     }
     
 
     @Override
     public void AddMovement(MoveCommand command) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        movimientos.push(command);
     }
 
     @Override
     public MoveCommand RemoveMovement() {
-        return null;
+        return  (MoveCommand)movimientos.pop();
     }
 
     @Override
@@ -154,11 +161,9 @@ public class BoardModel extends AbstractModel {
        
     }
 
-
-
     @Override
     public void RemoveAllMovements(String id) {
-        
+        movimientos.clear();
     }
     
     
