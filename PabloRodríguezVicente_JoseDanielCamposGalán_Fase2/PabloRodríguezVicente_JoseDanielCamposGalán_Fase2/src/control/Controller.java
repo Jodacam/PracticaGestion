@@ -80,8 +80,13 @@ public class Controller extends AbstractController {
                 long endTime = System.currentTimeMillis() - startTime;
                 System.out.println(endTime);
                 totalTimeRemove += endTime;
-                movimientos.pop();
-                moveCommand.controller = this;
+
+                if (moveCommand != null) {
+                    moveCommand.controller = this;
+                    movimientos.pop();
+                } else {
+                    moveCommand = (MoveCommand) movimientos.pop();
+                }
                 moveCommand.undoCommand();
 
             }

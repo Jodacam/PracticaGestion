@@ -206,7 +206,7 @@ public class ConfigLoader {
             String newName = PuzzleGUI.getInstance().GetFromPanel("Write a name for the save data",games);
 
             if (newName != null && !newName.isEmpty()) {
-                Deque<MoveCommand> c = new ConcurrentLinkedDeque<>();
+                Deque<MoveCommand> c = new ArrayDeque<>();
                 list.forEach(d -> {
                     c.add((MoveCommand) d);
                 });

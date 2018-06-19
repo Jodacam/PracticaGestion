@@ -63,6 +63,8 @@ public class MongoDataBase implements DataBaseAbstract {
 
     @Override
     public LoadState LoadFromDataBase(String id) {
+       
+        
         LoadState state = null;
         Bson bson = eq("id", id);
         Document document = collection.find(bson).first();
