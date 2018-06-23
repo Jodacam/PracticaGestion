@@ -66,7 +66,7 @@ public abstract class AbstractModel implements Observer {
         return m;
     }
     
-    public void SetListAndBlanck(int blank, ArrayList<PieceModel> list){
+    protected void SetListAndBlanck(int blank, ArrayList<PieceModel> list){
         iconArray = list;
         blankPiece = blank;
     }

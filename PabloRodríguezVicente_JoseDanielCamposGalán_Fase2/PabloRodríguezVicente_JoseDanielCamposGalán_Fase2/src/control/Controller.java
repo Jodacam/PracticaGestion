@@ -68,7 +68,8 @@ public class Controller extends AbstractController {
                     movimientos.push(dCommand);
                 }
             }
-            PuzzleGUI.getInstance().ShowMessage("Tiempo Medio de insercion en " + ConfigLoader.getInstance().getActualConfig().getUsedDataBase() + ": " + totalTimeInsert / 40);
+            PuzzleGUI.getInstance().ShowMessage("Tiempo Medio de insercion en "  + ": " + totalTimeInsert / movI);
+            PuzzleGUI.getInstance().UpdateTiempo(totalTimeInsert / movI);
             totalTimeInsert = 0;
 
         });
@@ -88,11 +89,13 @@ public class Controller extends AbstractController {
                 } else {
                     moveCommand = (MoveCommand) movimientos.pop();
                 }
+                 
                 moveCommand.undoCommand();
 
             }
             PuzzleGUI.getInstance().ShowMessage("Has Ganado!");
             PuzzleGUI.getInstance().ShowMessage("Tiempo Medio de recogida en " + modelInstance.gameName + ": " + totalTimeRemove / size);
+            PuzzleGUI.getInstance().UpdateTiempo(totalTimeRemove / size);
             totalTimeRemove = 0;
         });
 
@@ -221,6 +224,7 @@ public class Controller extends AbstractController {
             modelInstance.AddMovement(m);
             long endTime = System.currentTimeMillis() - startTime;
             System.out.println(endTime);
+            PuzzleGUI.getInstance().UpdateTiempo(endTime);
             movimientos.push(m);
             if (modelInstance.isPuzzleSolve()) {
                 PuzzleGUI.getInstance().ShowMessage("Has Ganado!");

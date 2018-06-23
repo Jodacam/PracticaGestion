@@ -32,6 +32,7 @@ public class PuzzleGUI extends JFrame {
     //Panel de juego
     private BoardView boardView;
 
+    private JPanel VentanaEstadistica;
     /**
      * Constructor privado
      */
@@ -40,10 +41,12 @@ public class PuzzleGUI extends JFrame {
         boardView = new BoardView(rowNum, columnNum, imageSize, imageList);
         boardView.addMouseListener(controller);
         controller.addObserver(boardView);
+        VentanaEstadistica = createEstadistica();
         this.getContentPane().setLayout(new BorderLayout());
         this.setJMenuBar(createMenuBar());
         this.getContentPane().add(boardView, BorderLayout.CENTER);
         this.getContentPane().add(createSouthPanel(), BorderLayout.SOUTH);
+        this.getContentPane().add(VentanaEstadistica,BorderLayout.EAST);
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(500, 500);
@@ -242,5 +245,23 @@ public class PuzzleGUI extends JFrame {
 
     public void ShowMessage(String Message) {
         JOptionPane.showMessageDialog(this, Message);
+    }
+    
+    private JPanel createEstadistica() {
+       JPanel frame = new JPanel();
+       JLabel label = new JLabel("Tiempo Medio en la última Operación: ");
+       JLabel Espacio = new JLabel("Espacio Consumido: ");
+       frame.add(label);   
+       frame.add(Espacio);
+       return frame;
+    }
+    
+    
+    public void UpdateMemoria(int tamaño){
+      ((JLabel)VentanaEstadistica.getComponent(1)).setText("Espacio Consumido: "+tamaño);
+    }
+    
+    public void UpdateTiempo(Long tiempo){
+        ((JLabel)VentanaEstadistica.getComponent(0)).setText("Tiempo Medio en la última Operación: "+tiempo);
     }
 }
