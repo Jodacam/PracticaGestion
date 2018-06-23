@@ -96,14 +96,13 @@ public class PuzzleGUI extends JFrame {
         JMenuItem save = new JMenuItem("Save Game");
         save.setActionCommand("save");
 
-        JMenuItem saveDB = new JMenuItem("Save In Data Base");
-        saveDB.setActionCommand("saveInDataBase");
+       
 
-        JMenuItem loadGame = new JMenuItem("Load Local Game");
+        JMenuItem loadGame = new JMenuItem("Load Game");
         loadGame.setActionCommand("load");
 
-        JMenuItem loadGameFromDataBase = new JMenuItem("Load Game From Data Base");
-        loadGameFromDataBase.setActionCommand("loadDataBase");
+        JMenuItem loadGameFromDataBase = new JMenuItem("Change To Local");
+        loadGameFromDataBase.setActionCommand("Local");
 
         JMenuItem load = new JMenuItem("Load New Image");
         load.setActionCommand("loadImage");
@@ -117,21 +116,21 @@ public class PuzzleGUI extends JFrame {
         JMenuItem xml = new JMenuItem("Change to XML");
         xml.setActionCommand("XML");
 
-        archive.add(saveDB);
-        archive.add(loadGameFromDataBase);
+        
+       
         archive.add(save);
         archive.add((loadGame));
         archive.add(load);
         archive.add(exit);
         help.add(info);
 
+        data.add(loadGameFromDataBase);
         data.add(mongo);
         data.add(xml);
 
         menu.add(archive);
         menu.add(data);
-        menu.add(help);
-        saveDB.addActionListener(controller);
+        menu.add(help);       
         loadGameFromDataBase.addActionListener(controller);
         loadGame.addActionListener(controller);
         save.addActionListener(controller);
@@ -179,33 +178,10 @@ public class PuzzleGUI extends JFrame {
     }
 
     //MÃ©todo para actualizar la imagen del tablero
-    public void updateBoard(File imageFile) {
-
-        String inputString = JOptionPane.showInputDialog(this, "Choose a number of rows, the number must be equal or higgher than 3");
-        int input = Integer.parseInt(inputString);
-        if (input >= 3) {
-            rowNum = input;
-        } else {
-            rowNum = 3;
-        }
-
-        inputString = JOptionPane.showInputDialog(this, "Choose a number of columns, the number must be equal or higgher than 3");
-        input = Integer.parseInt(inputString);
-        if (input >= 3) {
-            columnNum = input;
-        } else {
-            columnNum = 3;
-        }
-
-        inputString = JOptionPane.showInputDialog(this, "Choose the piece size, the number must be equal or higgher than 32, all pieces are squares");
-        input = Integer.parseInt(inputString);
-        if (input >= 32) {
-            imageSize = input;
-        } else {
-            imageSize = 32;
-        }
-
-        ConfigLoader.getInstance().SetNewConfig(rowNum, columnNum, imageSize);
+    public void updateBoard(File imageFile,int r,int c,int i) {
+        imageSize = i;
+        rowNum = r;
+        columnNum = c;
         CreateNewBoard(imageFile);
 
     }

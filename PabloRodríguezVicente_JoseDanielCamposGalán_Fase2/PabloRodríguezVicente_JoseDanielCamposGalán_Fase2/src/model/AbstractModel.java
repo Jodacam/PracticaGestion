@@ -25,11 +25,16 @@ public abstract class AbstractModel implements Observer {
     //lista de images
     protected String[] imageList=null;
     
-     ArrayList<PieceModel> iconArray = null;
-     int blankPiece;
+    ArrayList<PieceModel> iconArray = null;
+    int blankPiece;
     
     public Config ActualConfig;
+    
     public String gameName;
+    
+    protected boolean isStore;
+    
+    protected String Type;
 
     public static final String ProyectDir = System.getProperty("user.dir");
     public static final String FileSeparator = System.getProperty("file.separator");
@@ -40,8 +45,10 @@ public abstract class AbstractModel implements Observer {
     AbstractModel model = null;
     switch (type){
         case "Mongo":
+            model = new MongoModel(rowNum, columnNum, pieceSize);
             break;
         case "XML" :
+            model = new XMLModel(rowNum, columnNum, pieceSize);
              break;
         case "Local":
             model = new BoardModel(rowNum, columnNum, pieceSize);
@@ -52,8 +59,24 @@ public abstract class AbstractModel implements Observer {
     return  model;
     }
     
+    public AbstractModel ChangeDataBase(String type){
+        this.CloseDataBase();
+        AbstractModel m = InstanciateModel(rowNum, columnNum, pieceSize, type);
+        m.SetListAndBlanck(blankPiece, iconArray);
+        return m;
+    }
+    
+    public void SetListAndBlanck(int blank, ArrayList<PieceModel> list){
+        iconArray = list;
+        blankPiece = blank;
+    }
     
     
+    
+    
+    public String getType(){
+        return Type;
+    }
     //constructor de la clase.
     public AbstractModel(int rowNum, int columnNum,int pieceSize, String[] imageList) {
         this.rowNum = rowNum;
@@ -63,11 +86,17 @@ public abstract class AbstractModel implements Observer {
     }
 
     //constructor de la clase.
-    public AbstractModel(int rowNum, int columnNum,int pieceSize) {
+    public AbstractModel(int rowNum, int columnNum,int pieceSize, String t) {
         this.rowNum = rowNum;
         this.columnNum = columnNum;
         this.pieceSize = pieceSize;
-        this.imageList = null;
+        iconArray = new ArrayList<>();
+        Type = t;
+        blankPiece = 0;
+        
+        for (int i = 0; i < columnNum*rowNum; i++) {
+            addNewPiece(i,i/columnNum,i%columnNum);
+        }
     }
 
     
@@ -92,7 +121,13 @@ public abstract class AbstractModel implements Observer {
     public abstract void addNewPiece(int id, int indexRow, int indexCol);
 
     //comprueba si el puzzle ha sido solucionado
-    public abstract boolean isPuzzleSolve();
+    public boolean isPuzzleSolve() {
+        boolean colocado = true;
+        for (int i = 0; i < columnNum*rowNum && colocado; i++) {
+            colocado = iconArray.get(i).getId() == i;
+        }
+        return colocado;
+    }
     //genera movimientos aleatorios
     public abstract int[] getRandomMovement(int lastPos, int pos);
 
@@ -109,6 +144,7 @@ public abstract class AbstractModel implements Observer {
     }
      
    
+    @Override
     public void update(int blankPos, int movedPos) {
        if(blankPos !=99)
         {        

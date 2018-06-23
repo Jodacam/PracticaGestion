@@ -16,6 +16,7 @@ import com.mongodb.client.model.PushOptions;
 import com.mongodb.client.model.Updates;
 import command.Command;
 import command.MoveCommand;
+import config.Config;
 import config.ConfigLoader;
 import static config.ConfigLoader.FileSeparator;
 import static config.ConfigLoader.ProyectDir;
@@ -52,7 +53,7 @@ public class MongoModel extends AbstractModel {
     
     
     public MongoModel(int rowNum, int columnNum, int pieceSize) {
-        super(rowNum, columnNum, pieceSize);
+        super(rowNum, columnNum, pieceSize,"Mongo");
          MongoClientURI uri = new MongoClientURI(
                 "mongodb+srv://admin:.99Kwo@gestiondatos-pzwlg.mongodb.net/gestion");
         mongoClient = new MongoClient(uri);
@@ -66,18 +67,17 @@ public class MongoModel extends AbstractModel {
     
     @Override
     public void addNewPiece(int id, int indexRow, int indexCol, String imagePath) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PieceModel p = new PieceModel(id,indexRow,indexCol,pieceSize,imagePath);
+        iconArray.add(p);
     }
 
     @Override
     public void addNewPiece(int id, int indexRow, int indexCol) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PieceModel p = new PieceModel(id,indexRow,indexCol,pieceSize);
+        iconArray.add(p);
     }
 
-    @Override
-    public boolean isPuzzleSolve() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
 
     @Override
     public int[] getRandomMovement(int lastPos, int pos) {
@@ -88,7 +88,7 @@ public class MongoModel extends AbstractModel {
     public boolean StoreAll(Deque<Command> list, File image) {
         boolean couldStore = true;
 
-        if (!ActualConfig.isStoredInDB()) {
+        if (!isStore) {
             String[] games = GetGames();
             String newName = PuzzleGUI.getInstance().GetFromPanel("Write a name for the save data",games);
 
@@ -104,10 +104,15 @@ public class MongoModel extends AbstractModel {
                             + "_saveImage";
                 }
 
-                LoadState state = new LoadState(ActualConfig, c, imageName, newName);
+                Config f = new Config();
+                f.setImageSize(pieceSize);
+                f.setNumColumn(columnNum);
+                f.setNumRow(rowNum);
+                f.setUsedDataBase("Mongo");
+                LoadState state = new LoadState(f, c, imageName, newName);
                 couldStore = Store(state);
                 if (couldStore) {
-                    ActualConfig.setGameName(newName);
+                   gameName = newName;
                     try {
                         if (image != null) {
                             BufferedImage imageBuffed = ImageIO.read(image);
@@ -117,7 +122,7 @@ public class MongoModel extends AbstractModel {
                         Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                ActualConfig.setStoredInDB(couldStore);
+               isStore = true;
             } else {
                 couldStore = false;
             }
@@ -126,8 +131,9 @@ public class MongoModel extends AbstractModel {
     }
     
     
+    
     private boolean Store(LoadState state){
-         boolean couldStore = false;
+        boolean couldStore = false;
         state.getConfig().setStoredInDB(true);
         state.getConfig().setGameName(state.getId());
         String json = JSONMapper.toJson(state);
@@ -146,7 +152,14 @@ public class MongoModel extends AbstractModel {
     @Override
     public LoadState LoadFromDataBase() {        
         String[] games = GetGames();
-        String id = PuzzleGUI.getInstance().GetFromPanel("Elige una partida para cargar", games);
+        String id = PuzzleGUI.getInstance().GetFromPanel("Elige una partida para cargar", games);                   
+        return Load(id);
+    }
+    
+    
+    
+    
+    private LoadState Load(String id){
         LoadState state = null;
         Bson bson = eq("id", id);
         Document document = collection.find(bson).first();
@@ -157,10 +170,12 @@ public class MongoModel extends AbstractModel {
             rowNum = state.getConfig().getNumRow();
             columnNum = state.getConfig().getNumColumn();
             pieceSize = state.getConfig().getImageSize();
+            isStore = state.getConfig().isStoredInDB();
         }
-                     
         return state;
     }
+    
+    
 
     @Override
     public void AddMovement(MoveCommand command) {
@@ -170,7 +185,7 @@ public class MongoModel extends AbstractModel {
             p.position(0);
             List<Document> moves = new ArrayList<>();
             moves.add(Document.parse(json));
-            collection.updateOne(eq("id", this.ActualConfig.getGameName()), Updates.pushEach("command", moves, p));
+            collection.updateOne(eq("id", gameName), Updates.pushEach("command", moves, p));
         }
     }
 
@@ -178,7 +193,7 @@ public class MongoModel extends AbstractModel {
     public MoveCommand RemoveMovement() {
         
         if(gameName != null){
-        LoadState state = LoadFromDataBase();
+        LoadState state = Load(gameName);
         MoveCommand c = state.getCommand().pollFirst();
         String json = JSONMapper.toJson(state);
         collection.replaceOne(eq("id", gameName), Document.parse(json));
@@ -200,10 +215,7 @@ public class MongoModel extends AbstractModel {
        collection.updateOne(eq("id", gameName), Updates.set("command", moves));
     }
 
-    @Override
-    public void update(int blankPos, int movedPos) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+
     
     
     private String[] GetGames(){

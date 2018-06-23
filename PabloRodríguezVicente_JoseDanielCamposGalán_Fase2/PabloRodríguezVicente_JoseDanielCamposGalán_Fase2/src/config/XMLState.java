@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Jose Daniel Campos y Pablo Rodriguez Vicente
  */
 @XmlRootElement(name = "LoadState")
-public class LoadStateAuxiliar {
+public class XMLState {
     
     private Config config;
     private List<MoveInformation> command;

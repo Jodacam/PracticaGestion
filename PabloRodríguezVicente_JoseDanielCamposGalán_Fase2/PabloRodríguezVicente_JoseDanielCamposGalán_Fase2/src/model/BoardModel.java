@@ -49,13 +49,9 @@ public class BoardModel extends AbstractModel {
     }
     
     public BoardModel(int rowNum, int columnNum, int pieceSize) {
-        super(rowNum, columnNum, pieceSize);
+        super(rowNum, columnNum, pieceSize,"Local");
         movimientos = new ArrayDeque<>();
-        iconArray = new ArrayList<>();
-        blankPiece = 0;
-        for (int i = 0; i < columnNum*rowNum; i++) {
-            addNewPiece(i,i/columnNum,i%columnNum);
-        }
+        
     }
 
     @Override
@@ -70,14 +66,7 @@ public class BoardModel extends AbstractModel {
         iconArray.add(p);
     }
 
-    @Override
-    public boolean isPuzzleSolve() {
-        boolean colocado = true;
-        for (int i = 0; i < columnNum*rowNum && colocado; i++) {
-            colocado = iconArray.get(i).getId() == i;
-        }
-        return colocado;
-    }
+    
 
 
 

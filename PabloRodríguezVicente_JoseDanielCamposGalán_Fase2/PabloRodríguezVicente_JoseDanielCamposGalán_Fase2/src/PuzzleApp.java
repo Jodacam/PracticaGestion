@@ -60,7 +60,7 @@ public class PuzzleApp {
         String[] imageList={imagePath+"blank.gif",imagePath+"one.gif",imagePath+"two.gif",imagePath+"three.gif",imagePath+ "four.gif",
                 imagePath+"five.gif",imagePath+"six.gif",imagePath+"seven.gif",imagePath+"eight.gif"};
         // Creamos el modelo
-       AbstractModel m = AbstractModel.InstanciateModel(rowNum, columnNum, imageSize,dataBaseType);
+        AbstractModel m = AbstractModel.InstanciateModel(rowNum, columnNum, imageSize,dataBaseType);
         // Creamos el controlador
         Controller controller  = new Controller(m);
         // Inicializamos la GUI

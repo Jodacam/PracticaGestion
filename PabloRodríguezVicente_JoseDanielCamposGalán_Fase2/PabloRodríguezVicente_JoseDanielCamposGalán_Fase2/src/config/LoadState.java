@@ -28,7 +28,7 @@ public class LoadState {
         this.id = id;
     }  
 
-    public LoadState(LoadStateAuxiliar c) {
+    public LoadState(XMLState c) {
         config = c.getConfig();
         config.setStoredInDB(true);
         imagePath = c.getImagePath().replace("\"", "");

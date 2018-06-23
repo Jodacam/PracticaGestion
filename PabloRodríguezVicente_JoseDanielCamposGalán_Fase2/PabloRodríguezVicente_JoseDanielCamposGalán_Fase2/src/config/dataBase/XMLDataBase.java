@@ -20,7 +20,7 @@ import org.basex.query.up.primitives.db.DBAdd;
 
 import command.MoveCommand;
 import config.LoadState;
-import config.LoadStateAuxiliar;
+import config.XMLState;
 import config.MoveInformation;
 
 import java.io.File;
@@ -80,16 +80,16 @@ public class XMLDataBase implements DataBaseAbstract {
 
     @Override
     public LoadState LoadFromDataBase(String id) {
-        LoadStateAuxiliar c = null;
+        XMLState c = null;
         LoadState state = null;
         try {
             String queryResult = new XQuery(QUERY_INTO + id + "']").execute(dataBaseContext);
             if (!queryResult.isEmpty()) {
 
-                JAXBContext context = JAXBContext.newInstance(LoadStateAuxiliar.class);
+                JAXBContext context = JAXBContext.newInstance(XMLState.class);
                 Unmarshaller XMLoader = context.createUnmarshaller();
                 StringReader reader = new StringReader(queryResult);
-                c = (LoadStateAuxiliar) XMLoader.unmarshal(reader);
+                c = (XMLState) XMLoader.unmarshal(reader);
                 state = new LoadState(c);
             }
 

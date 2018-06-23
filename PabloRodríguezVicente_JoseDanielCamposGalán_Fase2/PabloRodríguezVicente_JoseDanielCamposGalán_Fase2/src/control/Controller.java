@@ -72,6 +72,7 @@ public class Controller extends AbstractController {
             totalTimeInsert = 0;
 
         });
+
         EventsFunctions.put("solve", (String[] param) -> {
             int size = movimientos.size();
             while (!movimientos.isEmpty()) {
@@ -99,11 +100,38 @@ public class Controller extends AbstractController {
             while (!movimientos.isEmpty()) {
                 movimientos.pop();
             }
-            modelInstance.ActualConfig.setGameName(null);
+            modelInstance.gameName = null;
             File img = PuzzleGUI.getInstance().showFileSelector();
             if (img != null) {
-                PuzzleGUI.getInstance().updateBoard(img);
-                //             this.ReStartModel();
+                String inputString = PuzzleGUI.getInstance().GetFromPanel("Choose a number of rows, the number must be equal or higgher than 3",null);
+                int input = Integer.parseInt(inputString);
+                int rowNum;
+                if (input >= 3) {
+                    rowNum = input;
+                } else {
+                    rowNum = 3;
+                }
+                int columnNum;
+                inputString = PuzzleGUI.getInstance().GetFromPanel( "Choose a number of columns, the number must be equal or higgher than 3",null);
+                input = Integer.parseInt(inputString);
+                if (input >= 3) {
+                    columnNum = input;
+                } else {
+                    columnNum = 3;
+                }
+                int imageSize;
+                inputString = PuzzleGUI.getInstance().GetFromPanel("Choose the piece size, the number must be equal or higgher than 32, all pieces are squares",null);
+                input = Integer.parseInt(inputString);
+                if (input >= 32) {
+                    imageSize = input;
+                } else {
+                    imageSize = 32;
+                }                               
+                PuzzleGUI.getInstance().updateBoard(img,rowNum,columnNum,imageSize);
+                modelInstance.CloseDataBase();               
+                observerList.remove(modelInstance);
+                modelInstance = AbstractModel.InstanciateModel(rowNum, columnNum, imageSize, modelInstance.getType());             
+                observerList.add(modelInstance);
                 setViewFromObservers();
                 notifyObservers(99, 99);
             }
@@ -119,8 +147,10 @@ public class Controller extends AbstractController {
         });
 
         EventsFunctions.put("load", (String[] param) -> {
-
+            long startTime = System.currentTimeMillis();
             LoadState state = modelInstance.LoadFromDataBase();
+            long endTime = System.currentTimeMillis() - startTime;
+            System.out.println(endTime);           
             if (state != null) {
                 modelInstance.ActualConfig = state.getConfig();
                 this.LoadMovement(state);
@@ -137,28 +167,17 @@ public class Controller extends AbstractController {
         EventsFunctions.put("info", (String[] param) -> {
             InfoView info = new InfoView();
         });
-
-        EventsFunctions.put("loadDataBase", (String[] param) -> {
-            String[] games = ConfigLoader.getInstance().GetGames();
-            String loadName = PuzzleGUI.getInstance().GetFromPanel("Elige una partida para cargar", games);
-            long startTime = System.currentTimeMillis();
-            LoadState state = ConfigLoader.getInstance().LoadFromDataBase(loadName);
-            long endTime = System.currentTimeMillis() - startTime;
-            System.out.println(endTime);
-            if (state != null) {
-
-                ConfigLoader.getInstance().SetNewConfig(state.getConfig());
-                this.LoadMovement(state);
-            } else {
-                PuzzleGUI.getInstance().ShowMessage("Partida no encontrada");
-            }
-        });
+       
 
         EventsFunctions.put("Mongo", (String[] param) -> {
-            ConfigLoader.getInstance().changeDataBase("Mongo");
+           modelInstance = modelInstance.ChangeDataBase("Mongo");
         });
         EventsFunctions.put("XML", (String[] param) -> {
-            ConfigLoader.getInstance().changeDataBase("XML");
+            modelInstance = modelInstance.ChangeDataBase("XML");
+        });
+        
+        EventsFunctions.put("Local", (String[] param) -> {
+            modelInstance = modelInstance.ChangeDataBase("Local");
         });
 
     }
