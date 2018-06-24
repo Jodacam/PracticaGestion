@@ -258,7 +258,7 @@ public class PuzzleGUI extends JFrame {
     
     
     public void UpdateMemoria(int tamaño){
-      ((JLabel)VentanaEstadistica.getComponent(1)).setText("Espacio Consumido: "+tamaño);
+      ((JLabel)VentanaEstadistica.getComponent(1)).setText("Espacio Consumido: "+tamaño + "Kb");
     }
     
     public void UpdateTiempo(Long tiempo){

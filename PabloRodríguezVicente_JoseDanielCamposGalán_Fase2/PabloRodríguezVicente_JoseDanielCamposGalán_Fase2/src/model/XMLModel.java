@@ -264,4 +264,23 @@ public class XMLModel extends AbstractModel {
         }
     }
 
+ @Override
+    public float ObtainSize() {
+        File path = new File(ProyectDir + FileSeparator + "xmlDataBase");
+        return DirectorySize(path);
+    }
+    
+    
+    private float DirectorySize(File p){
+        long size = 0;
+        for (File file : p.listFiles()) {
+        if (file.isFile()) {          
+            size += file.length();
+        }
+        else
+            size += DirectorySize(file);
+    }
+    return size;      
+    }
+
 }

@@ -170,5 +170,6 @@ public abstract class AbstractModel implements Observer {
     public abstract MoveCommand RemoveMovement();
     public abstract void CloseDataBase();   
     public abstract void RemoveAllMovements(String id);
+    public abstract float ObtainSize();
     
 }

@@ -8,7 +8,7 @@ package control;
 import com.sun.media.sound.ModelAbstractChannelMixer;
 import command.Command;
 import command.MoveCommand;
-import config.ConfigLoader;
+
 import config.LoadState;
 import model.BoardModel;
 
@@ -155,7 +155,7 @@ public class Controller extends AbstractController {
             long endTime = System.currentTimeMillis() - startTime;
             System.out.println(endTime);           
             if (state != null) {
-                modelInstance.ActualConfig = state.getConfig();
+               
                 this.LoadMovement(state);
             } else {
                 PuzzleGUI.getInstance().ShowMessage("Partida no encontrada");
@@ -225,6 +225,7 @@ public class Controller extends AbstractController {
             long endTime = System.currentTimeMillis() - startTime;
             System.out.println(endTime);
             PuzzleGUI.getInstance().UpdateTiempo(endTime);
+            PuzzleGUI.getInstance().UpdateMemoria((int)modelInstance.ObtainSize()/1024);
             movimientos.push(m);
             if (modelInstance.isPuzzleSolve()) {
                 PuzzleGUI.getInstance().ShowMessage("Has Ganado!");
@@ -238,12 +239,7 @@ public class Controller extends AbstractController {
         viewInstance = (BoardView) observerList.stream().filter(a -> (a.getClass() == BoardView.class)).findFirst().get();
     }
 
-//    private void ReStartModel() {      
-//        observerList.remove(modelInstance);
-//        modelInstance = new BoardModel(ConfigLoader.getInstance().getActualConfig().getNumRow(), ConfigLoader.getInstance().getActualConfig().getNumColumn(),
-//                ConfigLoader.getInstance().getActualConfig().getImageSize());
-//        this.addObserver(modelInstance);
-//    }
+//  
     private void LoadMovement(LoadState state) {
         if (state == null) {
             PuzzleGUI.getInstance().ShowMessage("No has cargado ninguna partida");
@@ -251,7 +247,7 @@ public class Controller extends AbstractController {
         }
         movimientos.clear();
         if (0 != state.getImagePath().compareTo("default")) {
-            PuzzleGUI.getInstance().CreateNewBoard(new File(ConfigLoader.ProyectDir + state.getImagePath()));
+            PuzzleGUI.getInstance().CreateNewBoard(new File(modelInstance.ProyectDir + state.getImagePath()));
             setViewFromObservers();
 
         } else {

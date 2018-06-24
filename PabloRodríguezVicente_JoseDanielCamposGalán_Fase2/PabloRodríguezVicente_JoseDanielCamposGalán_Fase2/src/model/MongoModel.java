@@ -17,9 +17,6 @@ import com.mongodb.client.model.Updates;
 import command.Command;
 import command.MoveCommand;
 import config.Config;
-import config.ConfigLoader;
-import static config.ConfigLoader.FileSeparator;
-import static config.ConfigLoader.ProyectDir;
 import config.LoadState;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -119,7 +116,7 @@ public class MongoModel extends AbstractModel {
                             ImageIO.write(imageBuffed, "jpg", new File(ProyectDir + imageName));
                         }
                     } catch (IOException ex) {
-                        Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(gameName).log(Level.SEVERE, null, ex);
                     }
                 }
                isStore = true;
@@ -228,5 +225,10 @@ public class MongoModel extends AbstractModel {
         }
         
         return games;
+    }
+
+    @Override
+    public float ObtainSize() {
+        return 0;
     }
 }
