@@ -5,13 +5,9 @@
  */
 package control;
 
-import com.sun.media.sound.ModelAbstractChannelMixer;
 import command.Command;
 import command.MoveCommand;
-
 import config.LoadState;
-import model.BoardModel;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -69,6 +65,7 @@ public class Controller extends AbstractController {
                 }
             }
             PuzzleGUI.getInstance().ShowMessage("Tiempo Medio de insercion en "  + ": " + totalTimeInsert / movI);
+            
             PuzzleGUI.getInstance().UpdateTiempo(totalTimeInsert / movI);
             totalTimeInsert = 0;
 
@@ -95,6 +92,7 @@ public class Controller extends AbstractController {
             }
             PuzzleGUI.getInstance().ShowMessage("Has Ganado!");
             PuzzleGUI.getInstance().ShowMessage("Tiempo Medio de recogida en " + modelInstance.gameName + ": " + totalTimeRemove / size);
+            
             PuzzleGUI.getInstance().UpdateTiempo(totalTimeRemove / size);
             totalTimeRemove = 0;
         });
@@ -196,7 +194,7 @@ public class Controller extends AbstractController {
 
         try {
             EventsFunctions.get(ae.getActionCommand()).ExecuteAction(null);
-
+            PuzzleGUI.getInstance().UpdateMemoria(modelInstance.ObtainSize()/1024);
         } catch (NullPointerException e) {
             e.printStackTrace();
             System.out.println("No implementado");
@@ -225,7 +223,7 @@ public class Controller extends AbstractController {
             long endTime = System.currentTimeMillis() - startTime;
             System.out.println(endTime);
             PuzzleGUI.getInstance().UpdateTiempo(endTime);
-            PuzzleGUI.getInstance().UpdateMemoria((int)modelInstance.ObtainSize()/1024);
+            PuzzleGUI.getInstance().UpdateMemoria(modelInstance.ObtainSize()/1024);
             movimientos.push(m);
             if (modelInstance.isPuzzleSolve()) {
                 PuzzleGUI.getInstance().ShowMessage("Has Ganado!");

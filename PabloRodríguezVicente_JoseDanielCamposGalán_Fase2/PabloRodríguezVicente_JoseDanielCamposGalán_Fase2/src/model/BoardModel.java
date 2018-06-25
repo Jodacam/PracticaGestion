@@ -8,7 +8,6 @@ package model;
 import command.Command;
 import command.MoveCommand;
 import config.Config;
-import config.ConfigLoader;
 
 import config.LoadState;
 import java.awt.image.BufferedImage;
@@ -18,9 +17,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -114,7 +110,7 @@ public class BoardModel extends AbstractModel {
             w.print(data);
             w.close();
         } catch (IOException ex) {
-            Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(gameName).log(Level.SEVERE, null, ex);
             return false;
         }
 

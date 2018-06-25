@@ -1,7 +1,7 @@
 package view;
 
 import config.Config;
-import config.ConfigLoader;
+
 import control.AbstractController;
 
 import javax.swing.*;
@@ -49,7 +49,7 @@ public class PuzzleGUI extends JFrame {
         this.getContentPane().add(VentanaEstadistica,BorderLayout.EAST);
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.setSize(500, 500);
+        this.setSize(800, 600);
         this.setLocation(centerFrame());
     }
 
@@ -257,7 +257,7 @@ public class PuzzleGUI extends JFrame {
     }
     
     
-    public void UpdateMemoria(int tamaño){
+    public void UpdateMemoria(float tamaño){
       ((JLabel)VentanaEstadistica.getComponent(1)).setText("Espacio Consumido: "+tamaño + "Kb");
     }
     

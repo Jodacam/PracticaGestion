@@ -8,13 +8,9 @@ package model;
 import command.Command;
 import command.MoveCommand;
 import config.Config;
-import config.ConfigLoader;
-import static config.ConfigLoader.FileSeparator;
-import static config.ConfigLoader.ProyectDir;
 import config.LoadState;
 import config.MoveInformation;
 import config.XMLState;
-import config.dataBase.XMLDataBase;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +48,7 @@ public class XMLModel extends AbstractModel {
             new CreateDB("XMLdb").execute(dataBaseContext);
             new Add("LoadStates.xml", ProyectDir + FileSeparator + "xmlDataBase").execute(dataBaseContext);
         } catch (BaseXException ex) {
-            Logger.getLogger(XMLDataBase.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger("").log(Level.SEVERE, null, ex);
         }
 
     }
@@ -109,7 +105,7 @@ public class XMLModel extends AbstractModel {
                             ImageIO.write(imageBuffed, "jpg", new File(ProyectDir + imageName));
                         }
                     } catch (IOException ex) {
-                        Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger("").log(Level.SEVERE, null, ex);
                     }
                 }
                 isStore = true;
@@ -144,7 +140,7 @@ public class XMLModel extends AbstractModel {
             }
 
         } catch (BaseXException ex) {
-            Logger.getLogger(XMLDataBase.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger("").log(Level.SEVERE, null, ex);
         }
         return couldStore;
     }
@@ -234,7 +230,7 @@ public class XMLModel extends AbstractModel {
         try {
             new XQuery("delete node " + QUERY_INTO + gameName + "']/command/comando").execute(dataBaseContext);
         } catch (BaseXException ex) {
-            Logger.getLogger(XMLDataBase.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger("").log(Level.SEVERE, null, ex);
         }
         UpdateFile();
     }

@@ -229,6 +229,8 @@ public class MongoModel extends AbstractModel {
 
     @Override
     public float ObtainSize() {
-        return 0;
+       Document stats = database.runCommand(new Document("collStats", "partida"));
+       float t = (float) stats.getInteger("size");
+       return t;
     }
 }

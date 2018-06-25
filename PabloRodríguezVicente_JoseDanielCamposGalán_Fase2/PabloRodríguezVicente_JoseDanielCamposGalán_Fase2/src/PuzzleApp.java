@@ -1,9 +1,4 @@
 import config.Config;
-import config.ConfigLoader;
-import static config.ConfigLoader.FileSeparator;
-import static config.ConfigLoader.ProyectDir;
-import config.dataBase.MongoDataBase;
-import config.dataBase.XMLDataBase;
 import control.Controller;
 import java.io.File;
 import java.util.logging.Level;
@@ -91,7 +86,7 @@ public class PuzzleApp {
                 File xml = new File("config.xml");
                 c = (Config) XMLoader.unmarshal(xml);
             } catch (JAXBException ex) {
-                Logger.getLogger(ConfigLoader.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger("").log(Level.SEVERE, null, ex);
             }
              c.setStoredInDB(false);                     
         } catch (Exception e) {
