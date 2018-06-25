@@ -98,7 +98,8 @@ public class XMLModel extends AbstractModel {
                 LoadState state = new LoadState(f, c, imageName, newName);
                 couldStore = Store(state);
                 if (couldStore) {
-                    gameName = newName;
+                    //gameName = newName;
+                    isStore = true;
                     try {
                         if (image != null) {
                             BufferedImage imageBuffed = ImageIO.read(image);
@@ -108,7 +109,7 @@ public class XMLModel extends AbstractModel {
                         Logger.getLogger("").log(Level.SEVERE, null, ex);
                     }
                 }
-                isStore = true;
+                
             } else {
                 couldStore = false;
             }
